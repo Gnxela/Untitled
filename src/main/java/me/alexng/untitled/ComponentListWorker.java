@@ -1,5 +1,6 @@
 package me.alexng.untitled;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -44,7 +45,6 @@ public class ComponentListWorker extends ComponentWorker {
 		return null;
 	}
 	
-	@Nullable
 	public void removeComponents(Class<?> clazz) {
 		LinkedList<Integer> indexs = new LinkedList<>();
 		for (int i = 0; i < components.size(); i++) {

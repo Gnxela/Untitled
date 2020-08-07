@@ -15,5 +15,4 @@ public class Main {
 		worker.update();
 		worker.update();
 	}
-	
 }
