@@ -1,4 +1,4 @@
-package me.alexng.untitled;
+package me.alexng.untitled.util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

@@ -1,5 +1,8 @@
 package me.alexng.untitled;
 
+import me.alexng.untitled.util.Component;
+import me.alexng.untitled.util.ComponentWorker;
+
 public class PositionComponent extends Component {
 
 	private int x, y;
