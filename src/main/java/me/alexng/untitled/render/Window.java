@@ -16,9 +16,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window implements Cleanable {
 
 	private long windowHandler;
+	private int width, height;
 
-	public Window(long windowHandler) {
+	public Window(long windowHandler, int width, int height) {
 		this.windowHandler = windowHandler;
+		this.width = width;
+		this.height = height;
 	}
 
 	public static Window create(int width, int height, String title) {
@@ -29,6 +32,11 @@ public class Window implements Cleanable {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
 
 		long windowHandler = glfwCreateWindow(width, height, title, NULL, NULL);
 		if (windowHandler == NULL) {
@@ -53,11 +61,15 @@ public class Window implements Cleanable {
 		createCapabilities();
 		// TODO: Do we want this?
 		glfwSwapInterval(1);
-		return new Window(windowHandler);
+		glViewport(0, 0, width, height);
+		return new Window(windowHandler, width, height);
+	}
+
+	public void clear() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	public void update() {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glfwSwapBuffers(windowHandler);
 		glfwPollEvents();
 	}
@@ -80,5 +92,13 @@ public class Window implements Cleanable {
 		glfwDestroyWindow(windowHandler);
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 }
