@@ -3,8 +3,6 @@ package me.alexng.untitled;
 import me.alexng.untitled.render.Window;
 import me.alexng.untitled.util.ComponentListWorker;
 import me.alexng.untitled.util.ComponentWorker;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
 
 public class Main {
 
@@ -23,5 +21,9 @@ public class Main {
 
 		Window window = Window.create(500, 300, "Hello world!");
 		window.show();
+		while (!window.shouldClose()) {
+			window.update();
+		}
+		window.cleanup();
 	}
 }
