@@ -1,6 +1,10 @@
 package me.alexng.untitled;
 
+import me.alexng.untitled.render.Shader;
 import me.alexng.untitled.render.Window;
+import me.alexng.untitled.render.exceptions.UntitledException;
+
+import java.io.IOException;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -12,55 +16,24 @@ public class Main {
 	private static final int WIDTH = 1020, HEIGHT = 800;
 	private static final String TITLE = "Title";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 		float[] vertexData = {
 				-0.5f, -0.5f, 0.0f,
 				0.5f, -0.5f, 0.0f,
 				0.0f, 0.5f, 0.0f,
 		};
-		String vertexShaderSource = "#version 330 core\n" +
-				"layout (location = 0) in vec3 aPos;\n" +
-				"void main()\n" +
-				"{\n" +
-				"gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +
-				"}\n";
-		String fragmentShaderSource = "#version 330 core\n" +
-				"out vec4 FragColor;\n" +
-				"void main()\n" +
-				"{\n" +
-				"FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-				"}\n";
 
-		int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShader, vertexShaderSource);
-		glCompileShader(vertexShader);
-		if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			String log = glGetShaderInfoLog(vertexShader);
-			System.out.println("Shader error: " + log);
-			return;
-		}
 
-		int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShader, fragmentShaderSource);
-		glCompileShader(fragmentShader);
-		if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			String log = glGetShaderInfoLog(fragmentShader);
-			System.out.println("Shader error: " + log);
-			return;
-		}
+		Shader vertexShader = new Shader("me/alexng/untitled/shaders/basic.vert");
+		Shader fragmentShader = new Shader("me/alexng/untitled/shaders/basic.frag");
+		vertexShader.load();
+		fragmentShader.load();
 
 		int shaderProgram = glCreateProgram();
-		glAttachShader(shaderProgram, vertexShader);
-		glAttachShader(shaderProgram, fragmentShader);
+		glAttachShader(shaderProgram, vertexShader.getHandler());
+		glAttachShader(shaderProgram, fragmentShader.getHandler());
 		glLinkProgram(shaderProgram);
-		if (glGetShaderi(vertexShader, GL_COMPILE_STATUS) == GL_FALSE) {
-			String log = glGetProgramInfoLog(shaderProgram);
-			System.out.println("Shader program error: " + log);
-			return;
-		}
-		glDeleteShader(vertexShader);
-		glDeleteShader(fragmentShader);
 
 		int vao = glGenVertexArrays();
 		glBindVertexArray(vao);
