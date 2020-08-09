@@ -21,6 +21,7 @@ public class ShaderProgram implements Cleanable {
 			shader.load();
 		}
 		glAttachShader(handle, shader.getHandle());
+		shader.cleanup();
 	}
 
 	public void linkProgram() {

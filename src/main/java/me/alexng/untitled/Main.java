@@ -24,7 +24,6 @@ public class Main {
 				0.0f, 0.5f, 0.0f,
 		};
 
-
 		ShaderProgram shaderProgram = new ShaderProgram();
 		shaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.vert"));
 		shaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.frag"));
@@ -47,6 +46,7 @@ public class Main {
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			window.update();
 		}
+		shaderProgram.cleanup();
 		window.cleanup();
 	}
 }
