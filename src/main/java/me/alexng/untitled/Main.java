@@ -25,15 +25,10 @@ public class Main {
 		};
 
 
-		Shader vertexShader = new Shader("me/alexng/untitled/shaders/basic.vert");
-		Shader fragmentShader = new Shader("me/alexng/untitled/shaders/basic.frag");
-		vertexShader.load();
-		fragmentShader.load();
-
-		int shaderProgram = glCreateProgram();
-		glAttachShader(shaderProgram, vertexShader.getHandler());
-		glAttachShader(shaderProgram, fragmentShader.getHandler());
-		glLinkProgram(shaderProgram);
+		ShaderProgram shaderProgram = new ShaderProgram();
+		shaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.vert"));
+		shaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.frag"));
+		shaderProgram.linkProgram();
 
 		int vao = glGenVertexArrays();
 		glBindVertexArray(vao);
@@ -48,7 +43,7 @@ public class Main {
 		while (!window.shouldClose()) {
 			window.clear();
 			glBindVertexArray(vao);
-			glUseProgram(shaderProgram);
+			glUseProgram(shaderProgram.getHandle());
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 			window.update();
 		}

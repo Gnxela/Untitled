@@ -16,30 +16,33 @@ public class Shader implements Cleanable {
 
 	private final String sourcePath;
 	private final boolean isFragment;
-	private int handler;
+	private final int handle;
+	private boolean loaded;
 
 	public Shader(String sourcePath) throws ShaderException {
 		checkPath(sourcePath);
 		this.sourcePath = sourcePath;
 		this.isFragment = sourcePath.endsWith(".frag");
+		this.handle = glCreateShader(isFragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
 	}
 
 	public void load() throws IOException, ShaderException {
+		if (loaded) {
+			throw new ShaderException(sourcePath + " already loaded");
+		}
 		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(sourcePath);
 		if (inputStream == null) {
 			cleanup();
-			throw new ShaderException(sourcePath + " not found.");
+			throw new ShaderException(sourcePath + " not found");
 		}
-		String source = new String(ByteStreams.toByteArray(inputStream));
-		System.out.println(source);
-		handler = glCreateShader(isFragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
-		glShaderSource(handler, source);
-		glCompileShader(handler);
-		if (glGetShaderi(handler, GL_COMPILE_STATUS) == GL_FALSE) {
-			String log = glGetShaderInfoLog(handler);
+		glShaderSource(handle, new String(ByteStreams.toByteArray(inputStream)));
+		glCompileShader(handle);
+		if (glGetShaderi(handle, GL_COMPILE_STATUS) == GL_FALSE) {
+			String log = glGetShaderInfoLog(handle);
 			cleanup();
 			throw new ShaderException(sourcePath + " failed to compile: " + log);
 		}
+		loaded = true;
 	}
 
 	private void checkPath(String sourcePath) throws ShaderException {
@@ -56,12 +59,16 @@ public class Shader implements Cleanable {
 		return !isFragment;
 	}
 
-	@Override
-	public void cleanup() {
-		glDeleteShader(handler);
+	public boolean isLoaded() {
+		return loaded;
 	}
 
-	public int getHandler() {
-		return handler;
+	@Override
+	public void cleanup() {
+		glDeleteShader(handle);
+	}
+
+	public int getHandle() {
+		return handle;
 	}
 }
