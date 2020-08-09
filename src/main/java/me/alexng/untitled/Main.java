@@ -13,20 +13,20 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class Main {
 
+	private static final int FLOAT_WIDTH = 4;
 	private static final int WIDTH = 1020, HEIGHT = 800;
 	private static final String TITLE = "Title";
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 		float[] vertexData = {
-				0.5f, 0.5f, 0.0f, // top right
-				0.5f, -0.5f, 0.0f, // bottom right
-				-0.5f, -0.5f, 0.0f, // bottom left
-				-0.5f, 0.5f, 0.0f // top left
+				// positions // colors
+				0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
+				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+				0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top
 		};
 		int[] indexData = {
-				0, 1, 3, // first triangle
-				1, 2, 3 // second triangle
+				0, 1, 2, // first triangle
 		};
 
 		ShaderProgram shaderProgram = new ShaderProgram();
@@ -45,8 +45,10 @@ public class Main {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * 4, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * FLOAT_WIDTH, 0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
+		glEnableVertexAttribArray(1);
 
 		while (!window.shouldClose()) {
 			window.clear();
