@@ -24,8 +24,20 @@ public class ShaderProgram implements Cleanable {
 		shader.cleanup();
 	}
 
-	public void linkProgram() {
+	public void linkProgram() throws ShaderException {
 		glLinkProgram(handle);
+		if (glGetProgrami(handle, GL_LINK_STATUS) == GL_FALSE) {
+			String log = glGetProgramInfoLog(handle);
+			throw new ShaderException("Unable to link shaders: " + log);
+		}
+	}
+
+	public void use() {
+		glUseProgram(handle);
+	}
+
+	public void setBool(String name, boolean value) {
+		glUniform1i(glGetUniformLocation(handle, name), value ? 1 : 0);
 	}
 
 	public int getHandle() {

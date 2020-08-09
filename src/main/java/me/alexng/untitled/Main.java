@@ -53,7 +53,8 @@ public class Main {
 		while (!window.shouldClose()) {
 			window.clear();
 			glBindVertexArray(vao);
-			glUseProgram(shaderProgram.getHandle());
+			shaderProgram.use();
+			shaderProgram.setBool("whiteout", true);
 			glDrawElements(GL_TRIANGLES, indexData.length, GL_UNSIGNED_INT, 0);
 			window.update();
 		}
