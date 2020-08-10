@@ -1,4 +1,4 @@
-package me.alexng.untitled.util;
+package me.alexng.untitled.render.util;
 
 public class Vec2d implements Vec2<Double> {
 

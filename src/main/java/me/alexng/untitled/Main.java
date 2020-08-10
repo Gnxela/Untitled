@@ -1,6 +1,7 @@
 package me.alexng.untitled;
 
 import me.alexng.untitled.render.Shader;
+import me.alexng.untitled.render.ShaderProgram;
 import me.alexng.untitled.render.Texture;
 import me.alexng.untitled.render.Window;
 import me.alexng.untitled.render.exceptions.UntitledException;
@@ -73,6 +74,8 @@ public class Main {
 			window.update();
 		}
 		shaderProgram.cleanup();
+		whiteWallTex.cleanup();
+		grassTex.cleanup();
 		glDeleteVertexArrays(vao);
 		glDeleteBuffers(vbo);
 		glDeleteBuffers(ebo);

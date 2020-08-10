@@ -1,7 +1,5 @@
-package me.alexng.untitled;
+package me.alexng.untitled.render;
 
-import me.alexng.untitled.render.Cleanable;
-import me.alexng.untitled.render.Shader;
 import me.alexng.untitled.render.exceptions.ShaderException;
 
 import java.io.IOException;

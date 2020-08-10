@@ -1,4 +1,4 @@
-package me.alexng.untitled.util;
+package me.alexng.untitled.render.util;
 
 public interface Vec2<T> {
 

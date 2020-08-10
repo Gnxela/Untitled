@@ -15,11 +15,12 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL30.glGenerateMipmap;
 import static org.lwjgl.stb.STBImage.*;
 
-public class Texture {
+public class Texture implements Cleanable {
 
-	private String resourcePath;
-	private boolean transparent;
-	private int handle;
+	private final String resourcePath;
+	private final boolean transparent;
+	private final int handle;
+	private boolean loaded;
 
 	public Texture(String resourcePath, boolean transparent) {
 		this.resourcePath = resourcePath;
@@ -32,6 +33,9 @@ public class Texture {
 	}
 
 	public void load() throws TextureException {
+		if (loaded) {
+			return;
+		}
 		String absolutePath = Main.class.getClassLoader().getResource(resourcePath).getPath().substring(1);
 		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
 			// stbi_load requires a file system path, NOT a classpath resource path
@@ -55,9 +59,13 @@ public class Texture {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
+		loaded = true;
 	}
 
-	public void bind(int textureUnit) {
+	public void bind(int textureUnit) throws TextureException {
+		if (!loaded) {
+			throw new TextureException("Texture not loaded");
+		}
 		if (textureUnit < 0 || textureUnit > 31) {
 			throw new IllegalArgumentException("Invalid texture unit: " + textureUnit);
 		}
@@ -65,8 +73,13 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, handle);
 	}
 
-	public void bind() {
+	public void bind() throws TextureException {
 		bind(0);
+	}
+
+	@Override
+	public void cleanup() {
+		glDeleteTextures(handle);
 	}
 
 	public int getHandle() {
