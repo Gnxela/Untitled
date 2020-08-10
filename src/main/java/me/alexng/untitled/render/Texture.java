@@ -63,9 +63,6 @@ public class Texture implements Cleanable {
 	}
 
 	public void bind(int textureUnit) throws TextureException {
-		if (!loaded) {
-			throw new TextureException("Texture not loaded");
-		}
 		if (textureUnit < 0 || textureUnit > 31) {
 			throw new IllegalArgumentException("Invalid texture unit: " + textureUnit);
 		}
