@@ -3,13 +3,19 @@ package me.alexng.untitled;
 import me.alexng.untitled.render.Shader;
 import me.alexng.untitled.render.Window;
 import me.alexng.untitled.render.exceptions.UntitledException;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load;
 
 public class Main {
 
@@ -20,13 +26,15 @@ public class Main {
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 		float[] vertexData = {
-				// positions // colors
-				0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom right
-				-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
-				0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top
+				// positions // colors // texture coords
+				0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+				0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+				-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+				-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
 		};
 		int[] indexData = {
-				0, 1, 2, // first triangle
+				0, 1, 3, // first triangle
+				1, 2, 3 // second triangle
 		};
 
 		ShaderProgram shaderProgram = new ShaderProgram();
@@ -45,16 +53,41 @@ public class Main {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 6 * FLOAT_WIDTH, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 0);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
 		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * FLOAT_WIDTH, 6 * FLOAT_WIDTH);
+		glEnableVertexAttribArray(2);
+
+		String absolutePath = Main.class.getClassLoader().getResource("me/alexng/untitled/textures/white_wall.jpg").getPath().substring(1);
+		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
+			// stbi_load requires a file system path, NOT a classpath resource path
+			absolutePath = File.separator + absolutePath;
+		}
+		IntBuffer width = BufferUtils.createIntBuffer(1);
+		IntBuffer height = BufferUtils.createIntBuffer(1);
+		IntBuffer channels = BufferUtils.createIntBuffer(1);
+		ByteBuffer image = stbi_load(absolutePath, width, height, channels, 0);
+		if (image == null) {
+			System.err.println("Could not decode image file [" + absolutePath + "]: [" + STBImage.stbi_failure_reason() + "]");
+		}
+		int texture = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		stbi_image_free(image);
 
 		while (!window.shouldClose()) {
 			window.clear();
 			glBindVertexArray(vao);
 			shaderProgram.use();
-			shaderProgram.setBool("whiteout", true);
+			shaderProgram.setBool("whiteout", false);
 			glDrawElements(GL_TRIANGLES, indexData.length, GL_UNSIGNED_INT, 0);
 			window.update();
 		}
