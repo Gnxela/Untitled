@@ -40,6 +40,10 @@ public class ShaderProgram implements Cleanable {
 		glUniform1i(glGetUniformLocation(handle, name), value ? 1 : 0);
 	}
 
+	public void setInt(String name, int value) {
+		glUniform1i(glGetUniformLocation(handle, name), value);
+	}
+
 	public int getHandle() {
 		return handle;
 	}

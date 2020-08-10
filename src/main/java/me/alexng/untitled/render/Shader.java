@@ -19,10 +19,10 @@ public class Shader implements Cleanable {
 	private final int handle;
 	private boolean loaded;
 
-	public Shader(String sourcePath) throws ShaderException {
-		checkPath(sourcePath);
-		this.sourcePath = sourcePath;
-		this.isFragment = sourcePath.endsWith(".frag");
+	public Shader(String resourcePath) throws ShaderException {
+		checkPath(resourcePath);
+		this.sourcePath = resourcePath;
+		this.isFragment = resourcePath.endsWith(".frag");
 		this.handle = glCreateShader(isFragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
 	}
 
