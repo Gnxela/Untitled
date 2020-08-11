@@ -57,7 +57,7 @@ public class Main {
 
 		Texture whiteWallTex = new Texture("me/alexng/untitled/textures/white_wall.jpg");
 		whiteWallTex.load();
-		Texture grassTex = new Texture("me/alexng/untitled/textures/grass.jpg");
+		Texture grassTex = new Texture("me/alexng/untitled/textures/grass2.jpg");
 		grassTex.load();
 
 		shaderProgram.use();

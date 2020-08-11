@@ -20,7 +20,7 @@ public class Texture implements Cleanable {
 	private final String resourcePath;
 	private final boolean transparent;
 	private final int handle;
-	private boolean loaded;
+	private boolean loaded, isPacked;
 
 	public Texture(String resourcePath, boolean transparent) {
 		this.resourcePath = resourcePath;
@@ -28,8 +28,15 @@ public class Texture implements Cleanable {
 		this.handle = glGenTextures();
 	}
 
+	public Texture(String resourcePath, boolean transparent, boolean isPacked) {
+		this.resourcePath = resourcePath;
+		this.transparent = transparent;
+		this.isPacked = isPacked;
+		this.handle = glGenTextures();
+	}
+
 	public Texture(String resourcePath) {
-		this(resourcePath, false);
+		this(resourcePath, false, true);
 	}
 
 	public void load() throws TextureException {
@@ -50,12 +57,16 @@ public class Texture implements Cleanable {
 		if (image == null) {
 			throw new TextureException("Could not decode image file " + resourcePath + ": " + STBImage.stbi_failure_reason());
 		}
+		System.out.println(channels.get(0));
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if (isPacked) {
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		}
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
