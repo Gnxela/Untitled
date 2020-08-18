@@ -27,6 +27,11 @@ public class Vec2d implements Vec2<Double> {
     }
 
     @Override
+    public Double dot(Double x, Double y) {
+        return getX() * x + getY() * y;
+    }
+
+    @Override
     public Vec2d div(Double x, Double y) {
         return new Vec2d(this.x / x, this.y / y);
     }
@@ -39,5 +44,15 @@ public class Vec2d implements Vec2<Double> {
     @Override
     public Double length() {
         return Math.sqrt(x * x + y * y);
+    }
+
+    @Override
+    public Double getX() {
+        return null;
+    }
+
+    @Override
+    public Double getY() {
+        return null;
     }
 }
