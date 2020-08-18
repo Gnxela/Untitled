@@ -1,6 +1,8 @@
 package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.ShaderException;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
 
@@ -40,6 +42,12 @@ public class ShaderProgram implements Cleanable {
 
 	public void setInt(String name, int value) {
 		glUniform1i(glGetUniformLocation(handle, name), value);
+	}
+
+	public void setMatrix4f(String name, Matrix4f transform) {
+		try (MemoryStack memoryStack = MemoryStack.stackPush()) {
+			glUniformMatrix4fv(glGetUniformLocation(handle, name), false, transform.get(memoryStack.mallocFloat(16)));
+		}
 	}
 
 	public int getHandle() {

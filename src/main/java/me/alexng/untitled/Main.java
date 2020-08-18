@@ -5,6 +5,7 @@ import me.alexng.untitled.render.ShaderProgram;
 import me.alexng.untitled.render.Texture;
 import me.alexng.untitled.render.Window;
 import me.alexng.untitled.render.exceptions.UntitledException;
+import org.joml.Matrix4f;
 
 import java.io.IOException;
 
@@ -63,6 +64,11 @@ public class Main {
 		shaderProgram.use();
 		shaderProgram.setInt("inputTexture1", 0);
 		shaderProgram.setInt("inputTexture2", 1);
+
+		Matrix4f transform = new Matrix4f().identity()
+				.rotate((float) Math.toRadians(90), 0, 0, 1)
+				.scale(0.5f, 0.5f, 0.5f);
+		shaderProgram.setMatrix4f("transform", transform);
 
 		while (!window.shouldClose()) {
 			window.clear();
