@@ -6,10 +6,11 @@ import me.alexng.untitled.render.Texture;
 import me.alexng.untitled.render.Window;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -17,21 +18,66 @@ import static org.lwjgl.opengl.GL30.*;
 public class Main {
 
 	private static final int FLOAT_WIDTH = 4;
+	private static final float FOV = 45;
 	private static final int WIDTH = 1020, HEIGHT = 800;
 	private static final String TITLE = "Title";
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 		float[] vertexData = {
-				// positions // colors // texture coords
-				0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-				0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-				-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-				-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
+				// positions // texture coords
+				-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+				0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+				0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+				-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+				-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+				0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+				-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+				-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+				-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+				-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+				0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+				0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+				0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+				-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+				-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+				0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+				-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+				-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 		};
 		int[] indexData = {
 				0, 1, 3, // first triangle
 				1, 2, 3 // second triangle
+		};
+		Vector3f[] cubePositions = new Vector3f[]{
+				new Vector3f(0.0f, 0.0f, 0.0f),
+				new Vector3f(2.0f, 5.0f, -15.0f),
+				new Vector3f(-1.5f, -2.2f, -2.5f),
+				new Vector3f(-3.8f, -2.0f, -12.3f),
+				new Vector3f(2.4f, -0.4f, -3.5f),
+				new Vector3f(-1.7f, 3.0f, -7.5f),
+				new Vector3f(1.3f, -2.0f, -2.5f),
+				new Vector3f(1.5f, 2.0f, -2.5f),
+				new Vector3f(1.5f, 0.2f, -1.5f),
+				new Vector3f(-1.3f, 1.0f, -1.5f)
 		};
 
 		ShaderProgram shaderProgram = new ShaderProgram();
@@ -50,12 +96,12 @@ public class Main {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * FLOAT_WIDTH, 0);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
+//		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
+//		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * FLOAT_WIDTH, 6 * FLOAT_WIDTH);
-		glEnableVertexAttribArray(2);
 
 		Texture whiteWallTex = new Texture("me/alexng/untitled/textures/white_wall.jpg");
 		whiteWallTex.load();
@@ -66,19 +112,31 @@ public class Main {
 		shaderProgram.setInt("inputTexture1", 0);
 		shaderProgram.setInt("inputTexture2", 1);
 
+		// TODO: Update view matrix when window changes
+		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100);
+		Vector3f cameraPos = new Vector3f(0.0f, 0.0f, 3.0f);
+		Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
+		Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
+
+		glEnable(GL_DEPTH_TEST);
+
 		while (!window.shouldClose()) {
+			handleInput(window, cameraPos, cameraFront, cameraUp);
 			window.clear();
 			whiteWallTex.bind(0);
 			grassTex.bind(1);
-			shaderProgram.use();
-			Matrix4f translate = new Matrix4f().identity()
-					.scale(0.8f, 0.8f, 0.8f)
-					.rotate((float) glfwGetTime(), 1, 0, 0)
-					.rotate((float) glfwGetTime() / 2, 0, 1, 0)
-					.rotate((float) glfwGetTime() / 4, 0, 0, 1);
-			shaderProgram.setMatrix4f("transform", translate);
 			glBindVertexArray(vao);
-			glDrawElements(GL_TRIANGLES, indexData.length, GL_UNSIGNED_INT, 0);
+			shaderProgram.use();
+			shaderProgram.setMatrix4f("projection", projection);
+			Matrix4f view = new Matrix4f().lookAt(cameraPos, cameraPos.add(cameraFront, new Vector3f()), cameraUp);
+			shaderProgram.setMatrix4f("view", view);
+			for (Vector3f cubePosition : cubePositions) {
+				Matrix4f model = new Matrix4f().identity()
+						.translate(cubePosition)
+						.rotate((float) Math.toRadians(-55) * (float) glfwGetTime(), 0.5f, 1, 0);
+				shaderProgram.setMatrix4f("model", model);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
 			window.update();
 		}
 		shaderProgram.cleanup();
@@ -88,5 +146,20 @@ public class Main {
 		glDeleteBuffers(vbo);
 		glDeleteBuffers(ebo);
 		window.cleanup();
+	}
+
+	private static void handleInput(Window window, Vector3f cameraPos, Vector3f cameraFront, Vector3f cameraUp) {
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS) {
+			cameraPos.add(cameraFront);
+		}
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_S) == GLFW_PRESS) {
+			cameraPos.sub(cameraFront);
+		}
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_A) == GLFW_PRESS) {
+			cameraPos.sub(cameraFront.cross(cameraUp, new Vector3f()).normalize());
+		}
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS) {
+			cameraPos.add(cameraFront.cross(cameraUp, new Vector3f()).normalize());
+		}
 	}
 }

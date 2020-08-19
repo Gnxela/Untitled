@@ -101,4 +101,8 @@ public class Window implements Cleanable {
 	public int getHeight() {
 		return height;
 	}
+
+	public long getHandle() {
+		return windowHandler;
+	}
 }
