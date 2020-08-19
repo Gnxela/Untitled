@@ -60,14 +60,21 @@ public class Main {
 				0, 1, 3, // first triangle
 				1, 2, 3 // second triangle
 		};
+		int length = 50;
+		float spacer = 1.2f;
+		Vector3f[] cubePositions = new Vector3f[length * length];
+		for (int i = 0; i < length; i++) {
+			for (int j = 0; j < length; j++) {
+				cubePositions[i + j * length] = new Vector3f(i * spacer, 0, j * spacer);
+			}
+		}
 
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 
-		Vector3f cubePosition = new Vector3f(0.0f, 0.0f, 0.0f);
-		Vector3f lightPosition = new Vector3f(2.0f, 2.0f, 2.0f);
+		Vector3f lightPosition = new Vector3f(length * spacer / 2, 10, length * spacer / 2);
 
 		// TODO: Update view matrix when window changes
-		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100);
+		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 1000);
 
 		Camera camera = new Camera(new Vector3f(0, 0, 3), 0, -90);
 		window.hideAndCaptureCursor();
@@ -110,17 +117,20 @@ public class Main {
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			cubeVao.bind();
-			defaultShaderProgram.use();
-			Matrix4f model = new Matrix4f().identity()
-					.translate(cubePosition);
-			defaultShaderProgram.setMatrix4f("view", view);
-			defaultShaderProgram.setMatrix4f("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			for (Vector3f cubePosition : cubePositions) {
+				cubeVao.bind();
+				defaultShaderProgram.use();
+				Matrix4f model = new Matrix4f().identity()
+						.translate(cubePosition);
+				defaultShaderProgram.setMatrix4f("view", view);
+				defaultShaderProgram.setMatrix4f("model", model);
+				defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
 
 			lightVao.bind();
 			lightShaderProgram.use();
-			model = new Matrix4f().identity()
+			Matrix4f model = new Matrix4f().identity()
 					.translate(lightPosition);
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);
