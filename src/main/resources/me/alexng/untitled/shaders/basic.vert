@@ -1,12 +1,19 @@
 #version 330 core
 
-in layout (location = 0) vec3 vector;
-in layout (location = 1) vec2 texCoord;
+in layout (location = 0) vec3 position;
+in layout (location = 1) vec3 normal;
+in layout (location = 2) vec2 texCoord;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+out vec3 outNormal;
+out vec3 outFragPos;
+
 void main() {
-    gl_Position = projection * view * model * vec4(vector, 1.0);
+    vec4 position4f = vec4(position, 1);
+    gl_Position = projection * view * model * position4f;
+    outNormal = normal;
+    outFragPos = vec3(model * position4f);
 }

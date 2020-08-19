@@ -2,6 +2,7 @@ package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.ShaderException;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
@@ -61,6 +62,10 @@ public class ShaderProgram implements Cleanable {
 
 	public void setVec3f(String name, float x, float y, float z) {
 		glUniform3f(glGetUniformLocation(handle, name), x, y, z);
+	}
+
+	public void setVec3f(String name, Vector3f v) {
+		setVec3f(name, v.x, v.y, v.z);
 	}
 
 	public void setVec4f(String name, float x, float y, float z, float w) {
