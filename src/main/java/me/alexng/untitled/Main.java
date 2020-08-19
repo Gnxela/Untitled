@@ -117,14 +117,14 @@ public class Main {
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
+			cubeVao.bind();
+			defaultShaderProgram.use();
+			defaultShaderProgram.setMatrix4f("view", view);
+			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
 			for (Vector3f cubePosition : cubePositions) {
-				cubeVao.bind();
-				defaultShaderProgram.use();
 				Matrix4f model = new Matrix4f().identity()
 						.translate(cubePosition);
-				defaultShaderProgram.setMatrix4f("view", view);
 				defaultShaderProgram.setMatrix4f("model", model);
-				defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
 
