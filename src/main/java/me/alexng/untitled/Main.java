@@ -131,7 +131,7 @@ public class Main {
 			for (Vector3f cubePosition : cubePositions) {
 				Matrix4f model = new Matrix4f().identity()
 						.translate(cubePosition)
-						.rotate((float) Math.toRadians(-55) * (float) glfwGetTime(), 0.5f, 1, 0);
+						.rotate((float) Math.toRadians(-45) * (float) glfwGetTime(), new Vector3f(2, 1, 0.5f).normalize());
 				shaderProgram.setMatrix4f("model", model);
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
