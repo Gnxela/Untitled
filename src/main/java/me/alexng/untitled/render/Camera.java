@@ -71,6 +71,12 @@ public class Camera implements GLFWCursorPosCallbackI {
 		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS) {
 			position.add(direction.cross(up, new Vector3f()).normalize());
 		}
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+			position.add(up.mul(0.6f, new Vector3f()));
+		}
+		if (glfwGetKey(window.getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			position.sub(up.mul(0.6f, new Vector3f()));
+		}
 	}
 
 	public Vector3f getPosition() {
