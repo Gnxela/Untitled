@@ -55,6 +55,18 @@ public class ShaderProgram implements Cleanable {
 		glUniformMatrix4fv(glGetUniformLocation(handle, name), false, buffer);
 	}
 
+	public void setVec2f(String name, int x, float y) {
+		glUniform2f(glGetUniformLocation(handle, name), x, y);
+	}
+
+	public void setVec3f(String name, float x, float y, float z) {
+		glUniform3f(glGetUniformLocation(handle, name), x, y, z);
+	}
+
+	public void setVec4f(String name, float x, float y, float z, float w) {
+		glUniform4f(glGetUniformLocation(handle, name), x, y, z, w);
+	}
+
 	public int getHandle() {
 		return handle;
 	}

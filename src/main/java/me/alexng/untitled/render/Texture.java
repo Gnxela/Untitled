@@ -48,7 +48,6 @@ public class Texture implements Cleanable {
 			// stbi_load requires a file system path, NOT a classpath resource path
 			absolutePath = File.separator + absolutePath;
 		}
-		System.out.println("Absolute path: " + absolutePath);
 		stbi_set_flip_vertically_on_load(true);
 		IntBuffer width = BufferUtils.createIntBuffer(1);
 		IntBuffer height = BufferUtils.createIntBuffer(1);
@@ -57,7 +56,6 @@ public class Texture implements Cleanable {
 		if (image == null) {
 			throw new TextureException("Could not decode image file " + resourcePath + ": " + STBImage.stbi_failure_reason());
 		}
-		System.out.println(channels.get(0));
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
