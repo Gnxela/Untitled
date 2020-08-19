@@ -9,6 +9,7 @@ import org.joml.Matrix4f;
 
 import java.io.IOException;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -65,16 +66,17 @@ public class Main {
 		shaderProgram.setInt("inputTexture1", 0);
 		shaderProgram.setInt("inputTexture2", 1);
 
-		Matrix4f transform = new Matrix4f().identity()
-				.rotate((float) Math.toRadians(90), 0, 0, 1)
-				.scale(0.5f, 0.5f, 0.5f);
-		shaderProgram.setMatrix4f("transform", transform);
-
 		while (!window.shouldClose()) {
 			window.clear();
 			whiteWallTex.bind(0);
 			grassTex.bind(1);
 			shaderProgram.use();
+			Matrix4f translate = new Matrix4f().identity()
+					.scale(0.8f, 0.8f, 0.8f)
+					.rotate((float) glfwGetTime(), 1, 0, 0)
+					.rotate((float) glfwGetTime() / 2, 0, 1, 0)
+					.rotate((float) glfwGetTime() / 4, 0, 0, 1);
+			shaderProgram.setMatrix4f("transform", translate);
 			glBindVertexArray(vao);
 			glDrawElements(GL_TRIANGLES, indexData.length, GL_UNSIGNED_INT, 0);
 			window.update();

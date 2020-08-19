@@ -5,6 +5,7 @@ import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -46,8 +47,12 @@ public class ShaderProgram implements Cleanable {
 
 	public void setMatrix4f(String name, Matrix4f transform) {
 		try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-			glUniformMatrix4fv(glGetUniformLocation(handle, name), false, transform.get(memoryStack.mallocFloat(16)));
+			setMatrix4f(name, transform.get(memoryStack.mallocFloat(16)));
 		}
+	}
+
+	public void setMatrix4f(String name, FloatBuffer buffer) {
+		glUniformMatrix4fv(glGetUniformLocation(handle, name), false, buffer);
 	}
 
 	public int getHandle() {
