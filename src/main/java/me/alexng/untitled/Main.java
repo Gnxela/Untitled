@@ -1,16 +1,13 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.render.Shader;
-import me.alexng.untitled.render.ShaderProgram;
-import me.alexng.untitled.render.Texture;
-import me.alexng.untitled.render.Window;
+import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.io.IOException;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -114,21 +111,22 @@ public class Main {
 
 		// TODO: Update view matrix when window changes
 		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 100);
-		Vector3f cameraPos = new Vector3f(0.0f, 0.0f, 3.0f);
-		Vector3f cameraFront = new Vector3f(0.0f, 0.0f, -1.0f);
-		Vector3f cameraUp = new Vector3f(0.0f, 1.0f, 0.0f);
+
+		Camera camera = new Camera(new Vector3f(0, 0, 3), 0, -90);
+		window.hideAndCaptureCursor();
+		window.setCursorPositionCallback(camera);
 
 		glEnable(GL_DEPTH_TEST);
 
 		while (!window.shouldClose()) {
-			handleInput(window, cameraPos, cameraFront, cameraUp);
+			camera.processInput(window);
 			window.clear();
 			whiteWallTex.bind(0);
 			grassTex.bind(1);
 			glBindVertexArray(vao);
 			shaderProgram.use();
 			shaderProgram.setMatrix4f("projection", projection);
-			Matrix4f view = new Matrix4f().lookAt(cameraPos, cameraPos.add(cameraFront, new Vector3f()), cameraUp);
+			Matrix4f view = camera.createViewMatrix();
 			shaderProgram.setMatrix4f("view", view);
 			for (Vector3f cubePosition : cubePositions) {
 				Matrix4f model = new Matrix4f().identity()
@@ -146,20 +144,5 @@ public class Main {
 		glDeleteBuffers(vbo);
 		glDeleteBuffers(ebo);
 		window.cleanup();
-	}
-
-	private static void handleInput(Window window, Vector3f cameraPos, Vector3f cameraFront, Vector3f cameraUp) {
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_W) == GLFW_PRESS) {
-			cameraPos.add(cameraFront);
-		}
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_S) == GLFW_PRESS) {
-			cameraPos.sub(cameraFront);
-		}
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_A) == GLFW_PRESS) {
-			cameraPos.sub(cameraFront.cross(cameraUp, new Vector3f()).normalize());
-		}
-		if (glfwGetKey(window.getHandle(), GLFW_KEY_D) == GLFW_PRESS) {
-			cameraPos.add(cameraFront.cross(cameraUp, new Vector3f()).normalize());
-		}
 	}
 }

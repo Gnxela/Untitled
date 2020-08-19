@@ -1,5 +1,6 @@
 package me.alexng.untitled.render;
 
+import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
@@ -84,6 +85,14 @@ public class Window implements Cleanable {
 
 	public void show() {
 		glfwShowWindow(windowHandler);
+	}
+
+	public void hideAndCaptureCursor() {
+		glfwSetInputMode(windowHandler, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
+	public void setCursorPositionCallback(GLFWCursorPosCallbackI callback) {
+		glfwSetCursorPosCallback(windowHandler, callback);
 	}
 
 	@Override
