@@ -70,14 +70,17 @@ public class Main {
 			defaultShaderProgram.setVec3f("light.position", lightPosition);
 			defaultShaderProgram.setMatrix4f("view", view);
 			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
-			Matrix4f model = new Matrix4f().identity()
-					.scale(0.5f)
-					.translate(modelPosition);
-			defaultShaderProgram.setMatrix4f("model", model);
-			backpack.draw(defaultShaderProgram);
+			for (int i = 0; i < 100; i++) {
+				Matrix4f model = new Matrix4f().identity()
+						.scale(0.5f)
+						.translate(modelPosition)
+						.translate(2 * i, 0, 0);
+				defaultShaderProgram.setMatrix4f("model", model);
+				backpack.draw(defaultShaderProgram);
+			}
 
 			lightShaderProgram.use();
-			model = new Matrix4f().identity()
+			Matrix4f model = new Matrix4f().identity()
 					.translate(lightPosition);
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);

@@ -3,7 +3,6 @@ package me.alexng.untitled.render;
 import me.alexng.untitled.Main;
 import me.alexng.untitled.render.exceptions.ModelException;
 import me.alexng.untitled.render.exceptions.TextureException;
-import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
 
 import java.nio.IntBuffer;
@@ -52,14 +51,15 @@ public class Model {
 		for (Mesh mesh : tempMeshList) {
 			meshes[index++] = mesh;
 		}
-		System.out.println("Loaded " + index + " meshes.");
+		System.out.println("Loaded " + meshes.length + " meshes.");
 	}
 
 	private void processNode(AIScene scene, AINode node, List<Mesh> tempMeshList) throws TextureException {
-		int numMeshes = scene.mNumMeshes();
-		PointerBuffer aiMeshes = scene.mMeshes();
+		int numMeshes = node.mNumMeshes();
 		for (int i = 0; i < numMeshes; i++) {
-			AIMesh aiMesh = AIMesh.create(aiMeshes.get(i));
+			int meshIndex = node.mMeshes().get(i);
+			long meshAddress = scene.mMeshes().get(meshIndex);
+			AIMesh aiMesh = AIMesh.create(meshAddress);
 			tempMeshList.add(processMesh(scene, aiMesh));
 		}
 		for (int i = 0; i < node.mNumChildren(); i++) {
@@ -119,7 +119,6 @@ public class Model {
 			textures[index++] = texture;
 		}
 
-		System.out.println("Loaded mesh: " + indices.length + ":" + vertices.length + ":" + textures.length);
 		return new Mesh(indices, vertices, textures);
 	}
 
