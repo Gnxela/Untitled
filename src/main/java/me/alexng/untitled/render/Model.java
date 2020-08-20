@@ -51,7 +51,7 @@ public class Model {
 		for (Mesh mesh : tempMeshList) {
 			meshes[index++] = mesh;
 		}
-		System.out.println("Loaded " + meshes.length + " meshes.");
+		System.out.println("Loaded: " + absolutePath + ". " + meshes.length + " meshes.");
 	}
 
 	private void processNode(AIScene scene, AINode node, List<Mesh> tempMeshList) throws TextureException {

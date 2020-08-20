@@ -42,6 +42,7 @@ public class Shader implements Cleanable {
 			cleanup();
 			throw new ShaderException(sourcePath + " failed to compile: " + log);
 		}
+		System.out.println("Loaded: " + sourcePath);
 		loaded = true;
 	}
 

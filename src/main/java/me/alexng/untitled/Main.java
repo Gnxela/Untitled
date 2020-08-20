@@ -61,7 +61,7 @@ public class Main {
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			float radius = 10f;
+			float radius = 13f;
 			lightPosition.x = (float) (Math.cos(glfwGetTime()) * radius);
 			lightPosition.y = (float) (Math.cos(glfwGetTime() / 3) * radius);
 			lightPosition.z = (float) (Math.sin(glfwGetTime()) * radius);
@@ -70,18 +70,24 @@ public class Main {
 			defaultShaderProgram.setVec3f("light.position", lightPosition);
 			defaultShaderProgram.setMatrix4f("view", view);
 			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
-			for (int i = 0; i < 100; i++) {
-				Matrix4f model = new Matrix4f().identity()
-						.scale(0.5f)
-						.translate(modelPosition)
-						.translate(2 * i, 0, 0);
-				defaultShaderProgram.setMatrix4f("model", model);
-				backpack.draw(defaultShaderProgram);
+			int numCircles = 10;
+			int numModels = 20;
+			radius = 17;
+			for (int j = 0; j < numCircles; j++) {
+				for (int i = 0; i < numModels; i++) {
+					Matrix4f model = new Matrix4f().identity()
+							.scale(0.5f)
+							.translate((float) Math.cos(Math.PI * 2 / numModels * i) * radius, j * 5 - 4.5f * 5, (float) Math.sin(Math.PI * 2 / numModels * i) * radius)
+							.rotate((float) (-Math.PI * 2 / numModels * i - Math.PI / 2), 0, 1, 0);
+					defaultShaderProgram.setMatrix4f("model", model);
+					backpack.draw(defaultShaderProgram);
+				}
 			}
 
 			lightShaderProgram.use();
 			Matrix4f model = new Matrix4f().identity()
-					.translate(lightPosition);
+					.translate(lightPosition)
+					.scale(0.25f);
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);
 			cubeMesh.draw(lightShaderProgram);
