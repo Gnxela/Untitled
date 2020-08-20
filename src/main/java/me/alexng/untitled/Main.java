@@ -89,6 +89,14 @@ public class Main {
 		defaultShaderProgram.setVec3f("objectColor", 1, 0.5f, 0.3f);
 		defaultShaderProgram.setVec3f("lightColor", 1, 1, 1);
 		defaultShaderProgram.setVec3f("lightPosition", lightPosition);
+		defaultShaderProgram.setVec3f("material.ambient", 1, 0.5f, 0.31f);
+		defaultShaderProgram.setVec3f("material.diffuse", 1, 0.5f, 0.31f);
+		defaultShaderProgram.setVec3f("material.specular", 0.5f, 0.5f, 0.5f);
+		defaultShaderProgram.setFloat("material.shininess", 32);
+		defaultShaderProgram.setVec3f("light.position", lightPosition);
+		defaultShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
+		defaultShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+		defaultShaderProgram.setVec3f("light.specular", 1, 1, 1);
 
 		VertexArrayObject cubeVao = new VertexArrayObject();
 		cubeVao.bind();

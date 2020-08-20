@@ -46,6 +46,10 @@ public class ShaderProgram implements Cleanable {
 		glUniform1i(glGetUniformLocation(handle, name), value);
 	}
 
+	public void setFloat(String name, float value) {
+		glUniform1f(glGetUniformLocation(handle, name), value);
+	}
+
 	public void setMatrix4f(String name, Matrix4f transform) {
 		try (MemoryStack memoryStack = MemoryStack.stackPush()) {
 			setMatrix4f(name, transform.get(memoryStack.mallocFloat(16)));
