@@ -86,6 +86,7 @@ public class Texture implements Cleanable {
 	@Override
 	public void cleanup() {
 		glDeleteTextures(handle);
+		loaded = false;
 	}
 
 	public int getHandle() {
