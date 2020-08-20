@@ -1,6 +1,5 @@
 package me.alexng.untitled.render;
 
-import me.alexng.untitled.Main;
 import me.alexng.untitled.render.exceptions.TextureException;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -9,6 +8,7 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -17,19 +17,30 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture implements Cleanable {
 
+	private final String absolutePath;
 
 	private final boolean transparent, isPacked;
-	private final String resourcePath;
-	private final Type type;
-	private final int handle;
-	private boolean loaded;
 
-	public Texture(String resourcePath, Type type, boolean transparent, boolean isPacked) {
-		this.resourcePath = resourcePath;
+	public Texture(String absolutePath, Type type, boolean transparent, boolean isPacked) {
+		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
+			// stbi_load requires a file system path, NOT a classpath resource path
+			this.absolutePath = File.separator + absolutePath;
+		} else {
+			this.absolutePath = absolutePath;
+		}
 		this.type = type;
 		this.transparent = transparent;
 		this.isPacked = isPacked;
 		this.handle = glGenTextures();
+	}
+
+	private final Type type;
+	private final int handle;
+
+	private boolean loaded;
+
+	public Texture(String resourcePath, Type type) {
+		this(resourcePath, type, false, false);
 	}
 
 	public Texture(String resourcePath, Type type, boolean transparent) {
@@ -37,21 +48,16 @@ public class Texture implements Cleanable {
 	}
 
 	public Texture(String resourcePath, boolean transparent) {
-		this(resourcePath, Type.NORMAL, transparent, false);
+		this(resourcePath, Type.NONE, transparent, false);
 	}
 
 	public Texture(String resourcePath) {
-		this(resourcePath, Type.NORMAL, false, true);
+		this(resourcePath, Type.NONE, false, true);
 	}
 
 	public void load() throws TextureException {
 		if (loaded) {
 			return;
-		}
-		String absolutePath = Main.class.getClassLoader().getResource(resourcePath).getPath().substring(1);
-		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
-			// stbi_load requires a file system path, NOT a classpath resource path
-			absolutePath = File.separator + absolutePath;
 		}
 		stbi_set_flip_vertically_on_load(true);
 		IntBuffer width = BufferUtils.createIntBuffer(1);
@@ -59,7 +65,7 @@ public class Texture implements Cleanable {
 		IntBuffer channels = BufferUtils.createIntBuffer(1);
 		ByteBuffer image = stbi_load(absolutePath, width, height, channels, 0);
 		if (image == null) {
-			throw new TextureException("Could not decode image file " + resourcePath + ": " + STBImage.stbi_failure_reason());
+			throw new TextureException("Could not decode image file " + absolutePath + ": " + STBImage.stbi_failure_reason());
 		}
 		bind();
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -77,6 +83,22 @@ public class Texture implements Cleanable {
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
 		loaded = true;
+	}
+
+	public enum Type {
+		NONE(aiTextureType_NONE),
+		DIFFUSE(aiTextureType_DIFFUSE),
+		SPECULAR(aiTextureType_SPECULAR);
+
+		private int assimpType;
+
+		Type(int assimpType) {
+			this.assimpType = assimpType;
+		}
+
+		public int getAssimpType() {
+			return assimpType;
+		}
 	}
 
 	public void bind(int textureUnit) {
@@ -99,12 +121,6 @@ public class Texture implements Cleanable {
 	public void cleanup() {
 		glDeleteTextures(handle);
 		loaded = false;
-	}
-
-	public enum Type {
-		NORMAL,
-		DIFFUSE,
-		SPECULAR;
 	}
 
 	public int getHandle() {

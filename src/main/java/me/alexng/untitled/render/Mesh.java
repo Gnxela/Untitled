@@ -7,6 +7,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Mesh implements Cleanable {
 
+	public static final int STRIDE = 8;
+
 	private final int[] indices;
 	private final float[] vertices; // stride: 8. vec3 position, vec3 normal, vec2 texCoord
 	private final Texture[] textures;
@@ -24,9 +26,9 @@ public class Mesh implements Cleanable {
 		vao.bind();
 		vao.getVbo().bindData(vertices);
 		vao.getEbo().bindData(indices);
-		vao.addAttribPointer(0, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 0);
-		vao.addAttribPointer(1, 3, GL_FLOAT, false, 8 * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
-		vao.addAttribPointer(2, 2, GL_FLOAT, false, 8 * FLOAT_WIDTH, 6 * FLOAT_WIDTH);
+		vao.addAttribPointer(0, 3, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 0);
+		vao.addAttribPointer(1, 3, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
+		vao.addAttribPointer(2, 2, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 6 * FLOAT_WIDTH);
 		VertexArrayObject.unbind();
 	}
 
