@@ -39,7 +39,7 @@ public class Model {
 		// aiProcess_GenNormals, aiProcess_SplitLargeMeshes, aiProcess_OptimizeMeshes
 		String absolutePath = Main.class.getClassLoader().getResource(resourcePath).getPath().substring(1);
 		directory = absolutePath.substring(0, absolutePath.lastIndexOf("/")) + '/';
-		AIScene scene = aiImportFile(absolutePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+		AIScene scene = aiImportFile(absolutePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes | aiProcess_GenNormals);
 		if (scene == null /*|| (scene.mFlags() & AI_SCENE_FLAGS_INCOMPLETE) == 0*/ || scene.mRootNode() == null) {
 			throw new ModelException("Failed to load model " + resourcePath + ". Scene: " + scene);
 		}
