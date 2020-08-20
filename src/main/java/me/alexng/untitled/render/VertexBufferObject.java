@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL15.*;
 public class VertexBufferObject implements Cleanable {
 
 	private final int handle;
-	private final int target;
+	private final int target; // GL_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER
 
 	public VertexBufferObject(int target) {
 		this.target = target;
@@ -22,6 +22,7 @@ public class VertexBufferObject implements Cleanable {
 	}
 
 	public void bindData(int[] data) {
+		bind();
 		glBufferData(target, data, GL_STATIC_DRAW);
 	}
 

@@ -17,26 +17,31 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture implements Cleanable {
 
+
+	private final boolean transparent, isPacked;
 	private final String resourcePath;
-	private final boolean transparent;
+	private final Type type;
 	private final int handle;
-	private boolean loaded, isPacked;
+	private boolean loaded;
 
-	public Texture(String resourcePath, boolean transparent) {
+	public Texture(String resourcePath, Type type, boolean transparent, boolean isPacked) {
 		this.resourcePath = resourcePath;
-		this.transparent = transparent;
-		this.handle = glGenTextures();
-	}
-
-	public Texture(String resourcePath, boolean transparent, boolean isPacked) {
-		this.resourcePath = resourcePath;
+		this.type = type;
 		this.transparent = transparent;
 		this.isPacked = isPacked;
 		this.handle = glGenTextures();
 	}
 
+	public Texture(String resourcePath, Type type, boolean transparent) {
+		this(resourcePath, type, transparent, false);
+	}
+
+	public Texture(String resourcePath, boolean transparent) {
+		this(resourcePath, Type.NORMAL, transparent, false);
+	}
+
 	public Texture(String resourcePath) {
-		this(resourcePath, false, true);
+		this(resourcePath, Type.NORMAL, false, true);
 	}
 
 	public void load() throws TextureException {
@@ -65,18 +70,25 @@ public class Texture implements Cleanable {
 		if (isPacked) {
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
+		if (!transparent && channels.get(0) > 3) {
+			System.err.println("Loaded texture with more than three channels but not transparent");
+		}
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
 		loaded = true;
 	}
 
-	public void bind(int textureUnit) throws TextureException {
+	public void bind(int textureUnit) {
 		if (textureUnit < 0 || textureUnit > 31) {
 			throw new IllegalArgumentException("Invalid texture unit: " + textureUnit);
 		}
 		glActiveTexture(GL_TEXTURE0 + textureUnit);
 		glBindTexture(GL_TEXTURE_2D, handle);
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public void bind() throws TextureException {
@@ -87,6 +99,12 @@ public class Texture implements Cleanable {
 	public void cleanup() {
 		glDeleteTextures(handle);
 		loaded = false;
+	}
+
+	public enum Type {
+		NORMAL,
+		DIFFUSE,
+		SPECULAR;
 	}
 
 	public int getHandle() {

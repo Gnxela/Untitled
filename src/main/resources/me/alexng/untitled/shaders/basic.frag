@@ -1,8 +1,8 @@
 #version 330 core
 
 struct Material {
-    sampler2D diffuse;
-    sampler2D specular;
+    sampler2D texture_diffuse1;
+    sampler2D texture_specular1;
     float shininess;
 };
 
@@ -25,8 +25,8 @@ out vec4 FragColor;
 
 void main() {
     vec3 normal = normalize(outNormal);
-    vec3 diffuseSample = vec3(texture(material.diffuse, outTexCoord));
-    vec3 specularSample = vec3(texture(material.specular, outTexCoord));
+    vec3 diffuseSample = vec3(texture(material.texture_diffuse1, outTexCoord));
+    vec3 specularSample = vec3(texture(material.texture_specular1, outTexCoord));
 
     vec3 ambient = light.ambient * diffuseSample;
 
