@@ -1,8 +1,8 @@
 package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.TextureException;
+import me.alexng.untitled.render.util.AttributeBuilder;
 
-import static me.alexng.untitled.render.UntitledConstants.FLOAT_WIDTH;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Mesh implements Cleanable {
@@ -14,21 +14,23 @@ public class Mesh implements Cleanable {
 	private final Texture[] textures;
 	private VertexArrayObject vao;
 
-	public Mesh(int[] indices, float[] vertices, Texture[] textures) {
+	public Mesh(int[] indices, float[] vertices, Texture[] textures, AttributeBuilder attributeBuilder) {
 		this.indices = indices;
 		this.vertices = vertices;
 		this.textures = textures;
-		setupMesh();
+		setupMesh(attributeBuilder);
 	}
 
-	private void setupMesh() {
+	public Mesh(int[] indices, float[] vertices, Texture[] textures) {
+		this(indices, vertices, textures, AttributeBuilder.DEFAULT_ATTRIBUTE_BUILDER);
+	}
+
+	private void setupMesh(AttributeBuilder attributeBuilder) {
 		vao = new VertexArrayObject();
 		vao.bind();
 		vao.getVbo().bindData(vertices);
 		vao.getEbo().bindData(indices);
-		vao.addAttribPointer(0, 3, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 0);
-		vao.addAttribPointer(1, 3, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 3 * FLOAT_WIDTH);
-		vao.addAttribPointer(2, 2, GL_FLOAT, false, STRIDE * FLOAT_WIDTH, 6 * FLOAT_WIDTH);
+		attributeBuilder.setAttributes(vao);
 		VertexArrayObject.unbind();
 	}
 
@@ -67,4 +69,6 @@ public class Mesh implements Cleanable {
 	public VertexArrayObject getVao() {
 		return vao;
 	}
+
+
 }

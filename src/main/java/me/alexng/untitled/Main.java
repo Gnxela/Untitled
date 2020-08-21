@@ -1,5 +1,6 @@
 package me.alexng.untitled;
 
+import me.alexng.untitled.generate.FlatMeshGenerator;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.CubeData;
@@ -49,6 +50,8 @@ public class Main {
 		Model backpack = new Model("me/alexng/untitled/temp/backpack.obj");
 		backpack.load();
 
+		Mesh flatMesh = FlatMeshGenerator.generateFlatMesh(10, 10, 5, 5);
+
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		window.show();
@@ -70,15 +73,15 @@ public class Main {
 			defaultShaderProgram.setVec3f("light.position", lightPosition);
 			defaultShaderProgram.setMatrix4f("view", view);
 			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
-			int numCircles = 10;
+			int numCircles = 3;
 			int numModels = 20;
-			radius = 17;
+			radius = 8;
 			for (int j = 0; j < numCircles; j++) {
 				for (int i = 0; i < numModels; i++) {
 					Matrix4f model = new Matrix4f().identity()
-							.scale(0.5f)
-							.translate((float) Math.cos(Math.PI * 2 / numModels * i) * radius, j * 5 - 4.5f * 5, (float) Math.sin(Math.PI * 2 / numModels * i) * radius)
-							.rotate((float) (-Math.PI * 2 / numModels * i - Math.PI / 2), 0, 1, 0);
+							.translate((float) Math.cos(Math.PI * 2 / numModels * i) * radius, j * 3 - (numCircles - 1) / 2f * 3, (float) Math.sin(Math.PI * 2 / numModels * i) * radius)
+							.rotate((float) (-Math.PI * 2 / numModels * i - Math.PI / 2), 0, 1, 0)
+							.scale(0.5f);
 					defaultShaderProgram.setMatrix4f("model", model);
 					backpack.draw(defaultShaderProgram);
 				}
@@ -91,6 +94,8 @@ public class Main {
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);
 			cubeMesh.draw(lightShaderProgram);
+			lightShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
+			flatMesh.draw(lightShaderProgram);
 
 			window.update();
 		}
