@@ -11,8 +11,7 @@ import java.io.IOException;
 
 import static me.alexng.untitled.render.UntitledConstants.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
 
@@ -20,7 +19,6 @@ public class Main {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 
 		Vector3f lightPosition = new Vector3f(0, 0, -2);
-		Vector3f modelPosition = new Vector3f(0, 0, 0);
 
 		// TODO: Update view matrix when window changes
 		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 1000);
@@ -56,16 +54,14 @@ public class Main {
 		terrainShaderProgram.linkProgram();
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
-		terrainShaderProgram.setVec3f("terrainColor", 0.2f, 1, 0.3f);
+		terrainShaderProgram.setVec3f("terrainColor", 0.05f, 0.2f, 0f);
 
 		Mesh flatMesh = FlatMeshGenerator.generateFlatMesh(40, 40, 5, 5);
-		Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 10);
-		// TODO: Below causes null pointer.
-		// Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 20);
+		Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 20);
 		Mesh flatMesh3 = FlatMeshGenerator.generateFlatMesh(40, 40, 20, 20);
 		Mesh flatMesh4 = FlatMeshGenerator.generateFlatMesh(40, 40, 40, 40);
 
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		window.show();
 		window.hideAndCaptureCursor();
