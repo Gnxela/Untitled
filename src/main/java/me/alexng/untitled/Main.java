@@ -50,9 +50,22 @@ public class Main {
 		Model backpack = new Model("me/alexng/untitled/temp/backpack.obj");
 		backpack.load();
 
-		Mesh flatMesh = FlatMeshGenerator.generateFlatMesh(10, 10, 5, 5);
+		ShaderProgram terrainShaderProgram = new ShaderProgram();
+		terrainShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/terrain.frag"));
+		terrainShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/terrain.vert"));
+		terrainShaderProgram.linkProgram();
+		terrainShaderProgram.use();
+		terrainShaderProgram.setMatrix4f("projection", projection);
+		terrainShaderProgram.setVec3f("terrainColor", 0.2f, 1, 0.3f);
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		Mesh flatMesh = FlatMeshGenerator.generateFlatMesh(40, 40, 5, 5);
+		Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 10);
+		// TODO: Below causes null pointer.
+		// Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 20);
+		Mesh flatMesh3 = FlatMeshGenerator.generateFlatMesh(40, 40, 20, 20);
+		Mesh flatMesh4 = FlatMeshGenerator.generateFlatMesh(40, 40, 40, 40);
+
+		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		window.show();
 		window.hideAndCaptureCursor();
@@ -94,8 +107,17 @@ public class Main {
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);
 			cubeMesh.draw(lightShaderProgram);
-			lightShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
+
+			terrainShaderProgram.use();
+			terrainShaderProgram.setMatrix4f("view", view);
+			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
 			flatMesh.draw(lightShaderProgram);
+			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(50, 0, 0));
+			flatMesh2.draw(lightShaderProgram);
+			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(90, 0, 0));
+			flatMesh3.draw(lightShaderProgram);
+			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(130, 0, 0));
+			flatMesh4.draw(lightShaderProgram);
 
 			window.update();
 		}
