@@ -1,7 +1,7 @@
 package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.TextureException;
-import me.alexng.untitled.render.util.AttributeBuilder;
+import me.alexng.untitled.render.util.AttributeStore;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,23 +14,23 @@ public class Mesh implements Cleanable {
 	private final Texture[] textures;
 	private VertexArrayObject vao;
 
-	public Mesh(int[] indices, float[] vertices, Texture[] textures, AttributeBuilder attributeBuilder) {
+	public Mesh(int[] indices, float[] vertices, Texture[] textures, AttributeStore attributeStore) {
 		this.indices = indices;
 		this.vertices = vertices;
 		this.textures = textures;
-		setupMesh(attributeBuilder);
+		setupMesh(attributeStore);
 	}
 
 	public Mesh(int[] indices, float[] vertices, Texture[] textures) {
-		this(indices, vertices, textures, AttributeBuilder.DEFAULT_ATTRIBUTE_BUILDER);
+		this(indices, vertices, textures, AttributeStore.VEC3F_VEC3F_VEC2F);
 	}
 
-	private void setupMesh(AttributeBuilder attributeBuilder) {
+	private void setupMesh(AttributeStore attributeStore) {
 		vao = new VertexArrayObject();
 		vao.bind();
 		vao.getVbo().bindData(vertices);
 		vao.getEbo().bindData(indices);
-		attributeBuilder.setAttributes(vao);
+		attributeStore.setAttributes(vao);
 		VertexArrayObject.unbind();
 	}
 
