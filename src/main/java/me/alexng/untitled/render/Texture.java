@@ -17,9 +17,28 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture implements Cleanable {
 
-	private final String absolutePath;
+	public enum Type {
+		NONE(aiTextureType_NONE),
+		DIFFUSE(aiTextureType_DIFFUSE),
+		SPECULAR(aiTextureType_SPECULAR);
 
+		private int assimpType;
+
+		Type(int assimpType) {
+			this.assimpType = assimpType;
+		}
+
+		public int getAssimpType() {
+			return assimpType;
+		}
+	}
+
+	private final String absolutePath;
 	private final boolean transparent, isPacked;
+	private final Type type;
+	private final int handle;
+
+	private boolean loaded;
 
 	public Texture(String absolutePath, Type type, boolean transparent, boolean isPacked) {
 		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
@@ -33,11 +52,6 @@ public class Texture implements Cleanable {
 		this.isPacked = isPacked;
 		this.handle = glGenTextures();
 	}
-
-	private final Type type;
-	private final int handle;
-
-	private boolean loaded;
 
 	public Texture(String resourcePath, Type type) {
 		this(resourcePath, type, false, false);
@@ -83,22 +97,6 @@ public class Texture implements Cleanable {
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
 		loaded = true;
-	}
-
-	public enum Type {
-		NONE(aiTextureType_NONE),
-		DIFFUSE(aiTextureType_DIFFUSE),
-		SPECULAR(aiTextureType_SPECULAR);
-
-		private int assimpType;
-
-		Type(int assimpType) {
-			this.assimpType = assimpType;
-		}
-
-		public int getAssimpType() {
-			return assimpType;
-		}
 	}
 
 	public void bind(int textureUnit) {
