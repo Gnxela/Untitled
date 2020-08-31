@@ -33,8 +33,8 @@ public class Texture implements Cleanable {
 		}
 
 	}
-	private final String absolutePath;
 
+	private final String absolutePath;
 	private final boolean transparent, isPacked;
 	private final Type type;
 	private final int handle;
