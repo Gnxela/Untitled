@@ -62,6 +62,8 @@ public class Window implements Cleanable {
 		createCapabilities();
 		// TODO: Do we want this?
 		glfwSwapInterval(1);
+		final float grey = 0.05f;
+		glClearColor(grey, grey, grey, 1f);
 		glViewport(0, 0, width, height);
 		return new Window(windowHandler, width, height);
 	}
