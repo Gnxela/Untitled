@@ -1,8 +1,10 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.generate.FlatMeshGenerator;
+import me.alexng.untitled.generate.MapData;
+import me.alexng.untitled.generate.TerrainGenerator;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
+import me.alexng.untitled.render.util.AttributeStore;
 import me.alexng.untitled.render.util.CubeData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -11,7 +13,8 @@ import java.io.IOException;
 
 import static me.alexng.untitled.render.UntitledConstants.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 public class Main {
 
@@ -56,12 +59,25 @@ public class Main {
 		terrainShaderProgram.setMatrix4f("projection", projection);
 		terrainShaderProgram.setVec3f("terrainColor", 0.05f, 0.2f, 0f);
 
-		Mesh flatMesh = FlatMeshGenerator.generateFlatMesh(40, 40, 5, 5);
-		Mesh flatMesh2 = FlatMeshGenerator.generateFlatMesh(40, 40, 10, 20);
-		Mesh flatMesh3 = FlatMeshGenerator.generateFlatMesh(40, 40, 20, 20);
-		Mesh flatMesh4 = FlatMeshGenerator.generateFlatMesh(40, 40, 40, 40);
+		Mesh flatMesh = TerrainGenerator.generateFlatMesh(40, 40, 5, 5);
+		Mesh flatMesh2 = TerrainGenerator.generateFlatMesh(40, 40, 10, 20);
+		Mesh flatMesh3 = TerrainGenerator.generateFlatMesh(40, 40, 20, 20);
+		Mesh flatMesh4 = TerrainGenerator.generateFlatMesh(40, 40, 40, 40);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		ShaderProgram texturedShaderProgram = new ShaderProgram();
+		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.frag"));
+		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.vert"));
+		texturedShaderProgram.linkProgram();
+		texturedShaderProgram.use();
+		texturedShaderProgram.setMatrix4f("projection", projection);
+
+		MapData mapData = new MapData(100, 100);
+		Texture mapTexture = mapData.toTextureRGB(Texture.Type.DIFFUSE);
+		float x = -10, dx = 5;
+		float z = -10, dz = 5;
+		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{mapTexture}, AttributeStore.VEC3F_VEC2F);
+
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		window.show();
 		window.hideAndCaptureCursor();
@@ -107,13 +123,18 @@ public class Main {
 			terrainShaderProgram.use();
 			terrainShaderProgram.setMatrix4f("view", view);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
-			flatMesh.draw(lightShaderProgram);
+			flatMesh.draw(terrainShaderProgram);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(50, 0, 0));
-			flatMesh2.draw(lightShaderProgram);
+			flatMesh2.draw(terrainShaderProgram);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(90, 0, 0));
-			flatMesh3.draw(lightShaderProgram);
+			flatMesh3.draw(terrainShaderProgram);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(130, 0, 0));
-			flatMesh4.draw(lightShaderProgram);
+			flatMesh4.draw(terrainShaderProgram);
+
+			texturedShaderProgram.use();
+			texturedShaderProgram.setMatrix4f("view", view);
+			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
+			texMesh.draw(texturedShaderProgram);
 
 			window.update();
 		}

@@ -22,6 +22,11 @@ public class AttributeStore {
 			new Attribute(1, 3, GL_FLOAT, false, 6 * FLOAT_WIDTH, 3 * FLOAT_WIDTH)
 	);
 
+	public static final AttributeStore VEC3F_VEC2F = new AttributeStore(
+			new Attribute(0, 3, GL_FLOAT, false, 5 * FLOAT_WIDTH, 0),
+			new Attribute(1, 2, GL_FLOAT, false, 5 * FLOAT_WIDTH, 3 * FLOAT_WIDTH)
+	);
+
 	private final List<Attribute> attributes;
 
 	public AttributeStore(Attribute... attributes) {

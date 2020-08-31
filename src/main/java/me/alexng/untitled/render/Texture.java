@@ -22,7 +22,7 @@ public class Texture implements Cleanable {
 		DIFFUSE(aiTextureType_DIFFUSE),
 		SPECULAR(aiTextureType_SPECULAR);
 
-		private int assimpType;
+		private final int assimpType;
 
 		Type(int assimpType) {
 			this.assimpType = assimpType;
@@ -31,13 +31,13 @@ public class Texture implements Cleanable {
 		public int getAssimpType() {
 			return assimpType;
 		}
-	}
 
+	}
 	private final String absolutePath;
+
 	private final boolean transparent, isPacked;
 	private final Type type;
 	private final int handle;
-
 	private boolean loaded;
 
 	public Texture(String absolutePath, Type type, boolean transparent, boolean isPacked) {
@@ -69,6 +69,14 @@ public class Texture implements Cleanable {
 		this(resourcePath, Type.NONE, false, true);
 	}
 
+	public Texture(Type type) {
+		this(null, type, false, false);
+	}
+
+	public Texture() {
+		this(null, Type.NONE, false, false);
+	}
+
 	public void load() throws TextureException {
 		if (loaded) {
 			return;
@@ -82,6 +90,7 @@ public class Texture implements Cleanable {
 			throw new TextureException("Could not decode image file " + absolutePath + ": " + STBImage.stbi_failure_reason());
 		}
 		bind();
+		// TODO: Do we need to assign the below params every load?
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
@@ -93,10 +102,20 @@ public class Texture implements Cleanable {
 		if (!transparent && channels.get(0) > 3) {
 			System.err.println("Loaded texture with more than three channels but not transparent");
 		}
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image);
+		load(width.get(0), height.get(0), image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(image);
 		loaded = true;
+	}
+
+	public void load(int width, int height, ByteBuffer data) {
+		bind();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+
+	public void load(int width, int height, float[] data) {
+		bind();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
 	}
 
 	public void bind(int textureUnit) {
@@ -111,7 +130,7 @@ public class Texture implements Cleanable {
 		return type;
 	}
 
-	public void bind() throws TextureException {
+	public void bind() {
 		bind(0);
 	}
 
