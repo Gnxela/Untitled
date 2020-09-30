@@ -53,20 +53,20 @@ public class Texture implements Cleanable {
 		this.handle = glGenTextures();
 	}
 
-	public Texture(String resourcePath, Type type) {
-		this(resourcePath, type, false, false);
+	public Texture(String absolutePath, Type type) {
+		this(absolutePath, type, false, false);
 	}
 
-	public Texture(String resourcePath, Type type, boolean transparent) {
-		this(resourcePath, type, transparent, false);
+	public Texture(String absolutePath, Type type, boolean transparent) {
+		this(absolutePath, type, transparent, false);
 	}
 
-	public Texture(String resourcePath, boolean transparent) {
-		this(resourcePath, Type.NONE, transparent, false);
+	public Texture(String absolutePath, boolean transparent) {
+		this(absolutePath, Type.NONE, transparent, false);
 	}
 
-	public Texture(String resourcePath) {
-		this(resourcePath, Type.NONE, false, true);
+	public Texture(String absolutePath) {
+		this(absolutePath, Type.NONE, false, true);
 	}
 
 	public Texture(Type type) {
