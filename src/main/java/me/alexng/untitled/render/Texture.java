@@ -94,6 +94,7 @@ public class Texture implements Cleanable {
 			System.err.println("Loaded texture with more than three channels but not transparent");
 		}
 		load(width.get(0), height.get(0), image);
+		System.out.println("Loaded: " + absolutePath);
 		stbi_image_free(image);
 	}
 
@@ -111,7 +112,6 @@ public class Texture implements Cleanable {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		loaded = true;
-		System.out.println("Loaded: " + absolutePath);
 	}
 
 	public void bind(int textureUnit) {
