@@ -64,7 +64,6 @@
             <artifactId>guice</artifactId>
             <version>4.2.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
@@ -119,7 +118,6 @@
             <artifactId>lwjgl-stb</artifactId>
             <classifier>natives-windows</classifier>
         </dependency>
-
         <dependency>
             <groupId>org.joml</groupId>
             <artifactId>joml</artifactId>
