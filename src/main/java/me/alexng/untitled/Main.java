@@ -38,7 +38,7 @@ public class Main {
 		defaultShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
 		defaultShaderProgram.setVec3f("light.specular", 1, 1, 1);
 
-		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{});
+		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F);
 
 		ShaderProgram lightShaderProgram = new ShaderProgram();
 		lightShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/light.vert"));
