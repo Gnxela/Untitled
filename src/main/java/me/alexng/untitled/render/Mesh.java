@@ -10,7 +10,7 @@ public class Mesh implements Cleanable {
 	public static final int STRIDE = 8;
 
 	private final int[] indices;
-	private final float[] vertices; // stride: 8. vec3 position, vec3 normal, vec2 texCoord
+	private final float[] vertices;
 	private final Texture[] textures;
 	private VertexArrayObject vao;
 
@@ -18,6 +18,7 @@ public class Mesh implements Cleanable {
 		this.indices = indices;
 		this.vertices = vertices;
 		this.textures = textures;
+		verifyData(vertices, attributeStore);
 		setupMesh(attributeStore);
 	}
 
@@ -28,6 +29,12 @@ public class Mesh implements Cleanable {
 		vao.getEbo().bindData(indices);
 		attributeStore.setAttributes(vao);
 		VertexArrayObject.unbind();
+	}
+
+	private void verifyData(float[] vertices, AttributeStore attributeStore) {
+		if (vertices.length % attributeStore.getTotalSize() != 0) {
+			throw new IllegalArgumentException("Vertex data did not match attributes");
+		}
 	}
 
 	public void draw(ShaderProgram shaderProgram) throws TextureException {

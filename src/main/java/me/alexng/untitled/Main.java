@@ -6,7 +6,6 @@ import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
 import me.alexng.untitled.render.util.CubeData;
-import me.alexng.untitled.render.util.FileUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -74,12 +73,9 @@ public class Main {
 
 		MapData mapData = new MapData(100, 100);
 		Texture mapTexture = mapData.toTextureRGB(Texture.Type.DIFFUSE);
-		Texture tempTexture = new Texture(FileUtil.getAbsolutePath("me/alexng/untitled/temp/diffuse.jpg"), Texture.Type.DIFFUSE);
-		tempTexture.load();
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
-		//Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 1, x + dx, 0, z, 1, 1, x, 0, z + dz, 1, 0, x + dx, 0, z + dz, 0, 0}, new Texture[]{tempTexture}, AttributeStore.VEC3F_VEC2F);
-		Mesh texMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{tempTexture}, AttributeStore.VEC3F_VEC3F_VEC2F);
+		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 1, x + dx, 0, z, 1, 1, x, 0, z + dz, 1, 0, x + dx, 0, z + dz, 0, 0}, new Texture[]{mapTexture}, AttributeStore.VEC3F_VEC2F);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

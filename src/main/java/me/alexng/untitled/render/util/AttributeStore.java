@@ -2,10 +2,6 @@ package me.alexng.untitled.render.util;
 
 import me.alexng.untitled.render.VertexArrayObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static me.alexng.untitled.render.UntitledConstants.FLOAT_WIDTH;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 
@@ -27,20 +23,24 @@ public class AttributeStore {
 			new Attribute(1, 2, GL_FLOAT, false, 5 * FLOAT_WIDTH, 3 * FLOAT_WIDTH)
 	);
 
-	private final List<Attribute> attributes;
+	private final Attribute[] attributes;
 
 	public AttributeStore(Attribute... attributes) {
-		this.attributes = new ArrayList<>(Arrays.asList(attributes));
-	}
-
-	public void addAttribute(int index, int size, int type, boolean normalized, int stride, int offset) {
-		attributes.add(new Attribute(index, size, type, normalized, stride, offset));
+		this.attributes = attributes;
 	}
 
 	public void setAttributes(VertexArrayObject vao) {
 		for (Attribute a : attributes) {
 			vao.addAttribPointer(a.index, a.size, a.type, a.normalized, a.stride, a.offset);
 		}
+	}
+
+	public int getTotalSize() {
+		int size = 0;
+		for (Attribute attribute : attributes) {
+			size += attribute.size;
+		}
+		return size;
 	}
 
 	public static class Attribute {

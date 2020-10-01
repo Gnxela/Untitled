@@ -134,7 +134,6 @@ public class Model {
 			}
 			Texture texture = new Texture(texturePath, type);
 			texture.load();
-			System.out.println("Loaded: " + texturePath);
 			loadedTextures.add(texturePath);
 			tempTextureList.add(texture);
 		}

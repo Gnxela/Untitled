@@ -1,7 +1,7 @@
 #version 330 core
 
 in layout (location = 0) vec3 position;
-in layout (location = 0) vec2 textureCoords;
+in layout (location = 1) vec2 textureCoords;
 
 uniform mat4 model;
 uniform mat4 view;

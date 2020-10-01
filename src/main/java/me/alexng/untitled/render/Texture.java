@@ -41,7 +41,8 @@ public class Texture implements Cleanable {
 	private boolean loaded;
 
 	public Texture(String absolutePath, Type type, boolean transparent, boolean isPacked) {
-		if (!System.getProperty("os.name").contains("Windows")) { // TODO Language/region agnostic value for 'Windows' ?
+		if (absolutePath != null && !System.getProperty("os.name").contains("Windows")) {
+			// TODO Language/region agnostic value for 'Windows' ?
 			// stbi_load requires a file system path, NOT a classpath resource path
 			this.absolutePath = File.separator + absolutePath;
 		} else {
@@ -89,6 +90,14 @@ public class Texture implements Cleanable {
 		if (image == null) {
 			throw new TextureException("Could not decode image file " + absolutePath + ": " + STBImage.stbi_failure_reason());
 		}
+		if (!transparent && channels.get(0) > 3) {
+			System.err.println("Loaded texture with more than three channels but not transparent");
+		}
+		load(width.get(0), height.get(0), image);
+		stbi_image_free(image);
+	}
+
+	public void load(int width, int height, ByteBuffer data) {
 		bind();
 		// TODO: Do we need to assign the below params every load?
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -99,23 +108,10 @@ public class Texture implements Cleanable {
 		if (isPacked) {
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
-		if (!transparent && channels.get(0) > 3) {
-			System.err.println("Loaded texture with more than three channels but not transparent");
-		}
-		load(width.get(0), height.get(0), image);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		stbi_image_free(image);
 		loaded = true;
-	}
-
-	public void load(int width, int height, ByteBuffer data) {
-		bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
-	}
-
-	public void load(int width, int height, float[] data) {
-		bind();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, transparent ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
+		System.out.println("Loaded: " + absolutePath);
 	}
 
 	public void bind(int textureUnit) {
