@@ -1,12 +1,11 @@
 #version 330 core
 
 in vec3 outFragPos;
-
-uniform vec3 terrainColor;
+in vec3 outColor;
 
 out vec4 FragColor;
 
 void main() {
     // TODO: Calculate lighting. Need normals
-    FragColor = vec4(terrainColor, 1.0);
+    FragColor = vec4(outColor, 1.0);
 }

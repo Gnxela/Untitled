@@ -1,7 +1,6 @@
 package me.alexng.untitled;
 
 import me.alexng.untitled.generate.HeightMap;
-import me.alexng.untitled.generate.MapData;
 import me.alexng.untitled.generate.TerrainGenerator;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
@@ -58,12 +57,6 @@ public class Main {
 		terrainShaderProgram.linkProgram();
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
-		terrainShaderProgram.setVec3f("terrainColor", 0.05f, 0.2f, 0f);
-
-		Mesh flatMesh = TerrainGenerator.generateFlatMesh(40, 40, 5, 5);
-		Mesh flatMesh2 = TerrainGenerator.generateFlatMesh(40, 40, 10, 20);
-		Mesh flatMesh3 = TerrainGenerator.generateFlatMesh(40, 40, 20, 20);
-		Mesh flatMesh4 = TerrainGenerator.generateFlatMesh(40, 40, 40, 40);
 
 		ShaderProgram texturedShaderProgram = new ShaderProgram();
 		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.frag"));
@@ -72,11 +65,13 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		MapData mapData = new HeightMap(1000, 1000);
-		Texture mapTexture = mapData.toTextureRGB(Texture.Type.DIFFUSE);
+		HeightMap heightMap = new HeightMap(1000, 1000);
+		Texture mapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
 		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{mapTexture}, AttributeStore.VEC3F_VEC2F);
+
+		Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(300, 300, 1000, 1000, 100, heightMap);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -124,13 +119,7 @@ public class Main {
 			terrainShaderProgram.use();
 			terrainShaderProgram.setMatrix4f("view", view);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
-			flatMesh.draw(terrainShaderProgram);
-			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(50, 0, 0));
-			flatMesh2.draw(terrainShaderProgram);
-			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(90, 0, 0));
-			flatMesh3.draw(terrainShaderProgram);
-			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(130, 0, 0));
-			flatMesh4.draw(terrainShaderProgram);
+			terrainMesh.draw(terrainShaderProgram);
 
 			texturedShaderProgram.use();
 			texturedShaderProgram.setMatrix4f("view", view);
