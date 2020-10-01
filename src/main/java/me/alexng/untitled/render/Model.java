@@ -1,8 +1,8 @@
 package me.alexng.untitled.render;
 
-import me.alexng.untitled.Main;
 import me.alexng.untitled.render.exceptions.ModelException;
 import me.alexng.untitled.render.exceptions.TextureException;
+import me.alexng.untitled.util.FileUtil;
 import org.lwjgl.assimp.*;
 
 import java.nio.IntBuffer;
@@ -36,7 +36,7 @@ public class Model {
 
 	public void load() throws ModelException, TextureException {
 		// aiProcess_GenNormals, aiProcess_SplitLargeMeshes, aiProcess_OptimizeMeshes
-		String absolutePath = Main.class.getClassLoader().getResource(resourcePath).getPath().substring(1);
+		String absolutePath = FileUtil.getAbsolutePath(resourcePath);
 		directory = absolutePath.substring(0, absolutePath.lastIndexOf("/")) + '/';
 		AIScene scene = aiImportFile(absolutePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_OptimizeMeshes | aiProcess_GenNormals);
 		if (scene == null /*|| (scene.mFlags() & AI_SCENE_FLAGS_INCOMPLETE) == 0*/ || scene.mRootNode() == null) {

@@ -2,6 +2,7 @@ package me.alexng.untitled.render;
 
 import com.google.common.io.ByteStreams;
 import me.alexng.untitled.render.exceptions.ShaderException;
+import me.alexng.untitled.util.FileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +31,7 @@ public class Shader implements Cleanable {
 		if (loaded) {
 			throw new ShaderException(sourcePath + " already loaded");
 		}
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(sourcePath);
+		InputStream inputStream = FileUtil.getResourceAsStream(sourcePath);
 		if (inputStream == null) {
 			cleanup();
 			throw new ShaderException(sourcePath + " not found");
