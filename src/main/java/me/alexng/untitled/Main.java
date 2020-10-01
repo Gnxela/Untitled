@@ -6,7 +6,7 @@ import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
 import me.alexng.untitled.render.util.CubeData;
-import me.alexng.untitled.util.FileUtil;
+import me.alexng.untitled.render.util.FileUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

@@ -2,7 +2,7 @@ package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.ModelException;
 import me.alexng.untitled.render.exceptions.TextureException;
-import me.alexng.untitled.util.FileUtil;
+import me.alexng.untitled.render.util.FileUtil;
 import org.lwjgl.assimp.*;
 
 import java.nio.IntBuffer;

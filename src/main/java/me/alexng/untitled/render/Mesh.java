@@ -21,10 +21,6 @@ public class Mesh implements Cleanable {
 		setupMesh(attributeStore);
 	}
 
-	public Mesh(int[] indices, float[] vertices, Texture[] textures) {
-		this(indices, vertices, textures, AttributeStore.VEC3F_VEC3F_VEC2F);
-	}
-
 	private void setupMesh(AttributeStore attributeStore) {
 		vao = new VertexArrayObject();
 		vao.bind();
