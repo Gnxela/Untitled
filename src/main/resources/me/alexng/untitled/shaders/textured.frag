@@ -11,6 +11,6 @@ uniform Material material;
 out vec4 FragColor;
 
 void main() {
-    vec3 sampleColor = texture(material.texture_diffuse1, outTextureCoords).rgb;
+    vec3 sampleColor = vec3(texture(material.texture_diffuse1, outTextureCoords));
     FragColor = vec4(sampleColor, 1f);
 }

@@ -2,6 +2,7 @@ package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.ModelException;
 import me.alexng.untitled.render.exceptions.TextureException;
+import me.alexng.untitled.render.util.AttributeStore;
 import me.alexng.untitled.render.util.FileUtil;
 import org.lwjgl.assimp.*;
 
@@ -119,7 +120,7 @@ public class Model {
 			textures[index++] = texture;
 		}
 
-		return new Mesh(indices, vertices, textures);
+		return new Mesh(indices, vertices, textures, AttributeStore.VEC3F_VEC3F_VEC2F);
 	}
 
 	private void loadMaterialTextures(AIMaterial material, Texture.Type type, List<Texture> tempTextureList) throws TextureException {

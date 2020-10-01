@@ -38,7 +38,7 @@ public class Main {
 		defaultShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
 		defaultShaderProgram.setVec3f("light.specular", 1, 1, 1);
 
-		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F);
+		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F_VEC2F);
 
 		ShaderProgram lightShaderProgram = new ShaderProgram();
 		lightShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/light.vert"));
@@ -78,7 +78,8 @@ public class Main {
 		tempTexture.load();
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
-		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 1, x + dx, 0, z, 1, 1, x, 0, z + dz, 1, 0, x + dx, 0, z + dz, 0, 0}, new Texture[]{tempTexture}, AttributeStore.VEC3F_VEC2F);
+		//Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 1, x + dx, 0, z, 1, 1, x, 0, z + dz, 1, 0, x + dx, 0, z + dz, 0, 0}, new Texture[]{tempTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh texMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{tempTexture}, AttributeStore.VEC3F_VEC3F_VEC2F);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
