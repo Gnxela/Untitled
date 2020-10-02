@@ -57,6 +57,11 @@ public class Main {
 		terrainShaderProgram.linkProgram();
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
+		terrainShaderProgram.setFloat("material.shininess", 32);
+		terrainShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
+		terrainShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
+		terrainShaderProgram.setVec3f("light.specular", 0.05f, 0.05f, 0.05f);
+
 
 		ShaderProgram texturedShaderProgram = new ShaderProgram();
 		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.frag"));
@@ -92,8 +97,8 @@ public class Main {
 
 			defaultShaderProgram.use();
 			defaultShaderProgram.setVec3f("light.position", lightPosition);
-			defaultShaderProgram.setMatrix4f("view", view);
 			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
+			defaultShaderProgram.setMatrix4f("view", view);
 			int numCircles = 3;
 			int numModels = 20;
 			radius = 8;
@@ -115,6 +120,11 @@ public class Main {
 			lightShaderProgram.setMatrix4f("view", view);
 			lightShaderProgram.setMatrix4f("model", model);
 			cubeMesh.draw(lightShaderProgram);
+
+			terrainShaderProgram.use();
+			terrainShaderProgram.setVec3f("light.position", camera.getPosition());
+			terrainShaderProgram.setVec3f("viewPosition", camera.getPosition());
+			terrainShaderProgram.setMatrix4f("view", view);
 
 			terrainShaderProgram.use();
 			terrainShaderProgram.setMatrix4f("view", view);
