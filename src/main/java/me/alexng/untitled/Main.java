@@ -24,7 +24,7 @@ public class Main {
 		Vector3f lightPosition = new Vector3f(0, 0, -2);
 
 		// TODO: Update view matrix when window changes
-		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 1000);
+		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
 
 		ShaderProgram defaultShaderProgram = new ShaderProgram();
 		defaultShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.vert"));
@@ -65,13 +65,13 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		HeightMap heightMap = new HeightMap(1000, 1000);
+		HeightMap heightMap = new HeightMap(2000, 2000);
 		Texture mapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
 		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{mapTexture}, AttributeStore.VEC3F_VEC2F);
 
-		Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(300, 300, 1000, 1000, 100, heightMap);
+		Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
