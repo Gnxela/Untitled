@@ -1,0 +1,31 @@
+struct Light {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+
+uniform Light light;
+
+vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 fragPosition, vec3 viewPosition);
+
+/**
+ * normal: The input vertex normal.
+ * diffuseSample: Color sample for diffuse lighting. The main color component of the final color.
+ * specularSample: Normally a scalar vector, scaling the specular highlight.
+ * fragPosition: The position of the fragment being lit.
+ */
+vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 fragPosition, vec3 viewPosition) {
+    vec3 ambient = light.ambient * diffuseSample;
+
+    vec3 lightDirection = normalize(light.position - fragPosition);
+    float diff = max(dot(normal, lightDirection), 0);
+    vec3 diffuse = light.diffuse * diff * diffuseSample;
+
+    vec3 viewDirection = normalize(viewPosition - fragPosition);
+    vec3 reflectedLightDirection = reflect(-lightDirection, normal);
+    float spec = pow(max(dot(viewDirection, reflectedLightDirection), 0), 32);
+    vec3 specular = light.specular * spec * specularSample;
+
+    return vec4(ambient + diffuse + specular, 1.0f);
+}

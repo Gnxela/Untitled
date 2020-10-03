@@ -1,11 +1,9 @@
 package me.alexng.untitled.render;
 
-import com.google.common.io.ByteStreams;
 import me.alexng.untitled.render.exceptions.ShaderException;
-import me.alexng.untitled.render.util.FileUtil;
+import me.alexng.untitled.render.util.ShaderLoader;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
@@ -31,12 +29,7 @@ public class Shader implements Cleanable {
 		if (loaded) {
 			throw new ShaderException(sourcePath + " already loaded");
 		}
-		InputStream inputStream = FileUtil.getResourceAsStream(sourcePath);
-		if (inputStream == null) {
-			cleanup();
-			throw new ShaderException(sourcePath + " not found");
-		}
-		glShaderSource(handle, new String(ByteStreams.toByteArray(inputStream)));
+		glShaderSource(handle, ShaderLoader.load(sourcePath));
 		glCompileShader(handle);
 		if (glGetShaderi(handle, GL_COMPILE_STATUS) == GL_FALSE) {
 			String log = glGetShaderInfoLog(handle);
