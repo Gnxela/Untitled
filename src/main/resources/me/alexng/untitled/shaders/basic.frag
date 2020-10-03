@@ -1,19 +1,13 @@
 #version 330 core
 
 #include "me/alexng/untitled/shaders/shared/lighting.sfrag"
-
-struct Material {
-    sampler2D texture_diffuse1;
-    sampler2D texture_specular1;
-    float shininess;
-};
+#include "me/alexng/untitled/shaders/shared/material.sfrag"
 
 in vec3 outNormal;
 in vec3 outFragPos;
 in vec2 outTexCoord;
 
 uniform vec3 viewPosition;
-uniform Material material;
 
 out vec4 FragColor;
 
