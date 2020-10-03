@@ -32,7 +32,6 @@ public class Main {
 		defaultShaderProgram.linkProgram();
 		defaultShaderProgram.use();
 		defaultShaderProgram.setMatrix4f("projection", projection);
-		defaultShaderProgram.setFloat("material.shininess", 32);
 		defaultShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
 		defaultShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
 		defaultShaderProgram.setVec3f("light.specular", 1, 1, 1);
@@ -57,7 +56,6 @@ public class Main {
 		terrainShaderProgram.linkProgram();
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
-		terrainShaderProgram.setFloat("material.shininess", 32);
 		terrainShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
 		terrainShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
 		terrainShaderProgram.setVec3f("light.specular", 0.05f, 0.05f, 0.05f);
