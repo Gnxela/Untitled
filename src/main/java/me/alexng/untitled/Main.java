@@ -1,7 +1,7 @@
 package me.alexng.untitled;
 
 import me.alexng.untitled.generate.HeightMap;
-import me.alexng.untitled.generate.TerrainGenerator;
+import me.alexng.untitled.generate.TemperatureMap;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -68,13 +68,19 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		HeightMap heightMap = new HeightMap(2000, 2000);
-		Texture mapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
+		HeightMap heightMap = new HeightMap(5000, 5000);
+		System.out.println("HeightMap: " + heightMap.getMin() + ":" + heightMap.getMax());
+		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
+		Texture heightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
+		Texture temperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
-		Mesh texMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{mapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{heightMapTexture}, AttributeStore.VEC3F_VEC2F);
+		x = -5;
+		z = -10;
+		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{temperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 
-		Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
+		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -123,16 +129,14 @@ public class Main {
 			terrainShaderProgram.setVec3f("light.position", camera.getPosition());
 			terrainShaderProgram.setVec3f("viewPosition", camera.getPosition());
 			terrainShaderProgram.setMatrix4f("view", view);
-
-			terrainShaderProgram.use();
-			terrainShaderProgram.setMatrix4f("view", view);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
-			terrainMesh.draw(terrainShaderProgram);
+			//terrainMesh.draw(terrainShaderProgram);
 
 			texturedShaderProgram.use();
 			texturedShaderProgram.setMatrix4f("view", view);
 			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
-			texMesh.draw(texturedShaderProgram);
+			heightMapTextureMesh.draw(texturedShaderProgram);
+			temperatureTextureMesh.draw(texturedShaderProgram);
 
 			window.update();
 		}
