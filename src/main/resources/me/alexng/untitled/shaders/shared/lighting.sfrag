@@ -7,14 +7,14 @@ struct Light {
 
 uniform Light light;
 
-vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 fragPosition, vec3 viewPosition);
-
 /**
  * normal: The input vertex normal.
  * diffuseSample: Color sample for diffuse lighting. The main color component of the final color.
  * specularSample: Normally a scalar vector, scaling the specular highlight.
  * fragPosition: The position of the fragment being lit.
  */
+vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 fragPosition, vec3 viewPosition);
+
 vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 fragPosition, vec3 viewPosition) {
     vec3 ambient = light.ambient * diffuseSample;
 

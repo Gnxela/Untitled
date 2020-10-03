@@ -68,6 +68,10 @@ public class ShaderProgram implements Cleanable {
 		glUniform3f(glGetUniformLocation(handle, name), x, y, z);
 	}
 
+	public void setVec3f(String name, float i) {
+		glUniform3f(glGetUniformLocation(handle, name), i, i, i);
+	}
+
 	public void setVec3f(String name, Vector3f v) {
 		setVec3f(name, v.x, v.y, v.z);
 	}

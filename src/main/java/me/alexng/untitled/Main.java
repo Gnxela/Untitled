@@ -32,9 +32,9 @@ public class Main {
 		defaultShaderProgram.linkProgram();
 		defaultShaderProgram.use();
 		defaultShaderProgram.setMatrix4f("projection", projection);
-		defaultShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
-		defaultShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
-		defaultShaderProgram.setVec3f("light.specular", 1, 1, 1);
+		defaultShaderProgram.setVec3f("light.ambient", 0.2f);
+		defaultShaderProgram.setVec3f("light.diffuse", 0.5f);
+		defaultShaderProgram.setVec3f("light.specular", 1);
 
 		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F_VEC2F);
 
@@ -56,9 +56,9 @@ public class Main {
 		terrainShaderProgram.linkProgram();
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
-		terrainShaderProgram.setVec3f("light.ambient", 0.2f, 0.2f, 0.2f);
-		terrainShaderProgram.setVec3f("light.diffuse", 0.5f, 0.5f, 0.5f);
-		terrainShaderProgram.setVec3f("light.specular", 0.05f, 0.05f, 0.05f);
+		terrainShaderProgram.setVec3f("light.ambient", 0.2f);
+		terrainShaderProgram.setVec3f("light.diffuse", 0.5f);
+		terrainShaderProgram.setVec3f("light.specular", 0.05f);
 
 
 		ShaderProgram texturedShaderProgram = new ShaderProgram();
