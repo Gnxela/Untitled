@@ -70,7 +70,7 @@ public class Main {
 
 		CombinedMap worldMap = new CombinedMap(new Sampler(10000, 10000));
 		CombinedMap worldMapLowRes = worldMap.sample(200, 200);
-		CombinedMap sampledMap = worldMap.sample(9000, 6000, 1000, 1000, 1000, 1000);
+		CombinedMap sampledMap = worldMap.sample(9000, 6000, 1000, 1000);
 		worldMapLowRes.generate();
 		sampledMap.generate();
 		Texture worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
