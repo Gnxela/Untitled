@@ -68,9 +68,14 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
+		long start = System.currentTimeMillis();
 		HeightMap heightMap = new HeightMap(5000, 5000);
-		System.out.println("HeightMap: " + heightMap.getMin() + ":" + heightMap.getMax());
+		System.out.println("Height map: " + (System.currentTimeMillis() - start) / 1000f + "s");
+		long startTemp = System.currentTimeMillis();
 		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
+		System.out.println("Temperature map: " + (System.currentTimeMillis() - startTemp) / 1000f + "s");
+		System.out.println("Map generation: " + (System.currentTimeMillis() - start) / 1000f + "s");
+
 		Texture heightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
 		Texture temperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
 		float x = -10, dx = 5;
