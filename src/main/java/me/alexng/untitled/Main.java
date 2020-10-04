@@ -1,8 +1,7 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.generate.HeightMap;
-import me.alexng.untitled.generate.TemperatureMap;
-import me.alexng.untitled.generate.WorldMap;
+import me.alexng.untitled.generate.CombinedMap;
+import me.alexng.untitled.generate.Sampler;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -69,10 +68,15 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		WorldMap worldMap = new WorldMap(10000, 10000);
-		worldMap.sample(500, 500);
+		CombinedMap combinedMap = new CombinedMap(new Sampler(10000, 10000));
+		CombinedMap sampledMap = combinedMap.sample(500, 500);
+		sampledMap.generate();
+		Texture heightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture temperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
-		HeightMap heightMap = new HeightMap(1000, 1000);
+
+		/*
+		HeightMap heightMap = new HeightMap(new Sampler(0, 0, 1000, 1000));
 		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
 		long start = System.currentTimeMillis();
 		heightMap.generate();
@@ -82,9 +86,10 @@ public class Main {
 		System.out.println("Temperature map: " + (System.currentTimeMillis() - startTemp) / 1000f + "s");
 		System.out.println("Map generation: " + (System.currentTimeMillis() - start) / 1000f + "s");
 
-
 		Texture heightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
 		Texture temperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
+		 */
+
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
 		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{heightMapTexture}, AttributeStore.VEC3F_VEC2F);
