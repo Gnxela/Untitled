@@ -69,10 +69,14 @@ public class Main {
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
 		CombinedMap combinedMap = new CombinedMap(new Sampler(10000, 10000));
-		CombinedMap sampledMap = combinedMap.sample(500, 500);
+		CombinedMap sampledMap = combinedMap.sample(200, 200);
+		CombinedMap sampledMap2 = combinedMap.sample(9000, 9000, 1000, 1000, 1000, 1000);
 		sampledMap.generate();
+		sampledMap2.generate();
 		Texture heightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		Texture temperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture heightMapTexture2 = sampledMap2.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture temperatureMapTexture2 = sampledMap2.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
 
 		/*
@@ -96,6 +100,12 @@ public class Main {
 		x = -5;
 		z = -10;
 		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{temperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		x = -10;
+		z = -5;
+		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{heightMapTexture2}, AttributeStore.VEC3F_VEC2F);
+		x = -5;
+		z = -5;
+		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{temperatureMapTexture2}, AttributeStore.VEC3F_VEC2F);
 
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
@@ -154,6 +164,8 @@ public class Main {
 			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
 			heightMapTextureMesh.draw(texturedShaderProgram);
 			temperatureTextureMesh.draw(texturedShaderProgram);
+			heightMapTextureMesh2.draw(texturedShaderProgram);
+			temperatureTextureMesh2.draw(texturedShaderProgram);
 
 			window.update();
 		}
