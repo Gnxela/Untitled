@@ -2,6 +2,7 @@ package me.alexng.untitled;
 
 import me.alexng.untitled.generate.HeightMap;
 import me.alexng.untitled.generate.TemperatureMap;
+import me.alexng.untitled.generate.WorldMap;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -68,13 +69,19 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
+		WorldMap worldMap = new WorldMap(10000, 10000);
+		worldMap.sample(500, 500);
+
+		HeightMap heightMap = new HeightMap(1000, 1000);
+		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
 		long start = System.currentTimeMillis();
-		HeightMap heightMap = new HeightMap(5000, 5000);
+		heightMap.generate();
 		System.out.println("Height map: " + (System.currentTimeMillis() - start) / 1000f + "s");
 		long startTemp = System.currentTimeMillis();
-		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
+		temperatureMap.generate();
 		System.out.println("Temperature map: " + (System.currentTimeMillis() - startTemp) / 1000f + "s");
 		System.out.println("Map generation: " + (System.currentTimeMillis() - start) / 1000f + "s");
+
 
 		Texture heightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
 		Texture temperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
