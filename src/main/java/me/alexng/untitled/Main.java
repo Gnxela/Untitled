@@ -68,15 +68,15 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		CombinedMap combinedMap = new CombinedMap(new Sampler(10000, 10000));
-		CombinedMap sampledMap = combinedMap.sample(200, 200);
-		CombinedMap sampledMap2 = combinedMap.sample(9000, 6000, 1000, 1000, 1000, 1000);
+		CombinedMap worldMap = new CombinedMap(new Sampler(10000, 10000));
+		CombinedMap worldMapLowRes = worldMap.sample(200, 200);
+		CombinedMap sampledMap = worldMap.sample(9000, 6000, 1000, 1000, 1000, 1000);
+		worldMapLowRes.generate();
 		sampledMap.generate();
-		sampledMap2.generate();
-		Texture heightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture temperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture heightMapTexture2 = sampledMap2.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture temperatureMapTexture2 = sampledMap2.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		Texture sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
 
 		/*
@@ -90,22 +90,22 @@ public class Main {
 		System.out.println("Temperature map: " + (System.currentTimeMillis() - startTemp) / 1000f + "s");
 		System.out.println("Map generation: " + (System.currentTimeMillis() - start) / 1000f + "s");
 
-		Texture heightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
-		Texture temperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
+		Texture worldMapHeightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
+		Texture worldMapTemperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
 		 */
 
 		float x = -10, dx = 5;
 		float z = -10, dz = 5;
-		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{heightMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -10;
-		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{temperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -10;
 		z = -5;
-		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{heightMapTexture2}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -5;
-		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{temperatureMapTexture2}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
