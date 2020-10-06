@@ -78,34 +78,19 @@ public class Main {
 		Texture sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		Texture sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
-
-		/*
-		HeightMap heightMap = new HeightMap(new Sampler(0, 0, 1000, 1000));
-		TemperatureMap temperatureMap = new TemperatureMap(heightMap);
-		long start = System.currentTimeMillis();
-		heightMap.generate();
-		System.out.println("Height map: " + (System.currentTimeMillis() - start) / 1000f + "s");
-		long startTemp = System.currentTimeMillis();
-		temperatureMap.generate();
-		System.out.println("Temperature map: " + (System.currentTimeMillis() - startTemp) / 1000f + "s");
-		System.out.println("Map generation: " + (System.currentTimeMillis() - start) / 1000f + "s");
-
-		Texture worldMapHeightMapTexture = heightMap.toTextureRGB(Texture.Type.DIFFUSE);
-		Texture worldMapTemperatureMapTexture = temperatureMap.toTextureRGB(Texture.Type.DIFFUSE);
-		 */
-
 		float x = -10, dx = 5;
+		float y = -5;
 		float z = -10, dz = 5;
-		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -10;
-		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -10;
 		z = -5;
-		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -5;
-		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, 0, z, 0, 0, x + dx, 0, z, 1, 0, x, 0, z + dz, 0, 1, x + dx, 0, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
