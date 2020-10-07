@@ -96,7 +96,7 @@ public class Main {
 
 		window.show();
 		window.hideAndCaptureCursor();
-		Camera camera = new Camera(new Vector3f(0, 0, 3), 0, -90);
+		Camera camera = new Camera(new Vector3f(0, 0, 0), -90, -90);
 		window.setCursorPositionCallback(camera);
 
 		while (!window.shouldClose()) {
