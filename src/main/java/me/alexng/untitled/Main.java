@@ -5,7 +5,6 @@ import me.alexng.untitled.generate.Sampler;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
-import me.alexng.untitled.render.util.CubeData;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -19,7 +18,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 public class Main {
 
 	private static CombinedMap worldMap, worldMapLowRes, sampledMap;
-	private static Texture worldMapHeightMapTexture, worldMapTemperatureMapTexture, sampledHeightMapTexture, sampledTemperatureMapTexture;
+	private static Texture worldMapLandmassTexture, worldMapHeightMapTexture, worldMapTemperatureMapTexture, sampledLandmassTexture, sampledHeightMapTexture, sampledTemperatureMapTexture;
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
@@ -29,29 +28,7 @@ public class Main {
 		// TODO: Update view matrix when window changes
 		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
 
-		ShaderProgram defaultShaderProgram = new ShaderProgram();
-		defaultShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.vert"));
-		defaultShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/basic.frag"));
-		defaultShaderProgram.linkProgram();
-		defaultShaderProgram.use();
-		defaultShaderProgram.setMatrix4f("projection", projection);
-		defaultShaderProgram.setVec3f("light.ambient", 0.2f);
-		defaultShaderProgram.setVec3f("light.diffuse", 0.5f);
-		defaultShaderProgram.setVec3f("light.specular", 1);
-
-		Mesh cubeMesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F_VEC2F);
-
-		ShaderProgram lightShaderProgram = new ShaderProgram();
-		lightShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/light.vert"));
-		lightShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/light.frag"));
-		lightShaderProgram.linkProgram();
-		lightShaderProgram.use();
-		lightShaderProgram.setMatrix4f("projection", projection);
-
 		glEnable(GL_DEPTH_TEST);
-
-		Model backpack = new Model("me/alexng/untitled/temp/backpack.obj");
-		backpack.load();
 
 		ShaderProgram terrainShaderProgram = new ShaderProgram();
 		terrainShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/terrain.frag"));
@@ -76,21 +53,29 @@ public class Main {
 		sampledMap = worldMap.sample(0, 0, 1000, 1000);
 		worldMapLowRes.generate();
 		sampledMap.generate();
+		worldMapLandmassTexture = worldMapLowRes.getLandmassMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		sampledLandmassTexture = sampledMap.getLandmassMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
-		float x = -10, dx = 5;
 		float y = -5;
+		float x = -15, dx = 5;
 		float z = -10, dz = 5;
-		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -5;
+		Mesh landmassTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapLandmassTexture}, AttributeStore.VEC3F_VEC2F);
+		x = -15;
+		z = -5;
+		Mesh landmassTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledLandmassTexture}, AttributeStore.VEC3F_VEC2F);
+		x = -10;
 		z = -10;
-		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -10;
 		z = -5;
 		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
+		x = -5;
+		z = -10;
+		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -5;
 		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
@@ -117,37 +102,6 @@ public class Main {
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			float radius = 13f;
-			lightPosition.x = (float) (Math.cos(glfwGetTime()) * radius);
-			lightPosition.y = (float) (Math.cos(glfwGetTime() / 3) * radius);
-			lightPosition.z = (float) (Math.sin(glfwGetTime()) * radius);
-
-			defaultShaderProgram.use();
-			defaultShaderProgram.setVec3f("light.position", lightPosition);
-			defaultShaderProgram.setVec3f("viewPosition", camera.getPosition());
-			defaultShaderProgram.setMatrix4f("view", view);
-			int numCircles = 3;
-			int numModels = 20;
-			radius = 8;
-			for (int j = 0; j < numCircles; j++) {
-				for (int i = 0; i < numModels; i++) {
-					Matrix4f model = new Matrix4f().identity()
-							.translate((float) Math.cos(Math.PI * 2 / numModels * i) * radius, j * 3 - (numCircles - 1) / 2f * 3, (float) Math.sin(Math.PI * 2 / numModels * i) * radius)
-							.rotate((float) (-Math.PI * 2 / numModels * i - Math.PI / 2), 0, 1, 0)
-							.scale(0.5f);
-					defaultShaderProgram.setMatrix4f("model", model);
-					backpack.draw(defaultShaderProgram);
-				}
-			}
-
-			lightShaderProgram.use();
-			Matrix4f model = new Matrix4f().identity()
-					.translate(lightPosition)
-					.scale(0.25f);
-			lightShaderProgram.setMatrix4f("view", view);
-			lightShaderProgram.setMatrix4f("model", model);
-			cubeMesh.draw(lightShaderProgram);
-
 			terrainShaderProgram.use();
 			terrainShaderProgram.setVec3f("light.position", camera.getPosition());
 			terrainShaderProgram.setVec3f("viewPosition", camera.getPosition());
@@ -158,15 +112,15 @@ public class Main {
 			texturedShaderProgram.use();
 			texturedShaderProgram.setMatrix4f("view", view);
 			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
+			landmassTextureMesh.draw(terrainShaderProgram);
 			heightMapTextureMesh.draw(texturedShaderProgram);
 			temperatureTextureMesh.draw(texturedShaderProgram);
+			landmassTextureMesh2.draw(texturedShaderProgram);
 			heightMapTextureMesh2.draw(texturedShaderProgram);
 			temperatureTextureMesh2.draw(texturedShaderProgram);
 
 			window.update();
 		}
-		defaultShaderProgram.cleanup();
-		cubeMesh.cleanup();
 		window.cleanup();
 	}
 
@@ -174,9 +128,11 @@ public class Main {
 		System.out.println("Regenerating maps");
 		worldMapLowRes.generate();
 		sampledMap.generate();
-		worldMapLowRes.getLandmassMap().toTextureRGB(worldMapHeightMapTexture, Texture.Type.DIFFUSE);
-		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture, Texture.Type.DIFFUSE);
-		sampledMap.getLandmassMap().toTextureRGB(sampledHeightMapTexture, Texture.Type.DIFFUSE);
-		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture, Texture.Type.DIFFUSE);
+		worldMapLowRes.getLandmassMap().toTextureRGB(worldMapLandmassTexture);
+		worldMapLowRes.getHeightMap().toTextureRGB(worldMapHeightMapTexture);
+		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture);
+		sampledMap.getLandmassMap().toTextureRGB(sampledLandmassTexture);
+		sampledMap.getHeightMap().toTextureRGB(sampledHeightMapTexture);
+		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture);
 	}
 }
