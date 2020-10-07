@@ -174,9 +174,9 @@ public class Main {
 		System.out.println("Regenerating maps");
 		worldMapLowRes.generate();
 		sampledMap.generate();
-		worldMapLowRes.getHeightMap().toTextureRGB(worldMapHeightMapTexture, Texture.Type.DIFFUSE);
+		worldMapLowRes.getLandmassMap().toTextureRGB(worldMapHeightMapTexture, Texture.Type.DIFFUSE);
 		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture, Texture.Type.DIFFUSE);
-		sampledMap.getHeightMap().toTextureRGB(sampledHeightMapTexture, Texture.Type.DIFFUSE);
+		sampledMap.getLandmassMap().toTextureRGB(sampledHeightMapTexture, Texture.Type.DIFFUSE);
 		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture, Texture.Type.DIFFUSE);
 	}
 }
