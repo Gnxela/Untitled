@@ -1,6 +1,7 @@
 package me.alexng.untitled;
 
 import me.alexng.untitled.generate.CombinedMap;
+import me.alexng.untitled.generate.NoiseHelper;
 import me.alexng.untitled.generate.Sampler;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
@@ -51,8 +52,9 @@ public class Main {
 		worldMap = new CombinedMap(new Sampler(10000, 10000));
 		worldMapLowRes = worldMap.sample(1000, 1000);
 		sampledMap = worldMap.sample(0, 0, 1000, 1000);
-		worldMapLowRes.generate();
-		sampledMap.generate();
+		int seed = NoiseHelper.getSeed();
+		worldMapLowRes.generate(seed);
+		sampledMap.generate(seed);
 		worldMapLandmassTexture = worldMapLowRes.getLandmassMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
@@ -126,8 +128,9 @@ public class Main {
 
 	private static void regenerateMaps() {
 		System.out.println("Regenerating maps");
-		worldMapLowRes.generate();
-		sampledMap.generate();
+		int seed = NoiseHelper.getSeed();
+		worldMapLowRes.generate(seed);
+		sampledMap.generate(seed);
 		worldMapLowRes.getLandmassMap().toTextureRGB(worldMapLandmassTexture);
 		worldMapLowRes.getHeightMap().toTextureRGB(worldMapHeightMapTexture);
 		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture);
