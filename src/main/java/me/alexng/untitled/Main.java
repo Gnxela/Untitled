@@ -51,7 +51,7 @@ public class Main {
 
 		worldMap = new CombinedMap(new Sampler(10000, 10000));
 		worldMapLowRes = worldMap.sample(1000, 1000);
-		sampledMap = worldMap.sample(0, 0, 1000, 1000);
+		sampledMap = worldMap.sample(4500, 4500, 1000, 1000);
 		int seed = NoiseHelper.getSeed();
 		worldMapLowRes.generate(seed);
 		sampledMap.generate(seed);
