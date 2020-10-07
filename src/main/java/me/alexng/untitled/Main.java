@@ -12,11 +12,14 @@ import org.joml.Vector3f;
 import java.io.IOException;
 
 import static me.alexng.untitled.render.UntitledConstants.*;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 public class Main {
+
+	private static CombinedMap worldMap, worldMapLowRes, sampledMap;
+	private static Texture worldMapHeightMapTexture, worldMapTemperatureMapTexture, sampledHeightMapTexture, sampledTemperatureMapTexture;
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
@@ -68,15 +71,15 @@ public class Main {
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		CombinedMap worldMap = new CombinedMap(new Sampler(10000, 10000));
-		CombinedMap worldMapLowRes = worldMap.sample(1000, 1000);
-		CombinedMap sampledMap = worldMap.sample(0, 0, 1000, 1000);
+		worldMap = new CombinedMap(new Sampler(10000, 10000));
+		worldMapLowRes = worldMap.sample(1000, 1000);
+		sampledMap = worldMap.sample(0, 0, 1000, 1000);
 		worldMapLowRes.generate();
 		sampledMap.generate();
-		Texture worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
-		Texture sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
+		sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 
 		float x = -10, dx = 5;
 		float y = -5;
@@ -95,6 +98,14 @@ public class Main {
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		window.setKeyCallback((windowHandle, key, scanCode, action, mode) -> {
+			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+				glfwSetWindowShouldClose(window.getHandle(), true);
+			} else if (key == GLFW_KEY_R && action == GLFW_RELEASE) {
+				regenerateMaps();
+			}
+		});
 
 		window.show();
 		window.hideAndCaptureCursor();
@@ -157,5 +168,15 @@ public class Main {
 		defaultShaderProgram.cleanup();
 		cubeMesh.cleanup();
 		window.cleanup();
+	}
+
+	private static void regenerateMaps() {
+		System.out.println("Regenerating maps");
+		worldMapLowRes.generate();
+		sampledMap.generate();
+		worldMapLowRes.getHeightMap().toTextureRGB(worldMapHeightMapTexture, Texture.Type.DIFFUSE);
+		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture, Texture.Type.DIFFUSE);
+		sampledMap.getHeightMap().toTextureRGB(sampledHeightMapTexture, Texture.Type.DIFFUSE);
+		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture, Texture.Type.DIFFUSE);
 	}
 }

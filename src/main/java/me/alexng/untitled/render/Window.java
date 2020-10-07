@@ -2,6 +2,7 @@ package me.alexng.untitled.render;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 
@@ -52,12 +53,6 @@ public class Window implements Cleanable {
 			glfwSetWindowPos(windowHandler, (vidMode.width() - bWidth.get(0)) / 2, (vidMode.height() - bHeight.get(0)) / 2);
 		}
 
-		glfwSetKeyCallback(windowHandler, (window, key, scanCode, action, mode) -> {
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-				glfwSetWindowShouldClose(windowHandler, true);
-			}
-		});
-
 		glfwMakeContextCurrent(windowHandler);
 		createCapabilities();
 		// TODO: Do we want this?
@@ -66,6 +61,10 @@ public class Window implements Cleanable {
 		glClearColor(grey, grey, grey, 1f);
 		glViewport(0, 0, width, height);
 		return new Window(windowHandler, width, height);
+	}
+
+	public void setKeyCallback(GLFWKeyCallbackI callback) {
+		glfwSetKeyCallback(windowHandler, callback);
 	}
 
 	public void clear() {
