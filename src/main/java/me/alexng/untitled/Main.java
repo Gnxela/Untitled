@@ -68,37 +68,16 @@ public class Main {
 		sampledMoistureMapTexture = sampledMap.getMoistureMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledBiomeMapTexture = sampledMap.getBiomeMap().toTextureRGB(Texture.Type.DIFFUSE);
 
-		float y = -5;
-		float x = -15, dx = 5;
-		float z = -10, dz = 5;
-		Mesh landmassTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapLandmassTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -15;
-		z = -5;
-		Mesh landmassTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledLandmassTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -10;
-		z = -10;
-		Mesh heightMapTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -10;
-		z = -5;
-		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -5;
-		z = -10;
-		Mesh biomeTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = -5;
-		z = -5;
-		Mesh biomeTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = 0;
-		z = -10;
-		Mesh moistureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapMoistureMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = 0;
-		z = -5;
-		Mesh moistureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledMoistureMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = 5;
-		z = -10;
-		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
-		x = 5;
-		z = -5;
-		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh landmassTextureMesh = generateTextureMesh(-15, -10, worldMapLandmassTexture);
+		Mesh landmassTextureMesh2 = generateTextureMesh(-15, -5, sampledLandmassTexture);
+		Mesh heightMapTextureMesh = generateTextureMesh(-10, -10, worldMapHeightMapTexture);
+		Mesh heightMapTextureMesh2 = generateTextureMesh(-10, -5, sampledHeightMapTexture);
+		Mesh biomeTextureMesh = generateTextureMesh(-5, -10, worldMapBiomeMapTexture);
+		Mesh biomeTextureMesh2 = generateTextureMesh(-5, -5, sampledBiomeMapTexture);
+		Mesh moistureTextureMesh = generateTextureMesh(0, -10, worldMapMoistureMapTexture);
+		Mesh moistureTextureMesh2 = generateTextureMesh(0, -5, sampledMoistureMapTexture);
+		Mesh temperatureTextureMesh = generateTextureMesh(5, -10, worldMapTemperatureMapTexture);
+		Mesh temperatureTextureMesh2 = generateTextureMesh(5, -5, sampledTemperatureMapTexture);
 
 		terrainMesh = TerrainGenerator.generateMeshFromMap(1000, 1000, 100, sampledMap);
 
@@ -146,6 +125,11 @@ public class Main {
 			window.update();
 		}
 		window.cleanup();
+	}
+
+	private static Mesh generateTextureMesh(int x, int z, Texture texture) {
+		final int dx = 5, dz = 5, y = 0;
+		return new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{texture}, AttributeStore.VEC3F_VEC2F);
 	}
 
 	private static void regenerateMaps() {
