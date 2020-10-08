@@ -3,6 +3,7 @@ package me.alexng.untitled;
 import me.alexng.untitled.generate.CombinedMap;
 import me.alexng.untitled.generate.NoiseHelper;
 import me.alexng.untitled.generate.Sampler;
+import me.alexng.untitled.generate.TerrainGenerator;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -20,6 +21,7 @@ public class Main {
 
 	private static CombinedMap worldMap, worldMapLowRes, sampledMap;
 	private static Texture worldMapLandmassTexture, worldMapHeightMapTexture, worldMapTemperatureMapTexture, worldMapMoistureMapTexture, worldMapBiomeMapTexture, sampledLandmassTexture, sampledHeightMapTexture, sampledTemperatureMapTexture, sampledMoistureMapTexture, sampledBiomeMapTexture;
+	private static Mesh terrainMesh;
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
@@ -98,7 +100,7 @@ public class Main {
 		z = -5;
 		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 
-		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
+		terrainMesh = TerrainGenerator.generateMeshFromMap(1000, 1000, 100, sampledMap);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -125,7 +127,7 @@ public class Main {
 			terrainShaderProgram.setVec3f("viewPosition", camera.getPosition());
 			terrainShaderProgram.setMatrix4f("view", view);
 			terrainShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(10, 0, 0));
-			//terrainMesh.draw(terrainShaderProgram);
+			terrainMesh.draw(terrainShaderProgram);
 
 			texturedShaderProgram.use();
 			texturedShaderProgram.setMatrix4f("view", view);
@@ -161,5 +163,6 @@ public class Main {
 		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture);
 		sampledMap.getMoistureMap().toTextureRGB(sampledMoistureMapTexture);
 		sampledMap.getBiomeMap().toTextureRGB(sampledBiomeMapTexture);
+		terrainMesh = TerrainGenerator.generateMeshFromMap(1000, 1000, 100, sampledMap);
 	}
 }
