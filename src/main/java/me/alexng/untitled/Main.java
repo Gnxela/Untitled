@@ -81,10 +81,10 @@ public class Main {
 		Mesh heightMapTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledHeightMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -10;
-		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh biomeTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = -5;
 		z = -5;
-		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh biomeTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = 0;
 		z = -10;
 		Mesh moistureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapMoistureMapTexture}, AttributeStore.VEC3F_VEC2F);
@@ -93,10 +93,10 @@ public class Main {
 		Mesh moistureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledMoistureMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = 5;
 		z = -10;
-		Mesh biomeTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 		x = 5;
 		z = -5;
-		Mesh biomeTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
+		Mesh temperatureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledTemperatureMapTexture}, AttributeStore.VEC3F_VEC2F);
 
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
