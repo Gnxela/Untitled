@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL11.glEnable;
 public class Main {
 
 	private static CombinedMap worldMap, worldMapLowRes, sampledMap;
-	private static Texture worldMapLandmassTexture, worldMapHeightMapTexture, worldMapTemperatureMapTexture, worldMapMoistureMapTexture, sampledLandmassTexture, sampledHeightMapTexture, sampledTemperatureMapTexture, sampledMoistureMapTexture;
+	private static Texture worldMapLandmassTexture, worldMapHeightMapTexture, worldMapTemperatureMapTexture, worldMapMoistureMapTexture, worldMapBiomeMapTexture, sampledLandmassTexture, sampledHeightMapTexture, sampledTemperatureMapTexture, sampledMoistureMapTexture, sampledBiomeMapTexture;
 
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
@@ -59,10 +59,12 @@ public class Main {
 		worldMapHeightMapTexture = worldMapLowRes.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapTemperatureMapTexture = worldMapLowRes.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 		worldMapMoistureMapTexture = worldMapLowRes.getMoistureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		worldMapBiomeMapTexture = worldMapLowRes.getBiomeMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledLandmassTexture = sampledMap.getLandmassMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledHeightMapTexture = sampledMap.getHeightMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledTemperatureMapTexture = sampledMap.getTemperatureMap().toTextureRGB(Texture.Type.DIFFUSE);
 		sampledMoistureMapTexture = sampledMap.getMoistureMap().toTextureRGB(Texture.Type.DIFFUSE);
+		sampledBiomeMapTexture = sampledMap.getBiomeMap().toTextureRGB(Texture.Type.DIFFUSE);
 
 		float y = -5;
 		float x = -15, dx = 5;
@@ -89,6 +91,12 @@ public class Main {
 		x = 0;
 		z = -5;
 		Mesh moistureTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledMoistureMapTexture}, AttributeStore.VEC3F_VEC2F);
+		x = 5;
+		z = -10;
+		Mesh biomeTextureMesh = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{worldMapBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
+		x = 5;
+		z = -5;
+		Mesh biomeTextureMesh2 = new Mesh(new int[]{0, 1, 2, 1, 3, 2}, new float[]{x, y, z, 0, 0, x + dx, y, z, 1, 0, x, y, z + dz, 0, 1, x + dx, y, z + dz, 1, 1}, new Texture[]{sampledBiomeMapTexture}, AttributeStore.VEC3F_VEC2F);
 
 		//Mesh terrainMesh = TerrainGenerator.generateMeshFromHeightMap(1000, 1000, 2000, 2000, 100, heightMap);
 
@@ -126,10 +134,12 @@ public class Main {
 			heightMapTextureMesh.draw(texturedShaderProgram);
 			temperatureTextureMesh.draw(texturedShaderProgram);
 			moistureTextureMesh.draw(texturedShaderProgram);
+			biomeTextureMesh.draw(texturedShaderProgram);
 			landmassTextureMesh2.draw(texturedShaderProgram);
 			heightMapTextureMesh2.draw(texturedShaderProgram);
 			temperatureTextureMesh2.draw(texturedShaderProgram);
 			moistureTextureMesh2.draw(texturedShaderProgram);
+			biomeTextureMesh2.draw(texturedShaderProgram);
 
 			window.update();
 		}
@@ -145,9 +155,11 @@ public class Main {
 		worldMapLowRes.getHeightMap().toTextureRGB(worldMapHeightMapTexture);
 		worldMapLowRes.getTemperatureMap().toTextureRGB(worldMapTemperatureMapTexture);
 		worldMapLowRes.getMoistureMap().toTextureRGB(worldMapMoistureMapTexture);
+		worldMapLowRes.getBiomeMap().toTextureRGB(worldMapBiomeMapTexture);
 		sampledMap.getLandmassMap().toTextureRGB(sampledLandmassTexture);
 		sampledMap.getHeightMap().toTextureRGB(sampledHeightMapTexture);
 		sampledMap.getTemperatureMap().toTextureRGB(sampledTemperatureMapTexture);
 		sampledMap.getMoistureMap().toTextureRGB(sampledMoistureMapTexture);
+		sampledMap.getBiomeMap().toTextureRGB(sampledBiomeMapTexture);
 	}
 }
