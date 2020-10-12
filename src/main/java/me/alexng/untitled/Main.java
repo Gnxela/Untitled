@@ -51,8 +51,10 @@ public class Main {
 		worldMapLowRes.generate(seed);
 		Texture mapTexture1 = worldMapLowRes.getGenerationPipeline().getBiomePipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.BIOME_MAP);
 		Texture mapTexture2 = worldMapLowRes.getGenerationPipeline().getTemperaturePipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.TEMPERATURE_MAP);
+		Texture mapTexture3 = worldMapLowRes.getGenerationPipeline().getHeightPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.HEIGHT_MAP);
 		Mesh mapTextureMesh1 = generateTextureMesh(-5, -10, mapTexture1);
 		Mesh mapTextureMesh2 = generateTextureMesh(-10, -10, mapTexture2);
+		Mesh mapTextureMesh3 = generateTextureMesh(-15, -10, mapTexture3);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -79,6 +81,7 @@ public class Main {
 			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
 			mapTextureMesh1.draw(texturedShaderProgram);
 			mapTextureMesh2.draw(texturedShaderProgram);
+			mapTextureMesh3.draw(texturedShaderProgram);
 
 			window.update();
 		}
