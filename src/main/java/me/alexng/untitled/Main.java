@@ -1,9 +1,6 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.generate.ColorMaps;
-import me.alexng.untitled.generate.CombinedMap;
-import me.alexng.untitled.generate.NoiseHelper;
-import me.alexng.untitled.generate.Sampler;
+import me.alexng.untitled.generate.*;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -50,11 +47,24 @@ public class Main {
 		int seed = NoiseHelper.getSeed();
 		worldMapLowRes.generate(seed);
 		Texture mapTexture1 = worldMapLowRes.getGenerationPipeline().getBiomePipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.BIOME_MAP);
-		Texture mapTexture2 = worldMapLowRes.getGenerationPipeline().getTemperaturePipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.TEMPERATURE_MAP);
-		Texture mapTexture3 = worldMapLowRes.getGenerationPipeline().getHeightPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.HEIGHT_MAP);
+		Texture mapTexture2 = worldMapLowRes.getGenerationPipeline().getHeightPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.HEIGHT_MAP);
+		Texture mapTexture3 = worldMapLowRes.getGenerationPipeline().getMountainPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.LANDMASS_MAP);
 		Mesh mapTextureMesh1 = generateTextureMesh(-5, -10, mapTexture1);
 		Mesh mapTextureMesh2 = generateTextureMesh(-10, -10, mapTexture2);
 		Mesh mapTextureMesh3 = generateTextureMesh(-15, -10, mapTexture3);
+
+		float min = Float.MAX_VALUE, max = Float.MIN_VALUE;
+		MapData storedData = worldMapLowRes.getGenerationPipeline().getMountainPipe().getStoredData();
+		for (int i = 0; i < storedData.getSize(); i++) {
+			float value = storedData.getData(i);
+			if (value > max) {
+				max = value;
+			}
+			if (value < min) {
+				min = value;
+			}
+		}
+		System.out.println(max + ":" + min);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
