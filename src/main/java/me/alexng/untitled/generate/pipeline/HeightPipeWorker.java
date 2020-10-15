@@ -45,6 +45,6 @@ public class HeightPipeWorker implements PipeWorker {
 	 */
 	private float getLandHeight(Point point, float mountainNormalized) {
 		float sampleNormalized = NoiseHelper.normalize(landNoise.GetNoise(point.getX(), point.getY()));
-		return sampleNormalized * 0.5f + mountainNormalized * 0.5f;
+		return (sampleNormalized + mountainNormalized) / 2;
 	}
 }
