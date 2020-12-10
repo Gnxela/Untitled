@@ -1,6 +1,7 @@
 package me.alexng.untitled.game;
 
 import me.alexng.untitled.render.Mesh;
+import me.alexng.untitled.render.SID;
 import me.alexng.untitled.render.ShaderProgram;
 import me.alexng.untitled.render.Texture;
 import me.alexng.untitled.render.exceptions.ShaderException;
@@ -25,9 +26,9 @@ public class Voxel {
 
 	public void draw(Matrix4f view, Matrix4f projection) throws TextureException {
 		shaderProgram.use();
-		shaderProgram.setMatrix4f("model", new Matrix4f().translate(x, y, z));
-		shaderProgram.setMatrix4f("view", view);
-		shaderProgram.setMatrix4f("projection", projection);
+		shaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().translate(x, y, z));
+		shaderProgram.setMatrix4f(SID.VIEW, view);
+		shaderProgram.setMatrix4f(SID.PROJECTION, projection);
 		mesh.draw(shaderProgram);
 	}
 }

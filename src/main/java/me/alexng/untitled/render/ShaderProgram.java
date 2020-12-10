@@ -40,46 +40,50 @@ public class ShaderProgram implements Cleanable {
 		glUseProgram(handle);
 	}
 
-	public void setBool(String name, boolean value) {
-		glUniform1i(glGetUniformLocation(handle, name), value ? 1 : 0);
+	public void setBool(SID shaderIdentifier, boolean value) {
+		glUniform1i(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), value ? 1 : 0);
 	}
 
-	public void setInt(String name, int value) {
+	public void setInt(SID shaderIdentifier, int value) {
+		setInt(shaderIdentifier.getGlslName(), value);
+	}
+
+	void setInt(String name, int value) {
 		glUniform1i(glGetUniformLocation(handle, name), value);
 	}
 
-	public void setFloat(String name, float value) {
-		glUniform1f(glGetUniformLocation(handle, name), value);
+	public void setFloat(SID shaderIdentifier, float value) {
+		glUniform1f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), value);
 	}
 
-	public void setMatrix4f(String name, Matrix4f transform) {
+	public void setMatrix4f(SID shaderIdentifier, Matrix4f transform) {
 		try (MemoryStack memoryStack = MemoryStack.stackPush()) {
-			setMatrix4f(name, transform.get(memoryStack.mallocFloat(16)));
+			setMatrix4f(shaderIdentifier, transform.get(memoryStack.mallocFloat(16)));
 		}
 	}
 
-	public void setMatrix4f(String name, FloatBuffer buffer) {
-		glUniformMatrix4fv(glGetUniformLocation(handle, name), false, buffer);
+	public void setMatrix4f(SID shaderIdentifier, FloatBuffer buffer) {
+		glUniformMatrix4fv(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), false, buffer);
 	}
 
-	public void setVec2f(String name, int x, float y) {
-		glUniform2f(glGetUniformLocation(handle, name), x, y);
+	public void setVec2f(SID shaderIdentifier, int x, float y) {
+		glUniform2f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), x, y);
 	}
 
-	public void setVec3f(String name, float x, float y, float z) {
-		glUniform3f(glGetUniformLocation(handle, name), x, y, z);
+	public void setVec3f(SID shaderIdentifier, float x, float y, float z) {
+		glUniform3f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), x, y, z);
 	}
 
-	public void setVec3f(String name, float i) {
-		glUniform3f(glGetUniformLocation(handle, name), i, i, i);
+	public void setVec3f(SID shaderIdentifier, float i) {
+		glUniform3f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), i, i, i);
 	}
 
-	public void setVec3f(String name, Vector3f v) {
-		setVec3f(name, v.x, v.y, v.z);
+	public void setVec3f(SID shaderIdentifier, Vector3f v) {
+		setVec3f(shaderIdentifier, v.x, v.y, v.z);
 	}
 
-	public void setVec4f(String name, float x, float y, float z, float w) {
-		glUniform4f(glGetUniformLocation(handle, name), x, y, z, w);
+	public void setVec4f(SID shaderIdentifier, float x, float y, float z, float w) {
+		glUniform4f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), x, y, z, w);
 	}
 
 	public int getHandle() {
