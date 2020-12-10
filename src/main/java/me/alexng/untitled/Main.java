@@ -1,6 +1,5 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.generate.*;
 import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
@@ -16,18 +15,15 @@ import static org.lwjgl.opengl.GL11.glEnable;
 
 public class Main {
 
+	// TODO: Update view matrix when window changes
+	public static final Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
+
 	public static void main(String[] args) throws IOException, UntitledException {
 		Window window = Window.create(WIDTH, HEIGHT, TITLE);
 
-		// TODO: Update view matrix when window changes
-		Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
-
 		glEnable(GL_DEPTH_TEST);
 
-		ShaderProgram terrainShaderProgram = new ShaderProgram();
-		terrainShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/terrain.frag"));
-		terrainShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/terrain.vert"));
-		terrainShaderProgram.linkProgram();
+		ShaderProgram terrainShaderProgram = new ShaderProgram("me/alexng/untitled/shaders/terrain.vert", "me/alexng/untitled/shaders/terrain.frag");
 		terrainShaderProgram.use();
 		terrainShaderProgram.setMatrix4f("projection", projection);
 		terrainShaderProgram.setVec3f("light.ambient", 0.2f);
@@ -35,36 +31,10 @@ public class Main {
 		terrainShaderProgram.setVec3f("light.specular", 0.05f);
 
 
-		ShaderProgram texturedShaderProgram = new ShaderProgram();
-		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.frag"));
-		texturedShaderProgram.attachShader(new Shader("me/alexng/untitled/shaders/textured.vert"));
-		texturedShaderProgram.linkProgram();
+		ShaderProgram texturedShaderProgram = new ShaderProgram("me/alexng/untitled/shaders/textured.vert", "me/alexng/untitled/shaders/textured.frag");
 		texturedShaderProgram.use();
 		texturedShaderProgram.setMatrix4f("projection", projection);
 
-		CombinedMap worldMap = new CombinedMap(new Sampler(10000, 10000));
-		CombinedMap worldMapLowRes = worldMap.sample(1000, 1000);
-		int seed = NoiseHelper.getSeed();
-		worldMapLowRes.generate(seed);
-		Texture mapTexture1 = worldMapLowRes.getGenerationPipeline().getBiomePipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.BIOME_MAP);
-		Texture mapTexture2 = worldMapLowRes.getGenerationPipeline().getHeightPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.HEIGHT_MAP);
-		Texture mapTexture3 = worldMapLowRes.getGenerationPipeline().getMountainPipe().getStoredData().toTextureRGB(Texture.Type.DIFFUSE, ColorMaps.LANDMASS_MAP);
-		Mesh mapTextureMesh1 = generateTextureMesh(-5, -10, mapTexture1);
-		Mesh mapTextureMesh2 = generateTextureMesh(-10, -10, mapTexture2);
-		Mesh mapTextureMesh3 = generateTextureMesh(-15, -10, mapTexture3);
-
-		float min = Float.MAX_VALUE, max = Float.MIN_VALUE;
-		MapData storedData = worldMapLowRes.getGenerationPipeline().getMountainPipe().getStoredData();
-		for (int i = 0; i < storedData.getSize(); i++) {
-			float value = storedData.getData(i);
-			if (value > max) {
-				max = value;
-			}
-			if (value < min) {
-				min = value;
-			}
-		}
-		System.out.println(max + ":" + min);
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -88,10 +58,7 @@ public class Main {
 
 			texturedShaderProgram.use();
 			texturedShaderProgram.setMatrix4f("view", view);
-			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(5, 0, 5));
-			mapTextureMesh1.draw(texturedShaderProgram);
-			mapTextureMesh2.draw(texturedShaderProgram);
-			mapTextureMesh3.draw(texturedShaderProgram);
+			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(0, -5, 0));
 
 			window.update();
 		}

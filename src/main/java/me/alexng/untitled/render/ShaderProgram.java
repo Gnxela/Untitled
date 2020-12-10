@@ -14,11 +14,14 @@ public class ShaderProgram implements Cleanable {
 
 	private final int handle;
 
-	public ShaderProgram() {
+	public ShaderProgram(String vertexShaderResourcePath, String fragmentShaderResourcePath) throws ShaderException, IOException {
 		this.handle = glCreateProgram();
+		attachShader(new Shader(vertexShaderResourcePath));
+		attachShader(new Shader(fragmentShaderResourcePath));
+		linkProgram();
 	}
 
-	public void attachShader(Shader shader) throws IOException, ShaderException {
+	private void attachShader(Shader shader) throws IOException, ShaderException {
 		if (!shader.isLoaded()) {
 			shader.load();
 		}
@@ -26,7 +29,7 @@ public class ShaderProgram implements Cleanable {
 		shader.cleanup();
 	}
 
-	public void linkProgram() throws ShaderException {
+	private void linkProgram() throws ShaderException {
 		glLinkProgram(handle);
 		if (glGetProgrami(handle, GL_LINK_STATUS) == GL_FALSE) {
 			String log = glGetProgramInfoLog(handle);
