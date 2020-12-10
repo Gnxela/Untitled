@@ -5,7 +5,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -14,14 +13,14 @@ public class ShaderProgram implements Cleanable {
 
 	private final int handle;
 
-	public ShaderProgram(String vertexShaderResourcePath, String fragmentShaderResourcePath) throws ShaderException, IOException {
+	public ShaderProgram(String vertexShaderResourcePath, String fragmentShaderResourcePath) throws ShaderException {
 		this.handle = glCreateProgram();
 		attachShader(new Shader(vertexShaderResourcePath));
 		attachShader(new Shader(fragmentShaderResourcePath));
 		linkProgram();
 	}
 
-	private void attachShader(Shader shader) throws IOException, ShaderException {
+	private void attachShader(Shader shader) throws ShaderException {
 		if (!shader.isLoaded()) {
 			shader.load();
 		}

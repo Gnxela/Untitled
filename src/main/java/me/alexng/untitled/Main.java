@@ -1,6 +1,10 @@
 package me.alexng.untitled;
 
-import me.alexng.untitled.render.*;
+import me.alexng.untitled.game.Voxel;
+import me.alexng.untitled.render.Camera;
+import me.alexng.untitled.render.Mesh;
+import me.alexng.untitled.render.Texture;
+import me.alexng.untitled.render.Window;
 import me.alexng.untitled.render.exceptions.UntitledException;
 import me.alexng.untitled.render.util.AttributeStore;
 import org.joml.Matrix4f;
@@ -23,19 +27,6 @@ public class Main {
 
 		glEnable(GL_DEPTH_TEST);
 
-		ShaderProgram terrainShaderProgram = new ShaderProgram("me/alexng/untitled/shaders/terrain.vert", "me/alexng/untitled/shaders/terrain.frag");
-		terrainShaderProgram.use();
-		terrainShaderProgram.setMatrix4f("projection", projection);
-		terrainShaderProgram.setVec3f("light.ambient", 0.2f);
-		terrainShaderProgram.setVec3f("light.diffuse", 0.5f);
-		terrainShaderProgram.setVec3f("light.specular", 0.05f);
-
-
-		ShaderProgram texturedShaderProgram = new ShaderProgram("me/alexng/untitled/shaders/textured.vert", "me/alexng/untitled/shaders/textured.frag");
-		texturedShaderProgram.use();
-		texturedShaderProgram.setMatrix4f("projection", projection);
-
-
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		window.setKeyCallback((windowHandle, key, scanCode, action, mode) -> {
@@ -51,14 +42,14 @@ public class Main {
 		Camera camera = new Camera(new Vector3f(0, 0, 0), -90, -90);
 		window.setCursorPositionCallback(camera);
 
+		Voxel voxel = new Voxel(0, 0, 0);
+
 		while (!window.shouldClose()) {
 			camera.processInput(window);
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			texturedShaderProgram.use();
-			texturedShaderProgram.setMatrix4f("view", view);
-			texturedShaderProgram.setMatrix4f("model", new Matrix4f().identity().translate(0, -5, 0));
+			voxel.draw(view, projection);
 
 			window.update();
 		}

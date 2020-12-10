@@ -3,8 +3,6 @@ package me.alexng.untitled.render;
 import me.alexng.untitled.render.exceptions.ShaderException;
 import me.alexng.untitled.render.util.ShaderLoader;
 
-import java.io.IOException;
-
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -25,7 +23,7 @@ public class Shader implements Cleanable {
 		this.handle = glCreateShader(isFragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
 	}
 
-	public void load() throws IOException, ShaderException {
+	public void load() throws ShaderException {
 		if (loaded) {
 			throw new ShaderException(sourcePath + " already loaded");
 		}
