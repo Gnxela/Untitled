@@ -1,5 +1,6 @@
-package me.alexng.untitled.render;
+package me.alexng.untitled.render.shader;
 
+import me.alexng.untitled.render.Cleanable;
 import me.alexng.untitled.render.exceptions.ShaderException;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -48,7 +49,8 @@ public class ShaderProgram implements Cleanable {
 		setInt(shaderIdentifier.getGlslName(), value);
 	}
 
-	void setInt(String name, int value) {
+	// TODO: Maybe remove this?
+	public void setInt(String name, int value) {
 		glUniform1i(glGetUniformLocation(handle, name), value);
 	}
 

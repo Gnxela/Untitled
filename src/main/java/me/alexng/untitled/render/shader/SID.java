@@ -1,4 +1,4 @@
-package me.alexng.untitled.render;
+package me.alexng.untitled.render.shader;
 
 /**
  * Shader Identifiers
