@@ -1,7 +1,7 @@
 package me.alexng.untitled.render.shader;
 
 import com.google.common.io.ByteStreams;
-import me.alexng.untitled.render.exceptions.ShaderException;
+import me.alexng.untitled.exceptions.ShaderException;
 import me.alexng.untitled.util.FileUtil;
 
 import java.io.IOException;

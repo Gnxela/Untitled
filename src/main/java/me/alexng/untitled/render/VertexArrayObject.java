@@ -41,9 +41,7 @@ public class VertexArrayObject implements Cleanable {
 	public void cleanup() {
 		glDeleteVertexArrays(handle);
 		vbo.cleanup();
-		if (ebo != null) {
-			ebo.cleanup();
-		}
+		ebo.cleanup();
 	}
 
 	public VertexBufferObject getVbo() {

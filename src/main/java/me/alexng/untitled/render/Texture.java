@@ -1,6 +1,6 @@
 package me.alexng.untitled.render;
 
-import me.alexng.untitled.render.exceptions.TextureException;
+import me.alexng.untitled.exceptions.TextureException;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 

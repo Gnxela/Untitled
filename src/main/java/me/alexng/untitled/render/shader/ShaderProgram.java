@@ -1,7 +1,7 @@
 package me.alexng.untitled.render.shader;
 
+import me.alexng.untitled.exceptions.ShaderException;
 import me.alexng.untitled.render.Cleanable;
-import me.alexng.untitled.render.exceptions.ShaderException;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;

@@ -1,4 +1,4 @@
-package me.alexng.untitled.render.exceptions;
+package me.alexng.untitled.exceptions;
 
 public class ShaderException extends UntitledException {
 	public ShaderException() {

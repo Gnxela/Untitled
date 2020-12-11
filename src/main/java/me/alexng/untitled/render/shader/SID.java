@@ -11,6 +11,8 @@ public enum SID {
 	LIGHT_DIFFUSE("light.diffuse"),
 	LIGHT_SPECULAR("light.specular"),
 
+	DEBUG_COLOR("debug_color"),
+
 	VIEW_POSITION("viewPosition"),
 	MODEL("model"),
 	VIEW("view"),

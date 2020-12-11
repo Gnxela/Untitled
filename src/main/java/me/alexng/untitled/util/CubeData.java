@@ -2,6 +2,75 @@ package me.alexng.untitled.util;
 
 public class CubeData {
 
+	public static float[] linesVertexData = {
+			// positions
+			0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, 0.5f,
+			0.5f, -0.5f, 0.5f,
+			-0.5f, -0.5f, 0.5f,
+			0.5f, 0.5f, -0.5f,
+			-0.5f, 0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+	};
+
+	public static int[] linesIndexData = {
+			0, 1,
+			0, 2,
+			0, 4,
+			1, 3,
+			1, 5,
+			2, 3,
+			2, 6,
+			3, 7,
+			4, 6,
+			4, 5,
+			5, 7,
+			6, 7,
+	};
+
+	public static float[] vertexDataPosition = {
+			// positions
+			-0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f, 0.5f, -0.5f,
+			0.5f, 0.5f, -0.5f,
+			-0.5f, 0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, 0.5f,
+			0.5f, -0.5f, 0.5f,
+			0.5f, 0.5f, 0.5f,
+			0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, 0.5f,
+			-0.5f, -0.5f, 0.5f,
+			-0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, -0.5f, 0.5f,
+			-0.5f, 0.5f, 0.5f,
+			0.5f, 0.5f, 0.5f,
+			0.5f, 0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, 0.5f,
+			0.5f, 0.5f, 0.5f,
+			-0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, -0.5f,
+			0.5f, -0.5f, 0.5f,
+			0.5f, -0.5f, 0.5f,
+			-0.5f, -0.5f, 0.5f,
+			-0.5f, -0.5f, -0.5f,
+			-0.5f, 0.5f, -0.5f,
+			0.5f, 0.5f, -0.5f,
+			0.5f, 0.5f, 0.5f,
+			0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, 0.5f,
+			-0.5f, 0.5f, -0.5f,
+	};
+
+	// TODO: Reduce the data here. We don't need 32 elements to just store positions
+
 	public static float[] vertexDataPositionNormal = {
 			// positions // normals
 			-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,

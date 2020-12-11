@@ -1,4 +1,4 @@
-package me.alexng.untitled.render.exceptions;
+package me.alexng.untitled.exceptions;
 
 public class TextureException extends UntitledException {
 	public TextureException() {

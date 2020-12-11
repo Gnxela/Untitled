@@ -1,10 +1,10 @@
 package me.alexng.untitled.game;
 
+import me.alexng.untitled.exceptions.ShaderException;
+import me.alexng.untitled.exceptions.TextureException;
 import me.alexng.untitled.render.AttributeStore;
 import me.alexng.untitled.render.Mesh;
 import me.alexng.untitled.render.Texture;
-import me.alexng.untitled.render.exceptions.ShaderException;
-import me.alexng.untitled.render.exceptions.TextureException;
 import me.alexng.untitled.render.shader.SID;
 import me.alexng.untitled.render.shader.ShaderProgram;
 import me.alexng.untitled.util.CubeData;

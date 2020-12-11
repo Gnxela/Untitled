@@ -1,7 +1,7 @@
 package me.alexng.untitled.render.shader;
 
+import me.alexng.untitled.exceptions.ShaderException;
 import me.alexng.untitled.render.Cleanable;
-import me.alexng.untitled.render.exceptions.ShaderException;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
