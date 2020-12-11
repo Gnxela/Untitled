@@ -42,14 +42,14 @@ public class Main {
 		Camera camera = new Camera(new Vector3f(0, 0, 0), -90, -90);
 		window.setCursorPositionCallback(camera);
 
-		Voxel voxel = new Voxel(0, 0, 0);
+		Voxel voxel = new Voxel(0, 0, 0, 0xFF0000);
 
 		while (!window.shouldClose()) {
 			camera.processInput(window);
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			voxel.draw(view, projection);
+			voxel.draw(camera.getPosition(), view, projection);
 
 			window.update();
 		}

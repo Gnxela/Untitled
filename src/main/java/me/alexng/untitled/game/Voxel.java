@@ -9,23 +9,33 @@ import me.alexng.untitled.render.shader.ShaderProgram;
 import me.alexng.untitled.render.util.AttributeStore;
 import me.alexng.untitled.render.util.CubeData;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class Voxel {
 
-	private int x, y, z;
-	private Mesh mesh;
-	private ShaderProgram shaderProgram;
+	private final int x, y, z;
+	private final int color;
 
-	public Voxel(int x, int y, int z) throws ShaderException {
+	private final Mesh mesh;
+	private final ShaderProgram shaderProgram;
+
+	public Voxel(int x, int y, int z, int color) throws ShaderException {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.mesh = new Mesh(CubeData.indexData, CubeData.vertexData, new Texture[]{}, AttributeStore.VEC3F_VEC3F_VEC2F);
+		this.color = color;
+		this.mesh = new Mesh(CubeData.indexData, CubeData.vertexDataPositionNormal, new Texture[]{}, AttributeStore.VEC3F_VEC3F);
 		this.shaderProgram = new ShaderProgram("me/alexng/untitled/shaders/voxel.vert", "me/alexng/untitled/shaders/voxel.frag");
 	}
 
-	public void draw(Matrix4f view, Matrix4f projection) throws TextureException {
+	public void draw(Vector3f viewPosition, Matrix4f view, Matrix4f projection) throws TextureException {
 		shaderProgram.use();
+		shaderProgram.setVec3f(SID.LIGHT_POSITION, viewPosition);
+		shaderProgram.setVec3f(SID.LIGHT_AMBIENT, 0.2f);
+		shaderProgram.setVec3f(SID.LIGHT_DIFFUSE, 0.5f);
+		shaderProgram.setVec3f(SID.LIGHT_SPECULAR, 0.05f);
+		shaderProgram.setInt(SID.VOXEL_COLOR, color);
+		shaderProgram.setVec3f(SID.VIEW_POSITION, viewPosition);
 		shaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().translate(x, y, z));
 		shaderProgram.setMatrix4f(SID.VIEW, view);
 		shaderProgram.setMatrix4f(SID.PROJECTION, projection);
