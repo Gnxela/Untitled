@@ -2,8 +2,10 @@ package me.alexng.untitled;
 
 import me.alexng.untitled.exceptions.UntitledException;
 import me.alexng.untitled.game.Octree;
+import me.alexng.untitled.game.Voxel;
 import me.alexng.untitled.render.Camera;
 import me.alexng.untitled.render.Window;
+import me.alexng.untitled.util.Colors;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -36,12 +38,14 @@ public class Main {
 		window.setCursorPositionCallback(camera);
 
 		Octree octree = Octree.create(16);
+		Voxel voxel = new Voxel(8, 8, 8, Colors.RED);
 
 		while (!window.shouldClose()) {
 			camera.processInput(window);
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
+			voxel.draw(camera.getPosition(), view, projection);
 			octree.draw(view, projection);
 
 			window.update();

@@ -36,7 +36,7 @@ public class Octree {
 	}
 
 	public void draw(Matrix4f view, Matrix4f projection) {
-		DebugRenderer.drawCube(Colors.RED, new Matrix4f().translate(0, 0, 0), view, projection);
+		DebugRenderer.drawCube(Colors.BLUE, new Matrix4f().translate(0, 0, 0).scale(width), view, projection);
 	}
 
 	public void createChildren() {
