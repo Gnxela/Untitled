@@ -18,7 +18,7 @@ public class DebugRenderer {
 
 	static {
 		try {
-			debugShaderProgram = new ShaderProgram("me/alexng/untitled/shaders/debug.vert", "me/alexng/untitled/shaders/debug.frag");
+			debugShaderProgram = new ShaderProgram("me/alexng/volumetricVoxels/shaders/debug.vert", "me/alexng/volumetricVoxels/shaders/debug.frag");
 
 			cubeOutlineVAO = new VertexArrayObject();
 			cubeOutlineVAO.bind();

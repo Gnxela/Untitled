@@ -20,9 +20,9 @@ public class VolumetricVoxels {
 	private Camera camera;
 
 	public void initialise() {
+		window = Window.create(WIDTH, HEIGHT, TITLE);
 		glEnable(GL_DEPTH_TEST);
 		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		window = Window.create(WIDTH, HEIGHT, TITLE);
 		// TODO: This should be user defined
 		window.setKeyCallback((windowHandle, key, scanCode, action, mode) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {

@@ -25,7 +25,7 @@ public class Voxel {
 		this.z = z;
 		this.color = color;
 		this.mesh = new Mesh(CubeData.indexData, CubeData.vertexDataPositionNormal, new Texture[]{}, AttributeStore.VEC3F_VEC3F);
-		this.shaderProgram = new ShaderProgram("me/alexng/untitled/shaders/voxel.vert", "me/alexng/untitled/shaders/voxel.frag");
+		this.shaderProgram = new ShaderProgram("me/alexng/volumetricVoxels/shaders/voxel.vert", "me/alexng/volumetricVoxels/shaders/voxel.frag");
 	}
 
 	public void draw(Vector3f viewPosition, Matrix4f view, Matrix4f projection) throws TextureException {

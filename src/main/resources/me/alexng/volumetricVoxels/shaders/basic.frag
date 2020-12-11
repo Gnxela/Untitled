@@ -1,7 +1,7 @@
 #version 330 core
 
-#include "me/alexng/untitled/shaders/shared/lighting.sfrag"
-#include "me/alexng/untitled/shaders/shared/material.sfrag"
+#include "me/alexng/volumetricVoxels/shaders/shared/lighting.sfrag"
+#include "me/alexng/volumetricVoxels/shaders/shared/material.sfrag"
 
 in vec3 outNormal;
 in vec3 outFragPos;
