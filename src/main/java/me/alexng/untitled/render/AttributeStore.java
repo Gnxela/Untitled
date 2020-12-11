@@ -1,6 +1,4 @@
-package me.alexng.untitled.render.util;
-
-import me.alexng.untitled.render.VertexArrayObject;
+package me.alexng.untitled.render;
 
 import static me.alexng.untitled.render.UntitledConstants.FLOAT_WIDTH;
 import static org.lwjgl.opengl.GL11.GL_FLOAT;

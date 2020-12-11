@@ -1,12 +1,8 @@
 package me.alexng.untitled;
 
 import me.alexng.untitled.game.Voxel;
-import me.alexng.untitled.render.Camera;
-import me.alexng.untitled.render.Mesh;
-import me.alexng.untitled.render.Texture;
-import me.alexng.untitled.render.Window;
+import me.alexng.untitled.render.*;
 import me.alexng.untitled.render.exceptions.UntitledException;
-import me.alexng.untitled.render.util.AttributeStore;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -42,7 +38,7 @@ public class Main {
 		Camera camera = new Camera(new Vector3f(0, 0, 0), -90, -90);
 		window.setCursorPositionCallback(camera);
 
-		Voxel voxel = new Voxel(0, 0, 0, 0xFF0000);
+		Voxel voxel = new Voxel(0, 0, 0, new Vector3f(0.1f, 0.4f, 1));
 
 		while (!window.shouldClose()) {
 			camera.processInput(window);

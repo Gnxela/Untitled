@@ -6,6 +6,7 @@
 in vec3 outNormal;
 in vec3 outFragPos;
 
+uniform vec3 voxel_color;
 uniform vec3 viewPosition;
 
 out vec4 FragColor;
@@ -13,5 +14,5 @@ out vec4 FragColor;
 void main() {
     vec3 normal = normalize(outNormal);
 
-    FragColor = defaultLighting(normal, vec3(1, 0, 0), vec3(0.2), outFragPos, viewPosition);
+    FragColor = defaultLighting(normal, voxel_color, vec3(0.2), outFragPos, viewPosition);
 }

@@ -2,7 +2,6 @@ package me.alexng.untitled.render;
 
 import me.alexng.untitled.render.exceptions.TextureException;
 import me.alexng.untitled.render.shader.ShaderProgram;
-import me.alexng.untitled.render.util.AttributeStore;
 
 import static org.lwjgl.opengl.GL11.*;
 

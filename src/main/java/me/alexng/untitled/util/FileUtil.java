@@ -1,4 +1,4 @@
-package me.alexng.untitled.render.util;
+package me.alexng.untitled.util;
 
 import java.io.InputStream;
 import java.util.Objects;
