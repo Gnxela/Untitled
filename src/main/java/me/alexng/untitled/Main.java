@@ -38,7 +38,7 @@ public class Main {
 		window.setCursorPositionCallback(camera);
 
 		Octree octree = Octree.create(16);
-		Voxel voxel = new Voxel(8, 8, 8, Colors.RED);
+		Voxel voxel = new Voxel(0, 0, 0, Colors.RED);
 
 		while (!window.shouldClose()) {
 			camera.processInput(window);
