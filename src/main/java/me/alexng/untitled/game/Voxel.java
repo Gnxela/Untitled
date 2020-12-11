@@ -31,7 +31,7 @@ public class Voxel {
 	public void draw(Vector3f viewPosition, Matrix4f view, Matrix4f projection) throws TextureException {
 		shaderProgram.use();
 		shaderProgram.setVec3f(SID.VOXEL_COLOR, color);
-		shaderProgram.setVec3f(SID.LIGHT_POSITION, viewPosition);
+		shaderProgram.setVec3f(SID.LIGHT_POSITION, new Vector3f(-1));
 		shaderProgram.setVec3f(SID.LIGHT_AMBIENT, 0.2f);
 		shaderProgram.setVec3f(SID.LIGHT_DIFFUSE, 0.5f);
 		shaderProgram.setVec3f(SID.LIGHT_SPECULAR, 0.05f);

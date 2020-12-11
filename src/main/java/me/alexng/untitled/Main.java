@@ -37,16 +37,36 @@ public class Main {
 		Camera camera = new Camera(new Vector3f(0, 0, 0), 0, 0);
 		window.setCursorPositionCallback(camera);
 
-		Octree octree = Octree.create(16);
+		Octree octree = Octree.create(new Vector3f(), 16);
+		octree.createChildren();
+		octree.getChildren()[0].createChildren();
+		octree.getChildren()[0].getChildren()[0].createChildren();
+		octree.getChildren()[0].getChildren()[0].getChildren()[0].createChildren();
+		Octree octree1 = Octree.create(new Vector3f(16), 16);
+		octree1.createChildren();
+		octree1.getChildren()[0].createChildren();
+		octree1.getChildren()[0].getChildren()[0].createChildren();
+		Octree octree2 = Octree.create(new Vector3f(32), 16);
+		octree2.createChildren();
+		octree2.getChildren()[0].createChildren();
+		Octree octree3 = Octree.create(new Vector3f(48), 16);
+		octree3.createChildren();
+		Octree octree4 = Octree.create(new Vector3f(64), 16);
 		Voxel voxel = new Voxel(0, 0, 0, Colors.RED);
+		Voxel voxel2 = new Voxel(1, 1, 1, Colors.RED);
 
 		while (!window.shouldClose()) {
 			camera.processInput(window);
 			Matrix4f view = camera.createViewMatrix();
 			window.clear();
 
-			voxel.draw(camera.getPosition(), view, projection);
 			octree.draw(view, projection);
+			octree1.draw(view, projection);
+			octree2.draw(view, projection);
+			octree3.draw(view, projection);
+			octree4.draw(view, projection);
+			voxel.draw(camera.getPosition(), view, projection);
+			voxel2.draw(camera.getPosition(), view, projection);
 
 			window.update();
 		}
