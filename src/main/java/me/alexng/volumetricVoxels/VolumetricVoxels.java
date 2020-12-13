@@ -7,7 +7,6 @@ import me.alexng.volumetricVoxels.render.Camera;
 import me.alexng.volumetricVoxels.render.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,10 +57,10 @@ public class VolumetricVoxels {
 		window.update();
 	}
 
-	public Octree createEntity(Vector3fc position, Object object) {
+	public Octree createEntity(Object object) {
 		Octree octree = null;
 		try {
-			octree = Rasterizer.rasterize(position, object);
+			octree = Rasterizer.rasterize(object);
 		} catch (ShaderException | OctreeException e) {
 			e.printStackTrace();
 		}

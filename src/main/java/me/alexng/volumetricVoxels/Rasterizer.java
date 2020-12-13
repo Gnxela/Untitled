@@ -4,17 +4,16 @@ import me.alexng.volumetricVoxels.exceptions.OctreeException;
 import me.alexng.volumetricVoxels.exceptions.ShaderException;
 import me.alexng.volumetricVoxels.util.Colors;
 import org.joml.Vector3f;
-import org.joml.Vector3fc;
 
 public class Rasterizer {
 
 
 	// TODO: Shader exception?!?!?
-	public static Octree rasterize(Vector3fc position, Object object) throws ShaderException, OctreeException {
+	public static Octree rasterize(Object object) throws ShaderException, OctreeException {
 		int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(object.getSize().x, Math.max(object.getSize().y, object.getSize().z))));
 		Octree octree = null;
 		try {
-			octree = Octree.create(position, octreeSize);
+			octree = Octree.create(octreeSize);
 		} catch (OctreeException e) {
 			e.printStackTrace();
 		}

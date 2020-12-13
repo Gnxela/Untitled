@@ -51,11 +51,11 @@ public class Octree {
 		return (n & (n - 1)) == 0;
 	}
 
-	public static Octree create(Vector3fc position, int width) throws OctreeException {
+	public static Octree create(int width) throws OctreeException {
 		if (!isPowerOf2(width)) {
 			throw new OctreeException("Width not divisible by 4");
 		}
-		return new Octree(position, width);
+		return new Octree(new Vector3f(), width);
 	}
 
 	public void draw(Matrix4f view, Matrix4f projection) throws TextureException {
