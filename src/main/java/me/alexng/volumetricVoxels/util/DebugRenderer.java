@@ -1,11 +1,14 @@
 package me.alexng.volumetricVoxels.util;
 
+import me.alexng.volumetricVoxels.Octree;
 import me.alexng.volumetricVoxels.render.AttributeStore;
 import me.alexng.volumetricVoxels.render.VertexArrayObject;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -57,5 +60,29 @@ public class DebugRenderer {
 		debugShaderProgram.setMatrix4f(SID.PROJECTION, projection);
 		cubeOutlineVAO.bind();
 		glDrawElements(GL_LINES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);
+	}
+
+	public static void drawOctree(Octree octree, Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+		debugShaderProgram.use();
+		debugShaderProgram.setVec3f(SID.DEBUG_COLOR, color);
+		debugShaderProgram.setMatrix4f(SID.VIEW, view);
+		debugShaderProgram.setMatrix4f(SID.PROJECTION, projection);
+		cubeOutlineVAO.bind();
+		drawOctree(octree, model);
+	}
+
+	private static void drawOctree(Octree octree, Matrix4fc model) {
+		Vector3i position = octree.getPosition();
+		debugShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f(model).translate(position.x, position.y, position.z, new Matrix4f()).scale(octree.getWidth()));
+		glDrawElements(GL_LINES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);
+		if (octree.getValue() != null) {
+			//value.draw(new Vector3f(), view, projection);
+		}
+
+		if (octree.hasChildren()) {
+			for (Octree child : octree.getChildren()) {
+				drawOctree(child, model);
+			}
+		}
 	}
 }

@@ -59,6 +59,10 @@ public class VolumetricVoxels {
 		Matrix4f view = camera.createViewMatrix();
 		window.clear();
 
+		//for (Octree octree : entities) {
+		//	DebugRenderer.drawOctree(octree, Colors.GREEN, new Matrix4f().identity(), view, projection);
+		//}
+
 		voxelMeshShaderProgram.use();
 		voxelMeshShaderProgram.setMatrix4f(SID.VIEW, view);
 		voxelMeshShaderProgram.setVec3f(SID.VIEW_POSITION, camera.getPosition());
@@ -79,7 +83,7 @@ public class VolumetricVoxels {
 			long start = System.nanoTime();
 			octree = Rasterizer.rasterize(object);
 			System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
-		} catch (ShaderException | OctreeException e) {
+		} catch (OctreeException e) {
 			e.printStackTrace();
 		}
 		entities.add(octree);

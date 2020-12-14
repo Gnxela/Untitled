@@ -1,10 +1,6 @@
 package me.alexng.volumetricVoxels;
 
 import me.alexng.volumetricVoxels.exceptions.OctreeException;
-import me.alexng.volumetricVoxels.exceptions.TextureException;
-import me.alexng.volumetricVoxels.util.Colors;
-import me.alexng.volumetricVoxels.util.DebugRenderer;
-import org.joml.Matrix4f;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 
@@ -21,16 +17,14 @@ public class Octree {
 	private static final int CHILD_NXPYNZ = 5;
 	private static final int CHILD_PXNYNZ = 6;
 	private static final int CHILD_NXNYNZ = 7;
-
 	private static final int NUM_CHILDREN = 8;
 	private static final float LOG_OF_2 = (float) Math.log(2);
 
-	private final int width;
 	private final Octree root;
 	private final Octree parent;
+	private final Vector3i position;
+	private final int width;
 
-	private Vector3i position;
-	private int depth;
 	@Nullable private Octree[] children;
 	// TODO: Storing children as an entire new Octree is a waste of memory.
 	@Nullable private Voxel value;
@@ -40,14 +34,12 @@ public class Octree {
 		this.width = width;
 		this.root = root;
 		this.parent = parent;
-		this.depth = parent.depth + 1;
 	}
 
 	private Octree(Vector3ic position, int width) {
 		this.position = new Vector3i(position);
 		this.width = width;
 		this.root = this;
-		this.depth = 1;
 		this.parent = null;
 	}
 
@@ -67,19 +59,6 @@ public class Octree {
 			throw new OctreeException("Width not divisible by 4");
 		}
 		return new Octree(new Vector3i(), width);
-	}
-
-	public void draw(Matrix4f view, Matrix4f projection) throws TextureException {
-		DebugRenderer.drawCubeOutline(Colors.BLUE, new Matrix4f().translate(position.x, position.y, position.z).scale(width), view, projection);
-		if (value != null) {
-			//value.draw(new Vector3f(), view, projection);
-		}
-
-		if (hasChildren()) {
-			for (Octree child : children) {
-				child.draw(view, projection);
-			}
-		}
 	}
 
 	@SuppressWarnings("SuspiciousNameCombination")
