@@ -1,15 +1,14 @@
 package me.alexng.volumetricVoxels;
 
 import me.alexng.volumetricVoxels.exceptions.OctreeException;
-import me.alexng.volumetricVoxels.exceptions.ShaderException;
 import me.alexng.volumetricVoxels.util.Colors;
 import org.joml.Vector3f;
 
 public class Rasterizer {
 
 
-	// TODO: Shader exception?!?!?
-	public static Octree rasterize(Object object) throws ShaderException, OctreeException {
+	public static Octree rasterize(Object object) throws OctreeException {
+		// TODO: Always rasterizing to a potentially large octree sucks. Allow for user defined storage.
 		int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(object.getSize().x, Math.max(object.getSize().y, object.getSize().z))));
 		Octree octree = null;
 		try {

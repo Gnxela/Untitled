@@ -32,6 +32,7 @@ public class Octree {
 	private Vector3i position;
 	private int depth;
 	@Nullable private Octree[] children;
+	// TODO: Storing children as an entire new Octree is a waste of memory.
 	@Nullable private Voxel value;
 
 	private Octree(Vector3ic position, int width, Octree root, Octree parent) {
