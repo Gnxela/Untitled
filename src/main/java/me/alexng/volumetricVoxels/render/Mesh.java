@@ -38,6 +38,7 @@ public class Mesh implements Cleanable {
 	}
 
 	public void draw(ShaderProgram shaderProgram) throws TextureException {
+		shaderProgram.use();
 		int d = 1, s = 1;
 		for (int i = 0; i < textures.length; i++) {
 			Texture texture = textures[i];
@@ -73,5 +74,11 @@ public class Mesh implements Cleanable {
 		return vao;
 	}
 
+	public int getVertexDataLength() {
+		return vertices.length;
+	}
 
+	public int getNumTriangles() {
+		return indices.length / 3;
+	}
 }

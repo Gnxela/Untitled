@@ -5,8 +5,8 @@ import me.alexng.volumetricVoxels.exceptions.TextureException;
 import me.alexng.volumetricVoxels.util.Colors;
 import me.alexng.volumetricVoxels.util.DebugRenderer;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector3fc;
+import org.joml.Vector3i;
+import org.joml.Vector3ic;
 
 import javax.annotation.Nullable;
 
@@ -19,21 +19,21 @@ public class Octree {
 	private final Octree root;
 	private final Octree parent;
 
-	private Vector3f position;
+	private Vector3i position;
 	private int depth;
 	@Nullable private Octree[] children;
 	@Nullable private Voxel value;
 
-	private Octree(Vector3fc position, int width, Octree root, Octree parent) {
-		this.position = new Vector3f(position);
+	private Octree(Vector3ic position, int width, Octree root, Octree parent) {
+		this.position = new Vector3i(position);
 		this.width = width;
 		this.root = root;
 		this.parent = parent;
 		this.depth = parent.depth + 1;
 	}
 
-	private Octree(Vector3fc position, int width) {
-		this.position = new Vector3f(position);
+	private Octree(Vector3ic position, int width) {
+		this.position = new Vector3i(position);
 		this.width = width;
 		this.root = this;
 		this.depth = 1;
@@ -55,13 +55,13 @@ public class Octree {
 		if (!isPowerOf2(width)) {
 			throw new OctreeException("Width not divisible by 4");
 		}
-		return new Octree(new Vector3f(), width);
+		return new Octree(new Vector3i(), width);
 	}
 
 	public void draw(Matrix4f view, Matrix4f projection) throws TextureException {
-		DebugRenderer.drawCubeOutline(Colors.BLUE, new Matrix4f().translate(position).scale(width), view, projection);
+		DebugRenderer.drawCubeOutline(Colors.BLUE, new Matrix4f().translate(position.x, position.y, position.z).scale(width), view, projection);
 		if (value != null) {
-			value.draw(new Vector3f(), view, projection);
+			//value.draw(new Vector3f(), view, projection);
 		}
 
 		if (hasChildren()) {
@@ -81,28 +81,60 @@ public class Octree {
 		}
 		children = new Octree[NUM_CHILDREN];
 		int childWidth = width / 2;
-		children[0] = new Octree(position.add(0, 0, 0, new Vector3f()), childWidth, root, this);
-		children[1] = new Octree(position.add(childWidth, 0, 0, new Vector3f()), childWidth, root, this);
-		children[2] = new Octree(position.add(0, childWidth, 0, new Vector3f()), childWidth, root, this);
-		children[3] = new Octree(position.add(0, 0, childWidth, new Vector3f()), childWidth, root, this);
-		children[4] = new Octree(position.add(childWidth, childWidth, 0, new Vector3f()), childWidth, root, this);
-		children[5] = new Octree(position.add(0, childWidth, childWidth, new Vector3f()), childWidth, root, this);
-		children[6] = new Octree(position.add(childWidth, 0, childWidth, new Vector3f()), childWidth, root, this);
-		children[7] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3f()), childWidth, root, this);
+		children[0] = new Octree(position.add(0, 0, 0, new Vector3i()), childWidth, root, this);
+		children[1] = new Octree(position.add(childWidth, 0, 0, new Vector3i()), childWidth, root, this);
+		children[2] = new Octree(position.add(0, childWidth, 0, new Vector3i()), childWidth, root, this);
+		children[3] = new Octree(position.add(0, 0, childWidth, new Vector3i()), childWidth, root, this);
+		children[4] = new Octree(position.add(childWidth, childWidth, 0, new Vector3i()), childWidth, root, this);
+		children[5] = new Octree(position.add(0, childWidth, childWidth, new Vector3i()), childWidth, root, this);
+		children[6] = new Octree(position.add(childWidth, 0, childWidth, new Vector3i()), childWidth, root, this);
+		children[7] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3i()), childWidth, root, this);
+	}
+
+	/**
+	 * Gets the first value in the hierarchy structure.
+	 */
+	@Nullable
+	public Voxel getFirst(int x, int y, int z) {
+		if (isLeaf()) {
+			return value;
+		}
+		if (!hasChildren()) {
+			return null;
+		}
+		int childWidth = width / 2;
+		boolean bx = x < position.x + childWidth, by = y < position.y + childWidth, bz = z < position.z + childWidth;
+		Octree child;
+		if (bx & by & bz) {
+			child = children[0];
+		} else if (!bx & by & bz) {
+			child = children[1];
+		} else if (bx & !by & bz) {
+			child = children[2];
+		} else if (bx & by & !bz) {
+			child = children[3];
+		} else if (!bx & !by & bz) {
+			child = children[4];
+		} else if (bx & !by) {
+			child = children[5];
+		} else if (by) {
+			child = children[6];
+		} else {
+			child = children[7];
+		}
+		return child.getFirst(x, y, z);
 	}
 
 	public void insert(Voxel voxel) throws OctreeException {
 		if (isLeaf()) {
-			System.out.println("set");
 			setValue(voxel);
 			return;
 		}
 		if (!hasChildren()) {
 			createChildren();
 		}
-		Vector3f distance = position.sub(voxel.getPosition().x(), voxel.getPosition().y(), voxel.getPosition().z(), new Vector3f()).mul(-1);
 		int childWidth = width / 2;
-		boolean x = distance.x < childWidth, y = distance.y < childWidth, z = distance.z < childWidth;
+		boolean x = voxel.getPosition().x() < position.x + childWidth, y = voxel.getPosition().y() < position.y + childWidth, z = voxel.getPosition().z() < position.z + childWidth;
 		Octree child;
 		if (x & y & z) {
 			child = children[0];
@@ -138,8 +170,25 @@ public class Octree {
 		return children;
 	}
 
+	public Vector3i getPosition() {
+		return position;
+	}
+
+	@Nullable
+	public Voxel getValue() {
+		return value;
+	}
+
 	public boolean isRoot() {
 		return this == root; // or parent == null
+	}
+
+	public Octree getRoot() {
+		return root;
+	}
+
+	public Octree getParent() {
+		return parent;
 	}
 
 	public boolean isLeaf() {
@@ -152,5 +201,9 @@ public class Octree {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public boolean contains(int x, int y, int z) {
+		return x >= position.x && x < position.x + width && y >= position.y && y < position.y + width && z >= position.z && z < position.z + width;
 	}
 }
