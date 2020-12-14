@@ -73,13 +73,17 @@ public class VolumetricVoxels {
 	}
 
 	public Octree createEntity(Object object) {
+		System.out.println("Creating object of size " + object.getSize().toString());
 		Octree octree = null;
 		try {
+			long start = System.nanoTime();
 			octree = Rasterizer.rasterize(object);
+			System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
 		} catch (ShaderException | OctreeException e) {
 			e.printStackTrace();
 		}
 		entities.add(octree);
+
 
 		long start = System.nanoTime();
 		Mesh mesh = Tessellater.tessellate(octree);
