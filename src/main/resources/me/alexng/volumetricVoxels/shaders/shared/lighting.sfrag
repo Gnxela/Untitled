@@ -19,7 +19,7 @@ vec4 defaultLighting(vec3 normal, vec3 diffuseSample, vec3 specularSample, vec3 
     vec3 ambient = light.ambient * diffuseSample;
 
     vec3 lightDirection = normalize(light.position - fragPosition);
-    float diff = max(dot(normal, lightDirection), 0);
+    float diff = abs(dot(normal, lightDirection));
     vec3 diffuse = light.diffuse * diff * diffuseSample;
 
     vec3 viewDirection = normalize(viewPosition - fragPosition);
