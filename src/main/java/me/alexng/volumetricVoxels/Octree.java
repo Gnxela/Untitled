@@ -12,6 +12,16 @@ import javax.annotation.Nullable;
 
 public class Octree {
 
+	// PXPYPZ means positive x, positive y, positive z. Positive x means that child.x < parent.x + width / 2
+	private static final int CHILD_PXPYPZ = 0;
+	private static final int CHILD_NXPYPZ = 1;
+	private static final int CHILD_PXNYPZ = 2;
+	private static final int CHILD_NXNYPZ = 3;
+	private static final int CHILD_PXPYNZ = 4;
+	private static final int CHILD_NXPYNZ = 5;
+	private static final int CHILD_PXNYNZ = 6;
+	private static final int CHILD_NXNYNZ = 7;
+
 	private static final int NUM_CHILDREN = 8;
 	private static final float LOG_OF_2 = (float) Math.log(2);
 
@@ -81,14 +91,14 @@ public class Octree {
 		}
 		children = new Octree[NUM_CHILDREN];
 		int childWidth = width / 2;
-		children[0] = new Octree(position.add(0, 0, 0, new Vector3i()), childWidth, root, this);
-		children[1] = new Octree(position.add(childWidth, 0, 0, new Vector3i()), childWidth, root, this);
-		children[2] = new Octree(position.add(0, childWidth, 0, new Vector3i()), childWidth, root, this);
-		children[3] = new Octree(position.add(0, 0, childWidth, new Vector3i()), childWidth, root, this);
-		children[4] = new Octree(position.add(childWidth, childWidth, 0, new Vector3i()), childWidth, root, this);
-		children[5] = new Octree(position.add(0, childWidth, childWidth, new Vector3i()), childWidth, root, this);
-		children[6] = new Octree(position.add(childWidth, 0, childWidth, new Vector3i()), childWidth, root, this);
-		children[7] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3i()), childWidth, root, this);
+		children[CHILD_PXPYPZ] = new Octree(position.add(0, 0, 0, new Vector3i()), childWidth, root, this);
+		children[CHILD_NXPYPZ] = new Octree(position.add(childWidth, 0, 0, new Vector3i()), childWidth, root, this);
+		children[CHILD_PXNYPZ] = new Octree(position.add(0, childWidth, 0, new Vector3i()), childWidth, root, this);
+		children[CHILD_PXPYNZ] = new Octree(position.add(0, 0, childWidth, new Vector3i()), childWidth, root, this);
+		children[CHILD_NXNYPZ] = new Octree(position.add(childWidth, childWidth, 0, new Vector3i()), childWidth, root, this);
+		children[CHILD_PXNYNZ] = new Octree(position.add(0, childWidth, childWidth, new Vector3i()), childWidth, root, this);
+		children[CHILD_NXPYNZ] = new Octree(position.add(childWidth, 0, childWidth, new Vector3i()), childWidth, root, this);
+		children[CHILD_NXNYNZ] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3i()), childWidth, root, this);
 	}
 
 	/**
@@ -106,21 +116,21 @@ public class Octree {
 		boolean bx = x < position.x + childWidth, by = y < position.y + childWidth, bz = z < position.z + childWidth;
 		Octree child;
 		if (bx & by & bz) {
-			child = children[0];
+			child = children[CHILD_PXPYPZ];
 		} else if (!bx & by & bz) {
-			child = children[1];
+			child = children[CHILD_NXPYPZ];
 		} else if (bx & !by & bz) {
-			child = children[2];
-		} else if (bx & by & !bz) {
-			child = children[3];
+			child = children[CHILD_PXNYPZ];
 		} else if (!bx & !by & bz) {
-			child = children[4];
-		} else if (bx & !by) {
-			child = children[5];
-		} else if (by) {
-			child = children[6];
+			child = children[CHILD_NXNYPZ];
+		} else if (bx & by) {
+			child = children[CHILD_PXPYNZ];
+		} else if (!bx & by) {
+			child = children[CHILD_NXPYNZ];
+		} else if (bx) {
+			child = children[CHILD_PXNYNZ];
 		} else {
-			child = children[7];
+			child = children[CHILD_NXNYNZ];
 		}
 		return child.getFirst(x, y, z);
 	}
@@ -134,24 +144,24 @@ public class Octree {
 			createChildren();
 		}
 		int childWidth = width / 2;
-		boolean x = voxel.getPosition().x() < position.x + childWidth, y = voxel.getPosition().y() < position.y + childWidth, z = voxel.getPosition().z() < position.z + childWidth;
+		boolean bx = voxel.getPosition().x() < position.x + childWidth, by = voxel.getPosition().y() < position.y + childWidth, bz = voxel.getPosition().z() < position.z + childWidth;
 		Octree child;
-		if (x & y & z) {
-			child = children[0];
-		} else if (!x & y & z) {
-			child = children[1];
-		} else if (x & !y & z) {
-			child = children[2];
-		} else if (x & y & !z) {
-			child = children[3];
-		} else if (!x & !y & z) {
-			child = children[4];
-		} else if (x & !y) {
-			child = children[5];
-		} else if (y) {
-			child = children[6];
+		if (bx & by & bz) {
+			child = children[CHILD_PXPYPZ];
+		} else if (!bx & by & bz) {
+			child = children[CHILD_NXPYPZ];
+		} else if (bx & !by & bz) {
+			child = children[CHILD_PXNYPZ];
+		} else if (!bx & !by & bz) {
+			child = children[CHILD_NXNYPZ];
+		} else if (bx & by) {
+			child = children[CHILD_PXPYNZ];
+		} else if (!bx & by) {
+			child = children[CHILD_NXPYNZ];
+		} else if (bx) {
+			child = children[CHILD_PXNYNZ];
 		} else {
-			child = children[7];
+			child = children[CHILD_NXNYNZ];
 		}
 		child.insert(voxel);
 	}
