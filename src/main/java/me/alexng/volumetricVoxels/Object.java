@@ -17,6 +17,10 @@ public class Object {
 		this.shapes = shapes;
 	}
 
+	public float lowestDistance(Vector3fc point) {
+		return (float) Arrays.stream(shapes).mapToDouble(s -> (int) Math.floor(s.signedDistance(point))).min().orElseThrow(RuntimeException::new);
+	}
+
 	public boolean containsPoint(Vector3fc point) {
 		return Arrays.stream(shapes).anyMatch(s -> s.signedDistance(point) <= 0);
 	}
