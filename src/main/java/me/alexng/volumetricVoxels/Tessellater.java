@@ -3,6 +3,7 @@ package me.alexng.volumetricVoxels;
 import me.alexng.volumetricVoxels.render.AttributeStore;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Texture;
+import me.alexng.volumetricVoxels.storage.Octree;
 import org.joml.Vector3f;
 
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ public class Tessellater {
 	private static final AttributeStore VERTEX_DATA_TYPE = AttributeStore.VEC3F_VEC3F_VEC3F;
 	private static final int STRIDE = VERTEX_DATA_TYPE.getTotalSize();
 
+	// TODO: Convert to VoxelStore
 	public static Mesh tessellate(Octree octree) {
 		// TODO: To avoid creating and destroying large Lists we could make this non-static and synchronised.
 		List<Integer> indicesList = new LinkedList<>();
@@ -145,9 +147,9 @@ public class Tessellater {
 	private static boolean isBlocked(Octree octree, int x, int y, int z) {
 		// For every voxel, 3/6 neighbors are guaranteed to be in the parents children.
 		if (octree.getParent().contains(x, y, z)) {
-			return octree.getParent().getFirst(x, y, z) == null;
+			return octree.getParent().get(x, y, z) == null;
 		}
-		return !octree.getRoot().contains(x, y, z) || octree.getRoot().getFirst(x, y, z) == null;
+		return !octree.getRoot().contains(x, y, z) || octree.getRoot().get(x, y, z) == null;
 	}
 
 	private static void addVertexData(List<Float> vertexData, Voxel voxel, Vector3f normal, float x, float y, float z) {

@@ -1,12 +1,13 @@
-package me.alexng.volumetricVoxels;
+package me.alexng.volumetricVoxels.storage;
 
+import me.alexng.volumetricVoxels.Voxel;
 import me.alexng.volumetricVoxels.exceptions.OctreeException;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 
 import javax.annotation.Nullable;
 
-public class Octree {
+public class Octree implements VoxelStore {
 
 	// PXPYPZ means positive x, positive y, positive z. Positive x means that child.x < parent.x + width / 2
 	private static final int CHILD_PXPYPZ = 0;
@@ -84,8 +85,9 @@ public class Octree {
 	/**
 	 * Gets the first value in the hierarchy structure.
 	 */
+	@Override
 	@Nullable
-	public Voxel getFirst(int x, int y, int z) {
+	public Voxel get(int x, int y, int z) {
 		if (isLeaf()) {
 			return value;
 		}
@@ -112,10 +114,11 @@ public class Octree {
 		} else {
 			child = children[CHILD_NXNYNZ];
 		}
-		return child.getFirst(x, y, z);
+		return child.get(x, y, z);
 	}
 
-	public void insert(Voxel voxel) throws OctreeException {
+	@Override
+	public void set(Voxel voxel) throws OctreeException {
 		if (isLeaf()) {
 			setValue(voxel);
 			return;
@@ -143,7 +146,7 @@ public class Octree {
 		} else {
 			child = children[CHILD_NXNYNZ];
 		}
-		child.insert(voxel);
+		child.set(voxel);
 	}
 
 	private void setValue(Voxel voxel) throws OctreeException {

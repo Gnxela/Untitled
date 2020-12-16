@@ -1,6 +1,6 @@
 package me.alexng.volumetricVoxels.exceptions;
 
-public class OctreeException extends VolumetricVoxelsException {
+public class OctreeException extends VoxelStoreException {
 	public OctreeException() {
 	}
 

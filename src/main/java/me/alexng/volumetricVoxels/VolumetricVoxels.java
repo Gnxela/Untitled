@@ -8,6 +8,8 @@ import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Window;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
+import me.alexng.volumetricVoxels.storage.Octree;
+import me.alexng.volumetricVoxels.storage.VoxelStore;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -28,7 +30,7 @@ public class VolumetricVoxels {
 	private Window window;
 	private Camera camera;
 	private ShaderProgram voxelMeshShaderProgram;
-	private List<Octree> entities = new LinkedList<>();
+	private List<VoxelStore> voxelStores = new LinkedList<>();
 	private List<Mesh> meshes = new LinkedList<>();
 
 	public void initialise() throws ShaderException {
@@ -86,8 +88,7 @@ public class VolumetricVoxels {
 		} catch (OctreeException e) {
 			e.printStackTrace();
 		}
-		entities.add(octree);
-
+		voxelStores.add(octree);
 
 		long start = System.nanoTime();
 		Mesh mesh = Tessellater.tessellate(octree);

@@ -1,10 +1,10 @@
 package me.alexng.volumetricVoxels.util;
 
-import me.alexng.volumetricVoxels.Octree;
 import me.alexng.volumetricVoxels.render.AttributeStore;
 import me.alexng.volumetricVoxels.render.VertexArrayObject;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
+import me.alexng.volumetricVoxels.storage.Octree;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fc;
 import org.joml.Vector3f;

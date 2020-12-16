@@ -1,6 +1,7 @@
 package me.alexng.volumetricVoxels;
 
 import me.alexng.volumetricVoxels.exceptions.OctreeException;
+import me.alexng.volumetricVoxels.storage.Octree;
 import me.alexng.volumetricVoxels.util.Colors;
 import org.joml.Vector3f;
 
@@ -24,7 +25,7 @@ public class Rasterizer {
 					float lowestDistance = object.lowestDistance(point);
 					if (lowestDistance <= 0) {
 						// TODO: Given that we know the order in which we are creating these. It is inefficient to have to search for the voxel's node every time.
-						octree.insert(new Voxel(x, y, z, Colors.RED));
+						octree.set(new Voxel(x, y, z, Colors.RED));
 					} else {
 						// We now know that we can move lowestDistance in any direction without missing anything.
 						// TODO: There should be a way to maximise the move here. Only moving along the z axis is easy but not optimal.
