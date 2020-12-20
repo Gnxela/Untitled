@@ -1,8 +1,23 @@
 package me.alexng.volumetricVoxels.shape;
 
-import org.joml.Vector3fc;
 
-public interface Shape {
+import me.alexng.volumetricVoxels.raster.Rasterable;
 
-	float signedDistance(Vector3fc point);
+public abstract class Shape {
+
+	public int color;
+
+	public Shape(int color) {
+		this.color = color;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
+	}
+
+	public abstract Rasterable toRasterInput();
 }

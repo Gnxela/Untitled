@@ -1,10 +1,10 @@
 package me.alexng.volumetricVoxels;
 
+import me.alexng.volumetricVoxels.raster.Rasterable;
 import me.alexng.volumetricVoxels.shape.Shape;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
-
-import java.util.Arrays;
 
 // TODO: Rename me!
 public class Object {
@@ -17,12 +17,12 @@ public class Object {
 		this.shapes = shapes;
 	}
 
-	public float lowestDistance(Vector3fc point) {
-		return (float) Arrays.stream(shapes).mapToDouble(s -> s.signedDistance(point)).min().orElseThrow(RuntimeException::new);
-	}
-
-	public boolean containsPoint(Vector3fc point) {
-		return Arrays.stream(shapes).anyMatch(s -> s.signedDistance(point) <= 0);
+	public Rasterable[] createRasterInput(Matrix4f model) {
+		Rasterable[] rasterInput = new Rasterable[shapes.length]; // Assuming every shape is one raster entry
+		for (int i = 0; i < shapes.length; i++) {
+			rasterInput[i] = shapes[i].toRasterInput();
+		}
+		return rasterInput;
 	}
 
 	public Vector3f getSize() {
