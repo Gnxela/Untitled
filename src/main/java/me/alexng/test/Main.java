@@ -20,8 +20,11 @@ public class Main {
 	public static void main(String[] args) throws OctreeException, ShaderException, TextureException {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
-		Object lineObject = new Object(new Vector3f(10), new Shape[]{
-				new Line(0xFF0000, new Vector3f(0, 0, 0), new Vector3f(10, 10, 10))
+		Object lineObject = new Object(new Vector3f(1000), new Shape[]{
+				new Line(0x000000, new Vector3f(0, 0, 1), new Vector3f(1000, 1000, 1001)),
+				new Line(0x222222, new Vector3f(0, 0, 2), new Vector3f(1000, 1000, 1002)),
+				new Line(0x444444, new Vector3f(0, 0, 3), new Vector3f(1000, 1000, 1003)),
+				new Line(0x666666, new Vector3f(0, 0, 4), new Vector3f(1000, 1000, 1004))
 		});
 
 		long start = System.nanoTime();
