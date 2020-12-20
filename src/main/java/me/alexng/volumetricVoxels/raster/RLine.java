@@ -42,7 +42,7 @@ public class RLine implements Rasterable {
 			if (dz < 0) {
 				dz += zinc1;
 			} else {
-				dz += yinc2;
+				dz += zinc2;
 				z += zsign;
 			}
 
