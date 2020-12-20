@@ -1,6 +1,5 @@
 package me.alexng.volumetricVoxels;
 
-import me.alexng.volumetricVoxels.exceptions.OctreeException;
 import me.alexng.volumetricVoxels.exceptions.ShaderException;
 import me.alexng.volumetricVoxels.exceptions.TextureException;
 import me.alexng.volumetricVoxels.render.Camera;
@@ -8,7 +7,6 @@ import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Window;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
-import me.alexng.volumetricVoxels.storage.Octree;
 import me.alexng.volumetricVoxels.storage.VoxelStore;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -30,8 +28,7 @@ public class VolumetricVoxels {
 	private Window window;
 	private Camera camera;
 	private ShaderProgram voxelMeshShaderProgram;
-	private List<VoxelStore> voxelStores = new LinkedList<>();
-	private List<Mesh> meshes = new LinkedList<>();
+	private List<Entity> entities = new LinkedList<>();
 
 	public void initialise() throws ShaderException {
 		window = Window.create(WIDTH, HEIGHT, TITLE);
@@ -69,34 +66,19 @@ public class VolumetricVoxels {
 		voxelMeshShaderProgram.setMatrix4f(SID.VIEW, view);
 		voxelMeshShaderProgram.setVec3f(SID.VIEW_POSITION, camera.getPosition());
 		voxelMeshShaderProgram.setVec3f(SID.LIGHT_POSITION, camera.getPosition());
-		for (Mesh mesh : meshes) {
+		for (Entity entity : entities) {
 			voxelMeshShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().identity());
-			mesh.draw(voxelMeshShaderProgram);
+			entity.getMesh().draw(voxelMeshShaderProgram);
 		}
 		// TODO: Separate update and render calls?
 
 		window.update();
 	}
 
-	public Octree createEntity(Object object) {
-		System.out.println("Creating object of size " + object.getSize().toString());
-		Octree octree = null;
-		try {
-			long start = System.nanoTime();
-			octree = Rasterizer.rasterize(object);
-			System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
-		} catch (OctreeException e) {
-			e.printStackTrace();
-		}
-		voxelStores.add(octree);
-
-		long start = System.nanoTime();
-		Mesh mesh = Tessellater.tessellate(octree);
-		System.out.println("Tesselation time: " + (System.nanoTime() - start) / 1000000 + "ms");
-		System.out.println("Num triangles: " + mesh.getNumTriangles());
-		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
-		meshes.add(mesh);
-		return octree;
+	public Entity addEntity(VoxelStore voxelStore, Mesh mesh) {
+		Entity entity = new Entity(voxelStore, mesh);
+		entities.add(entity);
+		return entity;
 	}
 
 	public Window getWindow() {

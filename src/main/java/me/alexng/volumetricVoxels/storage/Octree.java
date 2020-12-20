@@ -44,6 +44,16 @@ public class Octree implements VoxelStore {
 		this.parent = null;
 	}
 
+	@Override
+	public Vector3ic getSize() {
+		return null;
+	}
+
+	@Override
+	public boolean containsValue(int x, int y, int z) {
+		return false;
+	}
+
 	/**
 	 * Returns the minimum width required to fit {@code width} inside an {@link Octree}.
 	 */
@@ -156,6 +166,10 @@ public class Octree implements VoxelStore {
 		this.value = voxel;
 	}
 
+	public boolean contains(int x, int y, int z) {
+		return x >= position.x && x < position.x + width && y >= position.y && y < position.y + width && z >= position.z && z < position.z + width;
+	}
+
 	// TODO: Think about visibility
 
 	@Nullable
@@ -194,9 +208,5 @@ public class Octree implements VoxelStore {
 
 	public int getWidth() {
 		return width;
-	}
-
-	public boolean contains(int x, int y, int z) {
-		return x >= position.x && x < position.x + width && y >= position.y && y < position.y + width && z >= position.z && z < position.z + width;
 	}
 }
