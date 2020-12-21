@@ -20,12 +20,16 @@ public class Main {
 	public static void main(String[] args) throws VoxelStoreException, ShaderException, TextureException {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
+
 		Shape[] shapes = new Shape[1];
 		shapes[0] = new Line(0x00FF00, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
+		int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
+		Octree octree = Octree.create(octreeSize);
+
 		long start = System.nanoTime();
-		Octree octree = Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate);
+		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, octree);
 		System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
