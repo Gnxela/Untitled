@@ -37,11 +37,11 @@ public class Tessellater {
 	}
 
 	public static Mesh tessellateOctreeArrayGrid(OctreeArrayGrid arrayGrid) {
-		// TODO: To avoid creating and destroying large Lists we could make this non-static and synchronised.
 		List<Integer> indicesList = new LinkedList<>();
 		List<Float> vertexData = new LinkedList<>();
 		for (Octree octree : arrayGrid.getChildren()) {
 			if (octree != null) {
+				// TODO: We need to pass a trnasform matrix in here.
 				tessellateOctree(octree, indicesList, vertexData);
 			}
 		}

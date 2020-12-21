@@ -121,6 +121,7 @@ public class Octree implements VoxelStore {
 
 	@Override
 	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
+		// TODO: We should have internal (private) and external (public) versions. Internal needs less checks
 		if (!contains(x, y, z)) {
 			throw new VoxelStoreException("Voxel not contained in octree");
 		}

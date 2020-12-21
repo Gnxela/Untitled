@@ -14,16 +14,16 @@ public class OctreeArrayGrid implements VoxelStore {
 
 	private final Vector3i size;
 	private final Octree[] grid;
-	private final int cellWidth;
+	private final int octreeWidth;
 
 	/**
 	 * @param cells Size in number of cells.
 	 */
-	public OctreeArrayGrid(Vector3ic cells, int cellWidth) throws VoxelStoreException {
+	public OctreeArrayGrid(Vector3ic cells, int octreeWidth) throws VoxelStoreException {
 		checkSize(cells);
-		this.size = new Vector3i(cells).mul(cellWidth);
+		this.size = new Vector3i(cells).mul(octreeWidth);
 		this.grid = new Octree[cells.x() * cells.y() * cells.z()];
-		this.cellWidth = cellWidth;
+		this.octreeWidth = octreeWidth;
 	}
 
 	private static void checkSize(Vector3ic size) throws VoxelStoreException {
@@ -40,32 +40,39 @@ public class OctreeArrayGrid implements VoxelStore {
 	@Nullable
 	@Override
 	public Voxel get(int x, int y, int z) throws VoxelStoreException {
-		Octree cell = grid[getIndex(x, y, z)];
+		int cellX = x / octreeWidth;
+		int cellY = y / octreeWidth;
+		int cellZ = z / octreeWidth;
+		Octree cell = grid[getIndex(cellX, cellY, cellZ)];
 		if (cell == null) {
 			return null;
 		}
-		return cell.get(x, y, z);
+		return cell.get(x - cellX, y - cellY, z - cellZ);
 	}
 
 	@Override
 	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
-		int index = getIndex(x, y, z);
+		int cellX = x / octreeWidth;
+		int cellY = y / octreeWidth;
+		int cellZ = z / octreeWidth;
+		int index = getIndex(cellX, cellY, cellZ);
 		Octree cell = grid[index];
 		if (cell == null) {
-			grid[index] = cell = Octree.create(cellWidth);
+			cell = Octree.create(octreeWidth);
+			grid[index] = cell;
 		}
-		cell.set(x, y, z, voxel);
+		cell.set(x - cellX * octreeWidth, y - cellY * octreeWidth, z - cellZ, voxel);
 	}
 
-	private int getIndex(int x, int y, int z) {
-		return x / cellWidth * size.x * size.y + y / cellWidth * size.y + z / cellWidth;
+	private int getIndex(int cellX, int cellY, int cellZ) {
+		return cellZ * size.x * size.y + cellY * size.x + cellX;
 	}
 
 	public Octree[] getChildren() {
 		return grid;
 	}
 
-	public int getCellWidth() {
-		return cellWidth;
+	public int getOctreeWidth() {
+		return octreeWidth;
 	}
 }

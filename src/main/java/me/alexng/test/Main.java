@@ -23,7 +23,7 @@ public class Main {
 		vv.initialise();
 
 		Shape[] shapes = new Shape[1];
-		shapes[0] = new Line(0x00FF00, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
+		shapes[0] = new Line(0x00FF00, new Vector3f(0, 5, 5), new Vector3f(50, 5, 5));
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
 		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
