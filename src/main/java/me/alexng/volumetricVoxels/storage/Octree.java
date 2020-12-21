@@ -1,7 +1,7 @@
 package me.alexng.volumetricVoxels.storage;
 
 import me.alexng.volumetricVoxels.Voxel;
-import me.alexng.volumetricVoxels.exceptions.OctreeException;
+import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 
@@ -65,17 +65,17 @@ public class Octree implements VoxelStore {
 		return (n & (n - 1)) == 0;
 	}
 
-	public static Octree create(int width) throws OctreeException {
+	public static Octree create(int width) throws VoxelStoreException {
 		if (!isPowerOf2(width)) {
-			throw new OctreeException("Width not divisible by 4");
+			throw new VoxelStoreException("Width not divisible by 4");
 		}
 		return new Octree(new Vector3i(), width);
 	}
 
 	@SuppressWarnings("SuspiciousNameCombination")
-	public void createChildren() throws OctreeException {
+	public void createChildren() throws VoxelStoreException {
 		if (width == 1) {
-			throw new OctreeException("Can not create children for unit voxel");
+			throw new VoxelStoreException("Can not create children for unit voxel");
 		}
 		if (hasChildren()) {
 			return;
@@ -128,7 +128,10 @@ public class Octree implements VoxelStore {
 	}
 
 	@Override
-	public void set(Voxel voxel) throws OctreeException {
+	public void set(Voxel voxel) throws VoxelStoreException {
+		if (!contains(voxel.getPosition().x(), voxel.getPosition().y(), voxel.getPosition().z())) {
+			throw new VoxelStoreException("Voxel not contained in octree");
+		}
 		if (isLeaf()) {
 			setValue(voxel);
 			return;
@@ -159,9 +162,9 @@ public class Octree implements VoxelStore {
 		child.set(voxel);
 	}
 
-	private void setValue(Voxel voxel) throws OctreeException {
+	private void setValue(Voxel voxel) throws VoxelStoreException {
 		if (!isLeaf()) {
-			throw new OctreeException("Can not set value of non leaf nodes.");
+			throw new VoxelStoreException("Can not set value of non leaf nodes.");
 		}
 		this.value = voxel;
 	}

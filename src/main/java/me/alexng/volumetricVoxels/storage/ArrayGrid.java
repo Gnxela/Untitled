@@ -1,7 +1,6 @@
 package me.alexng.volumetricVoxels.storage;
 
 import me.alexng.volumetricVoxels.Voxel;
-import me.alexng.volumetricVoxels.exceptions.ArrayGridException;
 import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
@@ -14,16 +13,16 @@ public class ArrayGrid<T> implements VoxelStore {
 	private final Object[] grid;
 	private final int cellWidth;
 
-	public ArrayGrid(Vector3ic size, int cellWidth) throws ArrayGridException {
+	public ArrayGrid(Vector3ic size, int cellWidth) throws VoxelStoreException {
 		checkSize(size);
 		this.size = new Vector3i(size);
 		this.grid = new Object[size.x() * size.y() * size.z()];
 		this.cellWidth = cellWidth;
 	}
 
-	private static void checkSize(Vector3ic size) throws ArrayGridException {
+	private static void checkSize(Vector3ic size) throws VoxelStoreException {
 		if (size.x() < 0 && size.y() < 0 && size.z() < 0) {
-			throw new ArrayGridException("Size must be positive");
+			throw new VoxelStoreException("Size must be positive");
 		}
 	}
 

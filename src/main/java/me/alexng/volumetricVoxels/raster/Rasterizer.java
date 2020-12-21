@@ -1,7 +1,6 @@
 package me.alexng.volumetricVoxels.raster;
 
 import me.alexng.volumetricVoxels.ObjectTemplate;
-import me.alexng.volumetricVoxels.exceptions.OctreeException;
 import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import me.alexng.volumetricVoxels.storage.Octree;
 import org.joml.Matrix4f;
@@ -14,7 +13,7 @@ public class Rasterizer {
 		Octree octree = null;
 		try {
 			octree = Octree.create(octreeSize);
-		} catch (OctreeException e) {
+		} catch (VoxelStoreException e) {
 			e.printStackTrace();
 		}
 

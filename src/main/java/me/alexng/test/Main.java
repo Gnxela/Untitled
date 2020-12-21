@@ -10,7 +10,6 @@ import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import me.alexng.volumetricVoxels.raster.Rasterizer;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
-import me.alexng.volumetricVoxels.shape.Polygon;
 import me.alexng.volumetricVoxels.shape.Shape;
 import me.alexng.volumetricVoxels.storage.Octree;
 import org.joml.Matrix4f;
@@ -22,17 +21,11 @@ public class Main {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
 		Shape[] shapes = new Shape[1];
-		// TODO: Why are we using hex here and vectors later. To reduce memory I suppose.
-		Line[] lines = new Line[]{
-				new Line(0x00FF00, new Vector3f(-5, 0, -5), new Vector3f(-5, 0, 5)),
-				new Line(0x00FF00, new Vector3f(-5, 0, 5), new Vector3f(5, 0, 5)),
-				new Line(0x00FF00, new Vector3f(5, 0, 5), new Vector3f(-5, 0, -5)),
-		};
-		shapes[0] = new Polygon(0xFF0000, lines, new float[]{0, 1, 0, 0}, true);
+		shapes[0] = new Line(0xFF0000, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
 		long start = System.nanoTime();
-		Octree octree = Rasterizer.rasterize(new Matrix4f().rotate(0.5f, 1, 1, 1).translate(50, 50, 50), lineObjectTemplate);
+		Octree octree = Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate);
 		System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
