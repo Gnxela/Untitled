@@ -4,9 +4,9 @@ import me.alexng.volumetricVoxels.Entity;
 import me.alexng.volumetricVoxels.Object;
 import me.alexng.volumetricVoxels.Tessellater;
 import me.alexng.volumetricVoxels.VolumetricVoxels;
-import me.alexng.volumetricVoxels.exceptions.OctreeException;
 import me.alexng.volumetricVoxels.exceptions.ShaderException;
 import me.alexng.volumetricVoxels.exceptions.TextureException;
+import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import me.alexng.volumetricVoxels.raster.Rasterizer;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
@@ -17,14 +17,15 @@ import org.joml.Vector3f;
 
 public class Main {
 
-	public static void main(String[] args) throws OctreeException, ShaderException, TextureException {
+	public static void main(String[] args) throws VoxelStoreException, ShaderException, TextureException {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
 		Object lineObject = new Object(new Vector3f(1000), new Shape[]{
-				new Line(0x000000, new Vector3f(0, 0, 1), new Vector3f(1000, 1000, 1001)),
-				new Line(0x222222, new Vector3f(0, 0, 2), new Vector3f(1000, 1000, 1002)),
-				new Line(0x444444, new Vector3f(0, 0, 3), new Vector3f(1000, 1000, 1003)),
-				new Line(0x666666, new Vector3f(0, 0, 4), new Vector3f(1000, 1000, 1004))
+				new Line(0xFF0000, new Vector3f(0, 0, 0), new Vector3f(50, 0, 0)),
+				new Line(0x00FF00, new Vector3f(0, 0, 0), new Vector3f(0, 50, 0)),
+				new Line(0x0000FF, new Vector3f(0, 0, 0), new Vector3f(0, 0, 50)),
+
+				new Line(0xFF00FF, new Vector3f(5, 5, 0), new Vector3f(6, 5, 5)),
 		});
 
 		long start = System.nanoTime();
