@@ -7,6 +7,7 @@ import me.alexng.volumetricVoxels.util.ConversionUtil;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
+import org.joml.Vector4fc;
 
 public class RLine implements Rasterable {
 
@@ -19,8 +20,8 @@ public class RLine implements Rasterable {
 		this.color = color;
 	}
 
-	public static RLine floor(Vector3f start, Vector3f end, int color) {
-		return new RLine(new Vector3i((int) start.x, (int) start.y, (int) start.z), new Vector3i((int) end.x, (int) end.y, (int) end.z), color);
+	public static RLine floor(Vector4fc start, Vector4fc end, int color) {
+		return new RLine(new Vector3i((int) start.x(), (int) start.y(), (int) start.z()), new Vector3i((int) end.x(), (int) end.y(), (int) end.z()), color);
 	}
 
 	void swap() {

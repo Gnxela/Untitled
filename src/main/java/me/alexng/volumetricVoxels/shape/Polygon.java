@@ -3,6 +3,7 @@ package me.alexng.volumetricVoxels.shape;
 import me.alexng.volumetricVoxels.raster.RLine;
 import me.alexng.volumetricVoxels.raster.RPolygon;
 import me.alexng.volumetricVoxels.raster.Rasterable;
+import org.joml.Matrix4f;
 
 public class Polygon extends Shape {
 
@@ -20,10 +21,10 @@ public class Polygon extends Shape {
 	}
 
 	@Override
-	public Rasterable toRasterInput() {
+	public Rasterable toRasterInput(Matrix4f model) {
 		RLine[] rlines = new RLine[lines.length];
 		for (int i = 0; i < lines.length; i++) {
-			rlines[i] = lines[i].toRasterInput();
+			rlines[i] = lines[i].toRasterInput(model);
 		}
 		return new RPolygon(rlines, plane, color, filled);
 	}

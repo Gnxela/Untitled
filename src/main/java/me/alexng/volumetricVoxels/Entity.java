@@ -16,4 +16,8 @@ public class Entity {
 	public Mesh getMesh() {
 		return mesh;
 	}
+
+	public VoxelStore getVoxelStore() {
+		return voxelStore;
+	}
 }

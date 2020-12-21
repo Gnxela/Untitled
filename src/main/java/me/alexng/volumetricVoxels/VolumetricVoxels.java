@@ -7,7 +7,10 @@ import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Window;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
+import me.alexng.volumetricVoxels.storage.Octree;
 import me.alexng.volumetricVoxels.storage.VoxelStore;
+import me.alexng.volumetricVoxels.util.Colors;
+import me.alexng.volumetricVoxels.util.DebugRenderer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -23,7 +26,8 @@ import static org.lwjgl.opengl.GL11.glEnable;
 public class VolumetricVoxels {
 
 	// TODO: Update view matrix when window changes
-	public static final Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
+	private Matrix4f projection = new Matrix4f().perspective(FOV, ((float) WIDTH) / ((float) HEIGHT), 0.1f, 5000);
+	private Matrix4f view;
 
 	private Window window;
 	private Camera camera;
@@ -55,7 +59,7 @@ public class VolumetricVoxels {
 
 	public void update() throws TextureException {
 		camera.processInput(window);
-		Matrix4f view = camera.createViewMatrix();
+		view = camera.createViewMatrix();
 		window.clear();
 
 		//for (Octree octree : entities) {
@@ -69,6 +73,9 @@ public class VolumetricVoxels {
 		for (Entity entity : entities) {
 			voxelMeshShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().identity());
 			entity.getMesh().draw(voxelMeshShaderProgram);
+			if (entity.getVoxelStore() instanceof Octree) {
+				DebugRenderer.drawOctree((Octree) entity.getVoxelStore(), Colors.RED, new Matrix4f(), view, projection);
+			}
 		}
 		// TODO: Separate update and render calls?
 
@@ -79,6 +86,14 @@ public class VolumetricVoxels {
 		Entity entity = new Entity(voxelStore, mesh);
 		entities.add(entity);
 		return entity;
+	}
+
+	public Matrix4f getProjectionMatrix() {
+		return projection;
+	}
+
+	public Matrix4f getViewMatrix() {
+		return view;
 	}
 
 	public Window getWindow() {

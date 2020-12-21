@@ -1,7 +1,9 @@
 package me.alexng.volumetricVoxels.shape;
 
 import me.alexng.volumetricVoxels.raster.RLine;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public class Line extends Shape {
 
@@ -14,8 +16,8 @@ public class Line extends Shape {
 	}
 
 	@Override
-	public RLine toRasterInput() {
-		return RLine.floor(start, end, color);
+	public RLine toRasterInput(Matrix4f model) {
+		return RLine.floor(new Vector4f(start, 1).mul(model), new Vector4f(end, 1).mul(model), color);
 	}
 
 	public Vector3f getStart() {

@@ -6,13 +6,16 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
-// TODO: Rename me!
-public class Object {
+/**
+ * A reusable template that creates raster input for a shape/model/object.
+ * This object exists in object space while raster output exists in voxel space. A transformation matrix is applied when creating raster input.
+ */
+public class ObjectTemplate {
 
 	private final Shape[] shapes;
 	private final Vector3f size;
 
-	public Object(Vector3fc size, Shape[] shapes) {
+	public ObjectTemplate(Vector3fc size, Shape[] shapes) {
 		this.size = new Vector3f(size);
 		this.shapes = shapes;
 	}
@@ -20,7 +23,7 @@ public class Object {
 	public Rasterable[] createRasterInput(Matrix4f model) {
 		Rasterable[] rasterInput = new Rasterable[shapes.length]; // Assuming every shape is one raster entry
 		for (int i = 0; i < shapes.length; i++) {
-			rasterInput[i] = shapes[i].toRasterInput();
+			rasterInput[i] = shapes[i].toRasterInput(model);
 		}
 		return rasterInput;
 	}
