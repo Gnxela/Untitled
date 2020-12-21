@@ -31,6 +31,7 @@ public class RLine implements Rasterable {
 		int dy = 2 * yDelta - xDelta, yinc1 = 2 * yDelta, yinc2 = 2 * (yDelta - xDelta);
 		int z = start.z(), zDelta = Math.abs(end.z() - start.z()), zsign = (end.z() - start.z()) / zDelta;
 		int dz = 2 * zDelta - xDelta, zinc1 = 2 * zDelta, zinc2 = 2 * (zDelta - xDelta);
+		Vector3f c = ConversionUtil.rgbIntToVector3f(color);
 		while (x < end.x()) {
 			x++;
 			if (dy < 0) {
@@ -47,7 +48,7 @@ public class RLine implements Rasterable {
 			}
 
 			try {
-				store.set(new Voxel(x, y, z, ConversionUtil.rgbIntToVector3f(color)));
+				store.set(new Voxel(x, y, z, c));
 			} catch (VoxelStoreException e) {
 				e.printStackTrace();
 			}
