@@ -20,13 +20,14 @@ public class Main {
 	public static void main(String[] args) throws VoxelStoreException, ShaderException, TextureException {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
-		Object lineObject = new Object(new Vector3f(1000), new Shape[]{
-				new Line(0xFF0000, new Vector3f(0, 0, 0), new Vector3f(50, 0, 0)),
-				new Line(0x00FF00, new Vector3f(0, 0, 0), new Vector3f(0, 50, 0)),
-				new Line(0x0000FF, new Vector3f(0, 0, 0), new Vector3f(0, 0, 50)),
-
-				new Line(0xFF00FF, new Vector3f(5, 5, 0), new Vector3f(6, 5, 5)),
-		});
+		Shape[] shapes = new Shape[40];
+		int objectSize = 100;
+		Vector3f startPoint = new Vector3f(objectSize / 2f, objectSize / 2f, objectSize / 2f);
+		float pi2 = (float) Math.PI * 2 / shapes.length;
+		for (int i = 0; i < shapes.length; i++) {
+			shapes[i] = new Line(0xFF0000, startPoint, new Vector3f((float) Math.cos(pi2 * i) * objectSize / 2, 0, (float) Math.sin(pi2 * i) * objectSize / 2).add(startPoint));
+		}
+		Object lineObject = new Object(new Vector3f(objectSize), shapes);
 
 		long start = System.nanoTime();
 		Octree octree = Rasterizer.rasterize(new Matrix4f(), lineObject);

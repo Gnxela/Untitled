@@ -29,12 +29,6 @@ public class RLine implements Rasterable {
 		if (end.equals(start.x(), start.y(), start.z())) {
 			return;
 		}
-		if (start.x() > end.x()) { // Swap the vectors so that start.x < end.x
-			System.out.println("asd");
-			Vector3ic temp = start;
-			start = end;
-			end = temp;
-		}
 		Vector3f c = ConversionUtil.rgbIntToVector3f(color);
 		int x = start.x(), xDelta = Math.abs(end.x() - start.x()), xsign = (end.x() - start.x()) / (xDelta == 0 ? 1 : xDelta);
 		int y = start.y(), yDelta = Math.abs(end.y() - start.y()), ysign = (end.y() - start.y()) / (yDelta == 0 ? 1 : yDelta);
