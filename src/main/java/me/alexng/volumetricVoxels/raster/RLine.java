@@ -10,7 +10,7 @@ import org.joml.Vector3ic;
 
 public class RLine implements Rasterable {
 
-	private Vector3ic start, end;
+	Vector3ic start, end;
 	private int color;
 
 	private RLine(Vector3ic start, Vector3ic end, int color) {
@@ -21,6 +21,12 @@ public class RLine implements Rasterable {
 
 	public static RLine floor(Vector3f start, Vector3f end, int color) {
 		return new RLine(new Vector3i((int) start.x, (int) start.y, (int) start.z), new Vector3i((int) end.x, (int) end.y, (int) end.z), color);
+	}
+
+	void swap() {
+		Vector3ic temp = start;
+		start = end;
+		end = temp;
 	}
 
 	@Override

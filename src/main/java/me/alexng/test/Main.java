@@ -10,6 +10,7 @@ import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import me.alexng.volumetricVoxels.raster.Rasterizer;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
+import me.alexng.volumetricVoxels.shape.Polygon;
 import me.alexng.volumetricVoxels.shape.Shape;
 import me.alexng.volumetricVoxels.storage.Octree;
 import org.joml.Matrix4f;
@@ -20,14 +21,15 @@ public class Main {
 	public static void main(String[] args) throws VoxelStoreException, ShaderException, TextureException {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
-		Shape[] shapes = new Shape[40];
-		int objectSize = 100;
-		Vector3f startPoint = new Vector3f(objectSize / 2f, objectSize / 2f, objectSize / 2f);
-		float pi2 = (float) Math.PI * 2 / shapes.length;
-		for (int i = 0; i < shapes.length; i++) {
-			shapes[i] = new Line(0xFF0000, startPoint, new Vector3f((float) Math.cos(pi2 * i) * objectSize / 2, 0, (float) Math.sin(pi2 * i) * objectSize / 2).add(startPoint));
-		}
-		Object lineObject = new Object(new Vector3f(objectSize), shapes);
+		Shape[] shapes = new Shape[1];
+		// TODO: Why are we using hex here and vectors later. To reduce memory I suppose.
+		Line[] lines = new Line[]{
+				new Line(0x00FF00, new Vector3f(0), new Vector3f(0, 0, 10)),
+				new Line(0x00FF00, new Vector3f(0, 0, 10), new Vector3f(10, 0, 10)),
+				new Line(0x00FF00, new Vector3f(10, 0, 10), new Vector3f(0)),
+		};
+		shapes[0] = new Polygon(0xFF0000, lines, new float[]{0, 1, 0, 0}, true);
+		Object lineObject = new Object(new Vector3f(100), shapes);
 
 		long start = System.nanoTime();
 		Octree octree = Rasterizer.rasterize(new Matrix4f(), lineObject);
