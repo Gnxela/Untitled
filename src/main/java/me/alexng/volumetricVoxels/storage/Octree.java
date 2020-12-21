@@ -22,36 +22,28 @@ public class Octree implements VoxelStore {
 	private static final float LOG_OF_2 = (float) Math.log(2);
 
 	private final Octree root;
-	private final Octree parent;
 	private final Vector3i position;
 	private final int width;
 
 	@Nullable private Octree[] children;
-	// TODO: Storing children as an entire new Octree is a waste of memory.
+	// TODO: Storing leaves as an entire new Octree is a waste of memory.
 	@Nullable private Voxel value;
 
-	private Octree(Vector3ic position, int width, Octree root, Octree parent) {
+	private Octree(Vector3ic position, int width, Octree root) {
 		this.position = new Vector3i(position);
 		this.width = width;
 		this.root = root;
-		this.parent = parent;
 	}
 
 	private Octree(Vector3ic position, int width) {
 		this.position = new Vector3i(position);
 		this.width = width;
 		this.root = this;
-		this.parent = null;
 	}
 
 	@Override
 	public Vector3ic getSize() {
 		return null;
-	}
-
-	@Override
-	public boolean containsValue(int x, int y, int z) {
-		return false;
 	}
 
 	/**
@@ -82,14 +74,14 @@ public class Octree implements VoxelStore {
 		}
 		children = new Octree[NUM_CHILDREN];
 		int childWidth = width / 2;
-		children[CHILD_PXPYPZ] = new Octree(position.add(0, 0, 0, new Vector3i()), childWidth, root, this);
-		children[CHILD_NXPYPZ] = new Octree(position.add(childWidth, 0, 0, new Vector3i()), childWidth, root, this);
-		children[CHILD_PXNYPZ] = new Octree(position.add(0, childWidth, 0, new Vector3i()), childWidth, root, this);
-		children[CHILD_PXPYNZ] = new Octree(position.add(0, 0, childWidth, new Vector3i()), childWidth, root, this);
-		children[CHILD_NXNYPZ] = new Octree(position.add(childWidth, childWidth, 0, new Vector3i()), childWidth, root, this);
-		children[CHILD_PXNYNZ] = new Octree(position.add(0, childWidth, childWidth, new Vector3i()), childWidth, root, this);
-		children[CHILD_NXPYNZ] = new Octree(position.add(childWidth, 0, childWidth, new Vector3i()), childWidth, root, this);
-		children[CHILD_NXNYNZ] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3i()), childWidth, root, this);
+		children[CHILD_PXPYPZ] = new Octree(position.add(0, 0, 0, new Vector3i()), childWidth, root);
+		children[CHILD_NXPYPZ] = new Octree(position.add(childWidth, 0, 0, new Vector3i()), childWidth, root);
+		children[CHILD_PXNYPZ] = new Octree(position.add(0, childWidth, 0, new Vector3i()), childWidth, root);
+		children[CHILD_PXPYNZ] = new Octree(position.add(0, 0, childWidth, new Vector3i()), childWidth, root);
+		children[CHILD_NXNYPZ] = new Octree(position.add(childWidth, childWidth, 0, new Vector3i()), childWidth, root);
+		children[CHILD_PXNYNZ] = new Octree(position.add(0, childWidth, childWidth, new Vector3i()), childWidth, root);
+		children[CHILD_NXPYNZ] = new Octree(position.add(childWidth, 0, childWidth, new Vector3i()), childWidth, root);
+		children[CHILD_NXNYNZ] = new Octree(position.add(childWidth, childWidth, childWidth, new Vector3i()), childWidth, root);
 	}
 
 	/**
@@ -195,10 +187,6 @@ public class Octree implements VoxelStore {
 
 	public Octree getRoot() {
 		return root;
-	}
-
-	public Octree getParent() {
-		return parent;
 	}
 
 	public boolean isLeaf() {

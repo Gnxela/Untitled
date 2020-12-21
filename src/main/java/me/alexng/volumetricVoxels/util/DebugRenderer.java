@@ -5,10 +5,8 @@ import me.alexng.volumetricVoxels.render.VertexArrayObject;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
 import me.alexng.volumetricVoxels.storage.Octree;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fc;
-import org.joml.Vector3f;
-import org.joml.Vector3i;
+import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
+import org.joml.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -84,5 +82,16 @@ public class DebugRenderer {
 				drawOctree(child, model);
 			}
 		}
+	}
+
+	public static void drawOctreeArrayGrid(OctreeArrayGrid octreeArrayGrid, Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+		for (Octree octree : octreeArrayGrid.getChildren()) {
+			if (octree != null) {
+				drawOctree(octree, color, model, view, projection);
+			}
+		}
+		Vector3ic size = octreeArrayGrid.getSize();
+		debugShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f(model).scale(size.x(), size.y(), size.z()));
+		glDrawElements(GL_LINES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);
 	}
 }

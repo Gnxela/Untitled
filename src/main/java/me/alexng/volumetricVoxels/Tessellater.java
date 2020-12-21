@@ -4,6 +4,7 @@ import me.alexng.volumetricVoxels.render.AttributeStore;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Texture;
 import me.alexng.volumetricVoxels.storage.Octree;
+import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
 import me.alexng.volumetricVoxels.util.ConversionUtil;
 import org.joml.Vector3f;
 
@@ -17,11 +18,33 @@ public class Tessellater {
 	private static final int STRIDE = VERTEX_DATA_TYPE.getTotalSize();
 
 	// TODO: Convert to VoxelStore
-	public static Mesh tessellate(Octree octree) {
+	public static Mesh tessellateOctree(Octree octree) {
 		// TODO: To avoid creating and destroying large Lists we could make this non-static and synchronised.
 		List<Integer> indicesList = new LinkedList<>();
 		List<Float> vertexData = new LinkedList<>();
-		tessellate(octree, indicesList, vertexData);
+		tessellateOctree(octree, indicesList, vertexData);
+		int[] indices = new int[indicesList.size()];
+		int index = 0;
+		for (Integer i : indicesList) {
+			indices[index++] = i;
+		}
+		float[] vertices = new float[vertexData.size()];
+		index = 0;
+		for (Float f : vertexData) {
+			vertices[index++] = f;
+		}
+		return new Mesh(indices, vertices, new Texture[]{}, VERTEX_DATA_TYPE);
+	}
+
+	public static Mesh tessellateOctreeArrayGrid(OctreeArrayGrid arrayGrid) {
+		// TODO: To avoid creating and destroying large Lists we could make this non-static and synchronised.
+		List<Integer> indicesList = new LinkedList<>();
+		List<Float> vertexData = new LinkedList<>();
+		for (Octree octree : arrayGrid.getChildren()) {
+			if (octree != null) {
+				tessellateOctree(octree, indicesList, vertexData);
+			}
+		}
 		int[] indices = new int[indicesList.size()];
 		int index = 0;
 		for (Integer i : indicesList) {
@@ -43,7 +66,7 @@ public class Tessellater {
 	 * @param vertexData Ordered map of vertex data.
 	 */
 	// TODO: We are not sharing vertexData between voxels that are adjacent. If distinct vertex data (color, etc.) is not needed we can combine them.
-	private static void tessellate(Octree octree, List<Integer> indices, List<Float> vertexData) {
+	private static void tessellateOctree(Octree octree, List<Integer> indices, List<Float> vertexData) {
 		if (octree.isLeaf()) {
 			Voxel voxel = octree.getValue();
 			if (voxel == null) {
@@ -140,16 +163,13 @@ public class Tessellater {
 			}
 		} else if (octree.hasChildren()) {
 			for (Octree child : octree.getChildren()) {
-				tessellate(child, indices, vertexData);
+				tessellateOctree(child, indices, vertexData);
 			}
 		}
 	}
 
 	private static boolean isBlocked(Octree octree, int x, int y, int z) {
 		// For every voxel, 3/6 neighbors are guaranteed to be in the parents children.
-		if (octree.getParent().contains(x, y, z)) {
-			return octree.getParent().get(x, y, z) == null;
-		}
 		return !octree.getRoot().contains(x, y, z) || octree.getRoot().get(x, y, z) == null;
 	}
 

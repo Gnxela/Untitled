@@ -11,9 +11,10 @@ import me.alexng.volumetricVoxels.raster.Rasterizer;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
 import me.alexng.volumetricVoxels.shape.Shape;
-import me.alexng.volumetricVoxels.storage.Octree;
+import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 
 public class Main {
 
@@ -25,20 +26,21 @@ public class Main {
 		shapes[0] = new Line(0x00FF00, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
-		int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
-		Octree octree = Octree.create(octreeSize);
+		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
+		// Octree octree = Octree.create(octreeSize);
+		OctreeArrayGrid octreeArrayGrid = new OctreeArrayGrid(new Vector3i(3, 2, 3), 32);
 
 		long start = System.nanoTime();
-		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, octree);
+		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, octreeArrayGrid);
 		System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
-		Mesh mesh = Tessellater.tessellate(octree);
+		Mesh mesh = Tessellater.tessellateOctreeArrayGrid(octreeArrayGrid);
 		System.out.println("Tesselation time: " + (System.nanoTime() - start) / 1000000 + "ms");
 		System.out.println("Num triangles: " + mesh.getNumTriangles());
 		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
 
-		Entity entity = vv.addEntity(octree, mesh);
+		Entity entity = vv.addEntity(octreeArrayGrid, mesh);
 		while (!vv.getWindow().shouldClose()) {
 			vv.update();
 		}

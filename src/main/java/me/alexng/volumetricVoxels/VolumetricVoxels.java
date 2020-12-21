@@ -8,6 +8,7 @@ import me.alexng.volumetricVoxels.render.Window;
 import me.alexng.volumetricVoxels.render.shader.SID;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
 import me.alexng.volumetricVoxels.storage.Octree;
+import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
 import me.alexng.volumetricVoxels.storage.VoxelStore;
 import me.alexng.volumetricVoxels.util.Colors;
 import me.alexng.volumetricVoxels.util.DebugRenderer;
@@ -73,8 +74,12 @@ public class VolumetricVoxels {
 		for (Entity entity : entities) {
 			voxelMeshShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().identity());
 			entity.getMesh().draw(voxelMeshShaderProgram);
+
+			// DEBUG
 			if (entity.getVoxelStore() instanceof Octree) {
 				DebugRenderer.drawOctree((Octree) entity.getVoxelStore(), Colors.RED, new Matrix4f(), view, projection);
+			} else if (entity.getVoxelStore() instanceof OctreeArrayGrid) {
+				DebugRenderer.drawOctreeArrayGrid((OctreeArrayGrid) entity.getVoxelStore(), Colors.RED, new Matrix4f(), view, projection);
 			}
 		}
 		// TODO: Separate update and render calls?
