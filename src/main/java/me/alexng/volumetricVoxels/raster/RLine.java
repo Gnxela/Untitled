@@ -3,8 +3,6 @@ package me.alexng.volumetricVoxels.raster;
 import me.alexng.volumetricVoxels.Voxel;
 import me.alexng.volumetricVoxels.exceptions.VoxelStoreException;
 import me.alexng.volumetricVoxels.storage.VoxelStore;
-import me.alexng.volumetricVoxels.util.ConversionUtil;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector3ic;
 import org.joml.Vector4fc;
@@ -36,7 +34,6 @@ public class RLine implements Rasterable {
 		if (end.equals(start.x(), start.y(), start.z())) {
 			return;
 		}
-		Vector3f c = ConversionUtil.rgbIntToVector3f(color);
 		int x = start.x(), xDelta = Math.abs(end.x() - start.x()), xsign = (end.x() - start.x()) / (xDelta == 0 ? 1 : xDelta);
 		int y = start.y(), yDelta = Math.abs(end.y() - start.y()), ysign = (end.y() - start.y()) / (yDelta == 0 ? 1 : yDelta);
 		int z = start.z(), zDelta = Math.abs(end.z() - start.z()), zsign = (end.z() - start.z()) / (zDelta == 0 ? 1 : zDelta);
@@ -44,7 +41,7 @@ public class RLine implements Rasterable {
 		int dx = 2 * xDelta - end, xinc1 = 2 * xDelta, xinc2 = 2 * (xDelta - end);
 		int dy = 2 * yDelta - end, yinc1 = 2 * yDelta, yinc2 = 2 * (yDelta - end);
 		int dz = 2 * zDelta - end, zinc1 = 2 * zDelta, zinc2 = 2 * (zDelta - end);
-		store.set(new Voxel(start.x(), start.y(), start.z(), c));
+		store.set(start.x(), start.y(), start.z(), new Voxel(color));
 		while (current < end) {
 			current++;
 
@@ -67,7 +64,7 @@ public class RLine implements Rasterable {
 				z += zsign;
 			}
 
-			store.set(new Voxel(x, y, z, c));
+			store.set(x, y, z, new Voxel(color));
 		}
 	}
 }

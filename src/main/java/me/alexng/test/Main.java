@@ -21,7 +21,7 @@ public class Main {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
 		Shape[] shapes = new Shape[1];
-		shapes[0] = new Line(0xFF0000, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
+		shapes[0] = new Line(0x00FF00, new Vector3f(5, 5, 5), new Vector3f(0, 5, 5));
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
 		long start = System.nanoTime();

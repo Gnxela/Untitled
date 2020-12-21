@@ -48,12 +48,8 @@ public class ArrayGrid<T> implements VoxelStore {
 	}
 
 	@Override
-	public void set(Voxel voxel) throws VoxelStoreException {
-		grid[getIndex(voxel.getPosition())] = voxel;
-	}
-
-	private int getIndex(Vector3ic position) {
-		return getIndex(position.x(), position.y(), position.z());
+	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
+		grid[getIndex(x, y, z)] = voxel;
 	}
 
 	private int getIndex(int x, int y, int z) {

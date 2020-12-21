@@ -4,6 +4,7 @@ import me.alexng.volumetricVoxels.render.AttributeStore;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.render.Texture;
 import me.alexng.volumetricVoxels.storage.Octree;
+import me.alexng.volumetricVoxels.util.ConversionUtil;
 import org.joml.Vector3f;
 
 import java.util.LinkedList;
@@ -48,9 +49,9 @@ public class Tessellater {
 			if (voxel == null) {
 				return;
 			}
-			int x = voxel.getPosition().x();
-			int y = voxel.getPosition().y();
-			int z = voxel.getPosition().z();
+			int x = octree.getPosition().x();
+			int y = octree.getPosition().y();
+			int z = octree.getPosition().z();
 			int width = octree.getWidth();
 			// TODO: Check indices order (clockwise / anticlockwise)
 			if (isBlocked(octree, x - width, y, z)) {
@@ -159,8 +160,9 @@ public class Tessellater {
 		vertexData.add(normal.x);
 		vertexData.add(normal.y);
 		vertexData.add(normal.z);
-		vertexData.add(voxel.getColor().x);
-		vertexData.add(voxel.getColor().y);
-		vertexData.add(voxel.getColor().z);
+		Vector3f color = ConversionUtil.rgbIntToVector3f(voxel.getColor());
+		vertexData.add(color.x);
+		vertexData.add(color.y);
+		vertexData.add(color.z);
 	}
 }

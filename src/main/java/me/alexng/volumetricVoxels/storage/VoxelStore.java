@@ -25,7 +25,7 @@ public interface VoxelStore {
 	/**
 	 * Sets a voxel stored at position (voxel.x, voxel.y, voxel.z).
 	 */
-	void set(Voxel voxel) throws VoxelStoreException;
+	void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException;
 
 	/**
 	 * Returns true it the store contains a value for (x, y, z).

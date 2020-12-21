@@ -128,8 +128,8 @@ public class Octree implements VoxelStore {
 	}
 
 	@Override
-	public void set(Voxel voxel) throws VoxelStoreException {
-		if (!contains(voxel.getPosition().x(), voxel.getPosition().y(), voxel.getPosition().z())) {
+	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
+		if (!contains(x, y, z)) {
 			throw new VoxelStoreException("Voxel not contained in octree");
 		}
 		if (isLeaf()) {
@@ -140,7 +140,7 @@ public class Octree implements VoxelStore {
 			createChildren();
 		}
 		int childWidth = width / 2;
-		boolean bx = voxel.getPosition().x() < position.x + childWidth, by = voxel.getPosition().y() < position.y + childWidth, bz = voxel.getPosition().z() < position.z + childWidth;
+		boolean bx = x < position.x + childWidth, by = y < position.y + childWidth, bz = z < position.z + childWidth;
 		Octree child;
 		if (bx & by & bz) {
 			child = children[CHILD_PXPYPZ];
@@ -159,7 +159,7 @@ public class Octree implements VoxelStore {
 		} else {
 			child = children[CHILD_NXNYNZ];
 		}
-		child.set(voxel);
+		child.set(x, y, z, voxel);
 	}
 
 	private void setValue(Voxel voxel) throws VoxelStoreException {
