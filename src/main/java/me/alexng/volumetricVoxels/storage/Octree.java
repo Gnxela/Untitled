@@ -121,10 +121,13 @@ public class Octree implements VoxelStore {
 
 	@Override
 	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
-		// TODO: We should have internal (private) and external (public) versions. Internal needs less checks
 		if (!contains(x, y, z)) {
 			throw new VoxelStoreException("Voxel not contained in octree");
 		}
+		setInternal(x, y, z, voxel);
+	}
+
+	public void setInternal(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
 		if (isLeaf()) {
 			setValue(voxel);
 			return;
@@ -152,7 +155,7 @@ public class Octree implements VoxelStore {
 		} else {
 			child = children[CHILD_NXNYNZ];
 		}
-		child.set(x, y, z, voxel);
+		child.setInternal(x, y, z, voxel);
 	}
 
 	private void setValue(Voxel voxel) throws VoxelStoreException {

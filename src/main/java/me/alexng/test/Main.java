@@ -53,10 +53,14 @@ public class Main {
 				frames = 0;
 				lastUpdate = System.nanoTime();
 			}
+			entity.getRotation().rotateLocalY(0.01f);
 			entity1.getRotation().rotateLocalY(0.01f);
+			entity2.getRotation().rotateLocalY(0.01f);
 			frames++;
 			vv.render();
 		}
+		// TODO: Make below.
+		// vv.cleanup();
 	}
 
 	private static ObjectTemplate createObjectTemplate() {
