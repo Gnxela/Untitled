@@ -22,15 +22,7 @@ public class Main {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
 
-		Vector3f currentLineCenter = new Vector3f(50, 0, 50);
-		Shape[] shapes = new Shape[100];
-		double length = shapes.length;
-		for (int i = 0; i < shapes.length; i++) {
-			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
-			shapes[i] = new Line(0x00FF00, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
-			currentLineCenter.add(0, 1, 0);
-		}
-		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
+		ObjectTemplate lineObjectTemplate = createObjectTemplate();
 
 		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
 		// Octree octree = Octree.create(octreeSize);
@@ -44,13 +36,35 @@ public class Main {
 		Mesh mesh = Tessellater.tessellateOctreeArrayGrid(octreeArrayGrid);
 		System.out.println("Tesselation time: " + (System.nanoTime() - start) / 1000000 + "ms");
 		System.out.println("Num triangles: " + mesh.getNumTriangles());
+		System.out.println("Num voxels: " + mesh.getNumTriangles() / 8);
 		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
 
 		Entity entity = vv.addEntity(octreeArrayGrid, mesh);
-		//entity.setDebugMeshWireframe(true);
-		entity.setDebugVoxelStore(true);
+		// entity.setDebugMeshWireframe(true);
+		// entity.setDebugVoxelStore(true);
+
+		int frames = 0;
+		long lastUpdate = System.nanoTime();
 		while (!vv.getWindow().shouldClose()) {
+			if (System.nanoTime() - lastUpdate > 1000000000) {
+				vv.getWindow().setTitle("FPS: " + frames);
+				frames = 0;
+				lastUpdate = System.nanoTime();
+			}
+			frames++;
 			vv.render();
 		}
+	}
+
+	private static ObjectTemplate createObjectTemplate() {
+		Vector3f currentLineCenter = new Vector3f(50, 0, 50);
+		Shape[] shapes = new Shape[100];
+		double length = shapes.length;
+		for (int i = 0; i < shapes.length; i++) {
+			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
+			shapes[i] = new Line(0x00FF00, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
+			currentLineCenter.add(0, 1, 0);
+		}
+		return new ObjectTemplate(new Vector3f(100), shapes);
 	}
 }

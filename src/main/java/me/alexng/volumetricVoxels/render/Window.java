@@ -39,7 +39,6 @@ public class Window implements Cleanable {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-
 		long windowHandler = glfwCreateWindow(width, height, title, NULL, NULL);
 		if (windowHandler == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
@@ -57,8 +56,7 @@ public class Window implements Cleanable {
 		createCapabilities();
 		// TODO: Do we want this?
 		glfwSwapInterval(1);
-		final float grey = 0.05f;
-		glClearColor(grey, grey, grey, 1f);
+		glClearColor(0, 0, 0, 1f);
 		glViewport(0, 0, width, height);
 		return new Window(windowHandler, width, height);
 	}
@@ -106,6 +104,10 @@ public class Window implements Cleanable {
 		glfwDestroyWindow(windowHandler);
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
+	}
+
+	public void setTitle(String title) {
+		glfwSetWindowTitle(windowHandler, title);
 	}
 
 	public int getWidth() {
