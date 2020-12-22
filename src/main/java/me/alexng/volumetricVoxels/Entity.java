@@ -32,7 +32,8 @@ public class Entity {
 	void render(ShaderProgram shaderProgram, Matrix4f view, Matrix4f projection) {
 		// TODO: Rotate -> Translate? Translate -> Rotate? How can we rotate around the center
 		//  How can I ensure there are no scales?
-		shaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().identity().translate(position).rotate(rotation));
+		Matrix4f model = new Matrix4f().identity().translate(position).rotate(rotation);
+		shaderProgram.setMatrix4f(SID.MODEL, model);
 		if (debugMeshWireframe) {
 			mesh.drawOutline(shaderProgram);
 		} else {
@@ -41,9 +42,9 @@ public class Entity {
 
 		if (debugVoxelStore) {
 			if (voxelStore instanceof Octree) {
-				DebugRenderer.drawOctree((Octree) voxelStore, Colors.RED, new Matrix4f(), view, projection);
+				DebugRenderer.drawOctree((Octree) voxelStore, Colors.RED, model, view, projection);
 			} else if (voxelStore instanceof OctreeArrayGrid) {
-				DebugRenderer.drawOctreeArrayGrid((OctreeArrayGrid) voxelStore, Colors.RED, new Matrix4f(), view, projection);
+				DebugRenderer.drawOctreeArrayGrid((OctreeArrayGrid) voxelStore, Colors.RED, model, view, projection);
 			}
 		}
 	}

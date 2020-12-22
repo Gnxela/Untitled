@@ -41,6 +41,8 @@ public class Main {
 
 		Entity entity = vv.createEntity(octreeArrayGrid, mesh);
 		Entity entity1 = vv.createEntity(octreeArrayGrid, mesh);
+		entity1.getRotation().rotateX((float) Math.PI / 2);
+		entity1.setDebugVoxelStore(true);
 		int frames = 0;
 		long lastUpdate = System.nanoTime();
 		while (!vv.getWindow().shouldClose()) {
