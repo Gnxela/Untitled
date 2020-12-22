@@ -21,6 +21,7 @@ public class RPolygon implements Rasterable {
 
 	@Override
 	public void rasterize(VoxelStore store) throws VoxelStoreException {
+		// TODO: Implement polygon filling algorithm.
 		for (RLine line : lines) {
 			line.rasterize(store);
 		}
