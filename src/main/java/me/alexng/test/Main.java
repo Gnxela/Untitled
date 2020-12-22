@@ -39,10 +39,8 @@ public class Main {
 		System.out.println("Num voxels: " + mesh.getNumTriangles() / 8);
 		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
 
-		Entity entity = vv.addEntity(octreeArrayGrid, mesh);
-		// entity.setDebugMeshWireframe(true);
-		// entity.setDebugVoxelStore(true);
-
+		Entity entity = vv.createEntity(octreeArrayGrid, mesh);
+		Entity entity1 = vv.createEntity(octreeArrayGrid, mesh);
 		int frames = 0;
 		long lastUpdate = System.nanoTime();
 		while (!vv.getWindow().shouldClose()) {
@@ -62,7 +60,7 @@ public class Main {
 		double length = shapes.length;
 		for (int i = 0; i < shapes.length; i++) {
 			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
-			shapes[i] = new Line(0x00FF00, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
+			shapes[i] = new Line(0xFFFFFF * i / shapes.length, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
 			currentLineCenter.add(0, 1, 0);
 		}
 		return new ObjectTemplate(new Vector3f(100), shapes);

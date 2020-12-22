@@ -75,7 +75,7 @@ public class VolumetricVoxels {
 	}
 
 
-	public Entity addEntity(VoxelStore voxelStore, Mesh mesh) {
+	public Entity createEntity(VoxelStore voxelStore, Mesh mesh) {
 		Entity entity = new Entity(voxelStore, mesh);
 		entities.add(entity);
 		return entity;
