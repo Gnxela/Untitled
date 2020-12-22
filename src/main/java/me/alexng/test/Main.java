@@ -12,6 +12,7 @@ import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
 import me.alexng.volumetricVoxels.shape.Shape;
 import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
+import me.alexng.volumetricVoxels.util.ConversionUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
@@ -62,7 +63,7 @@ public class Main {
 		double length = shapes.length;
 		for (int i = 0; i < shapes.length; i++) {
 			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
-			shapes[i] = new Line(0xFFFFFF * i / shapes.length, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
+			shapes[i] = new Line(ConversionUtil.hsvToRgb((float) (i / length), 0.8f, 0.8f), new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
 			currentLineCenter.add(0, 1, 0);
 		}
 		return new ObjectTemplate(new Vector3f(100), shapes);
