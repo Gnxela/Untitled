@@ -11,11 +11,10 @@ import me.alexng.volumetricVoxels.raster.Rasterizer;
 import me.alexng.volumetricVoxels.render.Mesh;
 import me.alexng.volumetricVoxels.shape.Line;
 import me.alexng.volumetricVoxels.shape.Shape;
-import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
+import me.alexng.volumetricVoxels.storage.Octree;
 import me.alexng.volumetricVoxels.util.ConversionUtil;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector3i;
 
 public class Main {
 
@@ -27,23 +26,25 @@ public class Main {
 
 		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
 		// Octree octree = Octree.create(octreeSize);
-		OctreeArrayGrid octreeArrayGrid = new OctreeArrayGrid(new Vector3i(4, 4, 4), 32);
+		// OctreeArrayGrid voxelStore = new OctreeArrayGrid(new Vector3i(4, 4, 4), 32);
+		Octree voxelStore = Octree.create(512);
 
 		long start = System.nanoTime();
-		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, octreeArrayGrid);
+		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, voxelStore);
 		System.out.println("Rasterization time: " + (System.nanoTime() - start) / 1000000 + "ms");
 
 		start = System.nanoTime();
-		Mesh mesh = Tessellater.tessellateOctreeArrayGrid(octreeArrayGrid);
+		Mesh mesh = Tessellater.tessellateOctree(voxelStore);
 		System.out.println("Tesselation time: " + (System.nanoTime() - start) / 1000000 + "ms");
 		System.out.println("Num triangles: " + mesh.getNumTriangles());
 		System.out.println("Num voxels: " + mesh.getNumTriangles() / 8);
 		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
 
-		Entity entity = vv.createEntity(octreeArrayGrid, mesh);
-		Entity entity1 = vv.createEntity(octreeArrayGrid, mesh);
-		entity1.getRotation().rotateX((float) Math.PI / 2);
-		entity1.setDebugVoxelStore(true);
+		Entity entity = vv.createEntity(voxelStore, mesh);
+		Entity entity1 = vv.createEntity(voxelStore, mesh);
+		entity1.getPosition().add(0, 100, 0);
+		Entity entity2 = vv.createEntity(voxelStore, mesh);
+		entity2.getPosition().add(0, 200, 0);
 		int frames = 0;
 		long lastUpdate = System.nanoTime();
 		while (!vv.getWindow().shouldClose()) {
@@ -52,6 +53,7 @@ public class Main {
 				frames = 0;
 				lastUpdate = System.nanoTime();
 			}
+			entity1.getRotation().rotateLocalY(0.01f);
 			frames++;
 			vv.render();
 		}
@@ -62,7 +64,7 @@ public class Main {
 		Shape[] shapes = new Shape[100];
 		double length = shapes.length;
 		for (int i = 0; i < shapes.length; i++) {
-			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
+			float cos = (float) Math.cos(i / length * Math.PI) * 50, sin = (float) Math.sin(i / length * Math.PI) * 50;
 			shapes[i] = new Line(ConversionUtil.hsvToRgb((float) (i / length), 0.8f, 0.8f), new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
 			currentLineCenter.add(0, 1, 0);
 		}

@@ -25,15 +25,7 @@ public class Line extends Shape {
 		return start;
 	}
 
-	public void setStart(Vector3f start) {
-		this.start = start;
-	}
-
 	public Vector3f getEnd() {
 		return end;
-	}
-
-	public void setEnd(Vector3f end) {
-		this.end = end;
 	}
 }

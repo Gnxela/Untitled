@@ -3,7 +3,7 @@ package me.alexng.volumetricVoxels.render.shader;
 import me.alexng.volumetricVoxels.exceptions.ShaderException;
 import me.alexng.volumetricVoxels.render.Cleanable;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
@@ -80,8 +80,8 @@ public class ShaderProgram implements Cleanable {
 		glUniform3f(glGetUniformLocation(handle, shaderIdentifier.getGlslName()), i, i, i);
 	}
 
-	public void setVec3f(SID shaderIdentifier, Vector3f v) {
-		setVec3f(shaderIdentifier, v.x, v.y, v.z);
+	public void setVec3f(SID shaderIdentifier, Vector3fc v) {
+		setVec3f(shaderIdentifier, v.x(), v.y(), v.z());
 	}
 
 	public void setVec4f(SID shaderIdentifier, float x, float y, float z, float w) {

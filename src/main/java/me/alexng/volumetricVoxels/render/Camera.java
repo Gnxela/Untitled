@@ -2,6 +2,7 @@ package me.alexng.volumetricVoxels.render;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -13,8 +14,8 @@ public class Camera implements GLFWCursorPosCallbackI {
 	private boolean firstUpdate = true;
 	private double lastMouseX = -1, lastMouseY = -1;
 
-	public Camera(Vector3f position, float pitch, float yaw) {
-		this.position = position;
+	public Camera(Vector3fc position, float pitch, float yaw) {
+		this.position = new Vector3f(position);
 		this.pitch = pitch;
 		this.yaw = yaw;
 		this.up = new Vector3f(0.0f, 1.0f, 0.0f);
@@ -81,13 +82,5 @@ public class Camera implements GLFWCursorPosCallbackI {
 
 	public Vector3f getPosition() {
 		return position;
-	}
-
-	public Vector3f getDirection() {
-		return direction;
-	}
-
-	public Vector3f getUp() {
-		return up;
 	}
 }

@@ -40,7 +40,7 @@ public class DebugRenderer {
 		}
 	}
 
-	public static void drawCube(Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+	public static void drawCube(Vector3fc color, Matrix4f model, Matrix4f view, Matrix4f projection) {
 		debugShaderProgram.use();
 		debugShaderProgram.setVec3f(SID.DEBUG_COLOR, color);
 		debugShaderProgram.setMatrix4f(SID.MODEL, model);
@@ -50,7 +50,7 @@ public class DebugRenderer {
 		glDrawElements(GL_TRIANGLES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);
 	}
 
-	public static void drawCubeOutline(Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+	public static void drawCubeOutline(Vector3fc color, Matrix4f model, Matrix4f view, Matrix4f projection) {
 		debugShaderProgram.use();
 		debugShaderProgram.setVec3f(SID.DEBUG_COLOR, color);
 		debugShaderProgram.setMatrix4f(SID.MODEL, model);
@@ -60,7 +60,7 @@ public class DebugRenderer {
 		glDrawElements(GL_LINES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);
 	}
 
-	public static void drawOctree(Octree octree, Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+	public static void drawOctree(Octree octree, Vector3fc color, Matrix4f model, Matrix4f view, Matrix4f projection) {
 		debugShaderProgram.use();
 		debugShaderProgram.setVec3f(SID.DEBUG_COLOR, color);
 		debugShaderProgram.setMatrix4f(SID.VIEW, view);
@@ -84,7 +84,7 @@ public class DebugRenderer {
 		}
 	}
 
-	public static void drawOctreeArrayGrid(OctreeArrayGrid octreeArrayGrid, Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
+	public static void drawOctreeArrayGrid(OctreeArrayGrid octreeArrayGrid, Vector3fc color, Matrix4f model, Matrix4f view, Matrix4f projection) {
 		Vector3i gridSize = octreeArrayGrid.getGridSize();
 		int width = octreeArrayGrid.getOctreeWidth();
 		for (int x = 0; x < gridSize.x; x++) {
