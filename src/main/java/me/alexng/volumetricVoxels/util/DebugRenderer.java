@@ -85,11 +85,21 @@ public class DebugRenderer {
 	}
 
 	public static void drawOctreeArrayGrid(OctreeArrayGrid octreeArrayGrid, Vector3f color, Matrix4f model, Matrix4f view, Matrix4f projection) {
-		for (Octree octree : octreeArrayGrid.getChildren()) {
-			if (octree != null) {
-				drawOctree(octree, color, model, view, projection);
+		Vector3i gridSize = octreeArrayGrid.getGridSize();
+		int width = octreeArrayGrid.getOctreeWidth();
+		for (int x = 0; x < gridSize.x; x++) {
+			for (int y = 0; y < gridSize.y; y++) {
+				for (int z = 0; z < gridSize.z; z++) {
+					Octree octree = octreeArrayGrid.getCell(x, y, z);
+					if (octree != null) {
+						// TODO: We need to pass a trnasform matrix in here.
+						Matrix4f childModel = new Matrix4f(model).translate(x * width, y * width, z * width);
+						drawOctree(octree, color, childModel, view, projection);
+					}
+				}
 			}
 		}
+
 		Vector3ic size = octreeArrayGrid.getSize();
 		debugShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f(model).scale(size.x(), size.y(), size.z()));
 		glDrawElements(GL_LINES, CubeData.indexData.length, GL_UNSIGNED_INT, 0);

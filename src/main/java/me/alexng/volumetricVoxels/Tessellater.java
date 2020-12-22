@@ -6,7 +6,10 @@ import me.alexng.volumetricVoxels.render.Texture;
 import me.alexng.volumetricVoxels.storage.Octree;
 import me.alexng.volumetricVoxels.storage.OctreeArrayGrid;
 import me.alexng.volumetricVoxels.util.ConversionUtil;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
+import org.joml.Vector4f;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +25,7 @@ public class Tessellater {
 		// TODO: To avoid creating and destroying large Lists we could make this non-static and synchronised.
 		List<Integer> indicesList = new LinkedList<>();
 		List<Float> vertexData = new LinkedList<>();
-		tessellateOctree(octree, indicesList, vertexData);
+		tessellateOctree(octree, indicesList, vertexData, new Matrix4f().identity());
 		int[] indices = new int[indicesList.size()];
 		int index = 0;
 		for (Integer i : indicesList) {
@@ -39,12 +42,21 @@ public class Tessellater {
 	public static Mesh tessellateOctreeArrayGrid(OctreeArrayGrid arrayGrid) {
 		List<Integer> indicesList = new LinkedList<>();
 		List<Float> vertexData = new LinkedList<>();
-		for (Octree octree : arrayGrid.getChildren()) {
-			if (octree != null) {
-				// TODO: We need to pass a trnasform matrix in here.
-				tessellateOctree(octree, indicesList, vertexData);
+		Vector3i gridSize = arrayGrid.getGridSize();
+		int width = arrayGrid.getOctreeWidth();
+		for (int x = 0; x < gridSize.x; x++) {
+			for (int y = 0; y < gridSize.y; y++) {
+				for (int z = 0; z < gridSize.z; z++) {
+					Octree octree = arrayGrid.getCell(x, y, z);
+					if (octree != null) {
+						// TODO: We need to pass a trnasform matrix in here.
+						Matrix4f model = new Matrix4f().identity().translate(x * width, y * width, z * width);
+						tessellateOctree(octree, indicesList, vertexData, model);
+					}
+				}
 			}
 		}
+
 		int[] indices = new int[indicesList.size()];
 		int index = 0;
 		for (Integer i : indicesList) {
@@ -66,23 +78,28 @@ public class Tessellater {
 	 * @param vertexData Ordered map of vertex data.
 	 */
 	// TODO: We are not sharing vertexData between voxels that are adjacent. If distinct vertex data (color, etc.) is not needed we can combine them.
-	private static void tessellateOctree(Octree octree, List<Integer> indices, List<Float> vertexData) {
+	private static void tessellateOctree(Octree octree, List<Integer> indices, List<Float> vertexData, Matrix4f model) {
 		if (octree.isLeaf()) {
 			Voxel voxel = octree.getValue();
 			if (voxel == null) {
 				return;
 			}
-			int x = octree.getPosition().x();
-			int y = octree.getPosition().y();
-			int z = octree.getPosition().z();
+			Vector4f position4 = new Vector4f(octree.getPosition(), 1);
+			position4.mul(model);
+			float x = position4.x;
+			float y = position4.y;
+			float z = position4.z;
+			int ix = octree.getPosition().x;
+			int iy = octree.getPosition().y;
+			int iz = octree.getPosition().z;
 			int width = octree.getWidth();
 			// TODO: Check indices order (clockwise / anticlockwise)
-			if (isBlocked(octree, x - width, y, z)) {
+			if (isBlocked(octree, ix - width, iy, iz)) {
 				Vector3f normal = new Vector3f(-1, 0, 0);
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z); // -4
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z); // -3
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z + width); // -2
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z + width); // -1
+				addVertexData(vertexData, voxel, normal, x, y, z); // -4
+				addVertexData(vertexData, voxel, normal, x, y + width, z); // -3
+				addVertexData(vertexData, voxel, normal, x, y, z + width); // -2
+				addVertexData(vertexData, voxel, normal, x, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -91,12 +108,12 @@ public class Tessellater {
 				indices.add(size - 1);
 				indices.add(size - 2);
 			}
-			if (isBlocked(octree, x + width, y, z)) {
+			if (isBlocked(octree, ix + width, iy, iz)) {
 				Vector3f normal = new Vector3f(1, 0, 0);
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z); // -4
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z); // -3
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z + width); // -2
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z + width); // -1
+				addVertexData(vertexData, voxel, normal, x + width, y, z); // -4
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z); // -3
+				addVertexData(vertexData, voxel, normal, x + width, y, z + width); // -2
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -105,12 +122,12 @@ public class Tessellater {
 				indices.add(size - 1);
 				indices.add(size - 2);
 			}
-			if (isBlocked(octree, x, y - width, z)) {
+			if (isBlocked(octree, ix, iy - width, iz)) {
 				Vector3f normal = new Vector3f(0, -1, 0);
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z); // -4
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z); // -3
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z + width); // -2
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z + width); // -1
+				addVertexData(vertexData, voxel, normal, x, y, z); // -4
+				addVertexData(vertexData, voxel, normal, x + width, y, z); // -3
+				addVertexData(vertexData, voxel, normal, x, y, z + width); // -2
+				addVertexData(vertexData, voxel, normal, x + width, y, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -119,12 +136,12 @@ public class Tessellater {
 				indices.add(size - 1);
 				indices.add(size - 2);
 			}
-			if (isBlocked(octree, x, y + width, z)) {
+			if (isBlocked(octree, ix, iy + width, iz)) {
 				Vector3f normal = new Vector3f(0, 1, 0);
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z); // -4
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z); // -3
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z + width); // -2
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z + width); // -1
+				addVertexData(vertexData, voxel, normal, x, y + width, z); // -4
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z); // -3
+				addVertexData(vertexData, voxel, normal, x, y + width, z + width); // -2
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -133,12 +150,12 @@ public class Tessellater {
 				indices.add(size - 1);
 				indices.add(size - 2);
 			}
-			if (isBlocked(octree, x, y, z - width)) {
+			if (isBlocked(octree, ix, iy, iz - width)) {
 				Vector3f normal = new Vector3f(0, 0, -1);
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z); // -4
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z); // -3
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z); // -2
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z); // -1
+				addVertexData(vertexData, voxel, normal, x, y, z); // -4
+				addVertexData(vertexData, voxel, normal, x + width, y, z); // -3
+				addVertexData(vertexData, voxel, normal, x, y + width, z); // -2
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -147,12 +164,12 @@ public class Tessellater {
 				indices.add(size - 1);
 				indices.add(size - 2);
 			}
-			if (isBlocked(octree, x, y, z + width)) {
+			if (isBlocked(octree, ix, iy, iz + width)) {
 				Vector3f normal = new Vector3f(0, 0, 1);
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y, (float) z + width); // -4
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y, (float) z + width); // -3
-				addVertexData(vertexData, voxel, normal, (float) x, (float) y + width, (float) z + width); // -2
-				addVertexData(vertexData, voxel, normal, (float) x + width, (float) y + width, (float) z + width); // -1
+				addVertexData(vertexData, voxel, normal, x, y, z + width); // -4
+				addVertexData(vertexData, voxel, normal, x + width, y, z + width); // -3
+				addVertexData(vertexData, voxel, normal, x, y + width, z + width); // -2
+				addVertexData(vertexData, voxel, normal, x + width, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
 				indices.add(size - 3);
@@ -163,7 +180,7 @@ public class Tessellater {
 			}
 		} else if (octree.hasChildren()) {
 			for (Octree child : octree.getChildren()) {
-				tessellateOctree(child, indices, vertexData);
+				tessellateOctree(child, indices, vertexData, model);
 			}
 		}
 	}

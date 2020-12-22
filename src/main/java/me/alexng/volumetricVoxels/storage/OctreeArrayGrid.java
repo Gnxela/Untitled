@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 public class OctreeArrayGrid implements VoxelStore {
 
 	private final Vector3i size;
+	private final Vector3i cells;
 	private final Octree[] grid;
 	private final int octreeWidth;
 
@@ -22,6 +23,7 @@ public class OctreeArrayGrid implements VoxelStore {
 	public OctreeArrayGrid(Vector3ic cells, int octreeWidth) throws VoxelStoreException {
 		checkSize(cells);
 		this.size = new Vector3i(cells).mul(octreeWidth);
+		this.cells = new Vector3i(cells);
 		this.grid = new Octree[cells.x() * cells.y() * cells.z()];
 		this.octreeWidth = octreeWidth;
 	}
@@ -47,11 +49,20 @@ public class OctreeArrayGrid implements VoxelStore {
 		if (cell == null) {
 			return null;
 		}
-		return cell.get(x - cellX, y - cellY, z - cellZ);
+		System.out.println("Get " + cellX + cellY + cellZ);
+		return cell.get(x - cellX * octreeWidth, y - cellY * octreeWidth, z - cellZ * octreeWidth);
+	}
+
+	@Nullable
+	public Octree getCell(int x, int y, int z) {
+		return grid[getIndex(x, y, z)];
 	}
 
 	@Override
 	public void set(int x, int y, int z, Voxel voxel) throws VoxelStoreException {
+		if (!contains(x, y, z)) {
+			throw new VoxelStoreException("Voxel not contained: " + x + ":" + y + ":" + z);
+		}
 		int cellX = x / octreeWidth;
 		int cellY = y / octreeWidth;
 		int cellZ = z / octreeWidth;
@@ -61,11 +72,12 @@ public class OctreeArrayGrid implements VoxelStore {
 			cell = Octree.create(octreeWidth);
 			grid[index] = cell;
 		}
-		cell.set(x - cellX * octreeWidth, y - cellY * octreeWidth, z - cellZ, voxel);
+		// x % octreeWidth faster?
+		cell.set(x - cellX * octreeWidth, y - cellY * octreeWidth, z - cellZ * octreeWidth, voxel);
 	}
 
 	private int getIndex(int cellX, int cellY, int cellZ) {
-		return cellZ * size.x * size.y + cellY * size.x + cellX;
+		return cellZ * cells.x * cells.y + cellY * cells.x + cellX;
 	}
 
 	public Octree[] getChildren() {
@@ -74,5 +86,9 @@ public class OctreeArrayGrid implements VoxelStore {
 
 	public int getOctreeWidth() {
 		return octreeWidth;
+	}
+
+	public Vector3i getGridSize() {
+		return cells;
 	}
 }

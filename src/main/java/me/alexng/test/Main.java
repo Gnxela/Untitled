@@ -22,13 +22,19 @@ public class Main {
 		VolumetricVoxels vv = new VolumetricVoxels();
 		vv.initialise();
 
-		Shape[] shapes = new Shape[1];
-		shapes[0] = new Line(0x00FF00, new Vector3f(0, 5, 5), new Vector3f(50, 5, 5));
+		Vector3f currentLineCenter = new Vector3f(50, 0, 50);
+		Shape[] shapes = new Shape[100];
+		double length = shapes.length;
+		for (int i = 0; i < shapes.length; i++) {
+			float cos = (float) Math.cos(i / length * Math.PI * 2) * 50, sin = (float) Math.sin(i / length * Math.PI * 2) * 50;
+			shapes[i] = new Line(0x00FF00, new Vector3f(currentLineCenter).sub(cos, 0, sin), new Vector3f(currentLineCenter).add(cos, 0, sin));
+			currentLineCenter.add(0, 1, 0);
+		}
 		ObjectTemplate lineObjectTemplate = new ObjectTemplate(new Vector3f(100), shapes);
 
 		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
 		// Octree octree = Octree.create(octreeSize);
-		OctreeArrayGrid octreeArrayGrid = new OctreeArrayGrid(new Vector3i(3, 2, 3), 32);
+		OctreeArrayGrid octreeArrayGrid = new OctreeArrayGrid(new Vector3i(4, 4, 4), 32);
 
 		long start = System.nanoTime();
 		Rasterizer.rasterize(new Matrix4f(), lineObjectTemplate, octreeArrayGrid);
