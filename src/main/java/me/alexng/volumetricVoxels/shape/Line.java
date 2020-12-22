@@ -3,16 +3,17 @@ package me.alexng.volumetricVoxels.shape;
 import me.alexng.volumetricVoxels.raster.RLine;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector4f;
 
 public class Line extends Shape {
 
 	private Vector3f start, end;
 
-	public Line(int color, Vector3f start, Vector3f end) {
+	public Line(int color, Vector3fc start, Vector3fc end) {
 		super(color);
-		this.start = start;
-		this.end = end;
+		this.start = new Vector3f(start);
+		this.end = new Vector3f(end);
 	}
 
 	@Override
