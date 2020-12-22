@@ -53,9 +53,9 @@ public class Main {
 				frames = 0;
 				lastUpdate = System.nanoTime();
 			}
-			entity.getRotation().rotateLocalY(0.01f);
-			entity1.getRotation().rotateLocalY(0.01f);
-			entity2.getRotation().rotateLocalY(0.01f);
+			entity.getRotation().rotateY(0.01f);
+			entity1.getRotation().rotateY(0.01f);
+			entity2.getRotation().rotateY(0.01f);
 			frames++;
 			vv.render();
 		}

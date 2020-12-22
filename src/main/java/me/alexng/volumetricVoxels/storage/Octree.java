@@ -43,7 +43,7 @@ public class Octree implements VoxelStore {
 
 	@Override
 	public Vector3ic getSize() {
-		return null;
+		return new Vector3i(width);
 	}
 
 	/**
