@@ -93,7 +93,6 @@ public class Tessellater {
 			int iy = octree.getPosition().y;
 			int iz = octree.getPosition().z;
 			int width = octree.getWidth();
-			// TODO: Check indices order (clockwise / anticlockwise)
 			if (isBlocked(octree, ix - width, iy, iz)) {
 				Vector3f normal = new Vector3f(-1, 0, 0);
 				addVertexData(vertexData, voxel, normal, x, y, z); // -4
@@ -102,11 +101,11 @@ public class Tessellater {
 				addVertexData(vertexData, voxel, normal, x, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
-				indices.add(size - 3);
 				indices.add(size - 2);
 				indices.add(size - 3);
+				indices.add(size - 3);
+				indices.add(size - 2);
 				indices.add(size - 1);
-				indices.add(size - 2);
 			}
 			if (isBlocked(octree, ix + width, iy, iz)) {
 				Vector3f normal = new Vector3f(1, 0, 0);
@@ -144,11 +143,11 @@ public class Tessellater {
 				addVertexData(vertexData, voxel, normal, x + width, y + width, z + width); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
-				indices.add(size - 3);
 				indices.add(size - 2);
 				indices.add(size - 3);
+				indices.add(size - 3);
+				indices.add(size - 2);
 				indices.add(size - 1);
-				indices.add(size - 2);
 			}
 			if (isBlocked(octree, ix, iy, iz - width)) {
 				Vector3f normal = new Vector3f(0, 0, -1);
@@ -158,11 +157,11 @@ public class Tessellater {
 				addVertexData(vertexData, voxel, normal, x + width, y + width, z); // -1
 				int size = vertexData.size() / STRIDE;
 				indices.add(size - 4);
-				indices.add(size - 3);
 				indices.add(size - 2);
 				indices.add(size - 3);
+				indices.add(size - 2);
 				indices.add(size - 1);
-				indices.add(size - 2);
+				indices.add(size - 3);
 			}
 			if (isBlocked(octree, ix, iy, iz + width)) {
 				Vector3f normal = new Vector3f(0, 0, 1);

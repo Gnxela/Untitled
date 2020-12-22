@@ -55,7 +55,7 @@ public class Window implements Cleanable {
 		glfwMakeContextCurrent(windowHandler);
 		createCapabilities();
 		// TODO: Do we want this?
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 		glClearColor(0, 0, 0, 1f);
 		glViewport(0, 0, width, height);
 		return new Window(windowHandler, width, height);

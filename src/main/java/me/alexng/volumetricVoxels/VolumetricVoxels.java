@@ -17,8 +17,7 @@ import java.util.List;
 import static me.alexng.volumetricVoxels.VVConstants.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 public class VolumetricVoxels {
 
@@ -34,6 +33,8 @@ public class VolumetricVoxels {
 	public void initialise() throws ShaderException {
 		window = Window.create(WIDTH, HEIGHT, TITLE);
 		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 		// TODO: This should be user defined
 		window.setKeyCallback((windowHandle, key, scanCode, action, mode) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {

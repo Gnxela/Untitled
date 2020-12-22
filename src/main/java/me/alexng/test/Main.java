@@ -23,6 +23,7 @@ public class Main {
 		vv.initialise();
 
 		ObjectTemplate lineObjectTemplate = createObjectTemplate();
+		ObjectTemplate voxelTest = new ObjectTemplate(new Vector3f(1), new Shape[]{new Line(0x00FF00, new Vector3f(0), new Vector3f(1))});
 
 		// int octreeSize = Octree.upgradeWidth((int) Math.ceil(Math.max(lineObjectTemplate.getSize().x, Math.max(lineObjectTemplate.getSize().y, lineObjectTemplate.getSize().z))));
 		// Octree octree = Octree.create(octreeSize);
