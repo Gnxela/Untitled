@@ -34,7 +34,6 @@ public class VolumetricVoxels {
 	public void initialise() throws ShaderException {
 		window = Window.create(WIDTH, HEIGHT, TITLE);
 		glEnable(GL_DEPTH_TEST);
-		// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		// TODO: This should be user defined
 		window.setKeyCallback((windowHandle, key, scanCode, action, mode) -> {
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
@@ -54,7 +53,7 @@ public class VolumetricVoxels {
 		voxelMeshShaderProgram.setVec3f(SID.LIGHT_SPECULAR, new Vector3f(0.2f));
 	}
 
-	public void update() throws TextureException {
+	public void render() throws TextureException {
 		camera.processInput(window);
 		view = camera.createViewMatrix();
 		window.clear();
@@ -68,22 +67,13 @@ public class VolumetricVoxels {
 		voxelMeshShaderProgram.setVec3f(SID.VIEW_POSITION, camera.getPosition());
 		voxelMeshShaderProgram.setVec3f(SID.LIGHT_POSITION, camera.getPosition());
 		for (Entity entity : entities) {
-			voxelMeshShaderProgram.setMatrix4f(SID.MODEL, new Matrix4f().identity());
-			entity.getMesh().draw(voxelMeshShaderProgram);
-
-			// DEBUG
-			/*
-			if (entity.getVoxelStore() instanceof Octree) {
-				DebugRenderer.drawOctree((Octree) entity.getVoxelStore(), Colors.RED, new Matrix4f(), view, projection);
-			} else if (entity.getVoxelStore() instanceof OctreeArrayGrid) {
-				DebugRenderer.drawOctreeArrayGrid((OctreeArrayGrid) entity.getVoxelStore(), Colors.RED, new Matrix4f(), view, projection);
-			}
-			 */
+			entity.render(voxelMeshShaderProgram, view, projection);
 		}
 		// TODO: Separate update and render calls?
 
 		window.update();
 	}
+
 
 	public Entity addEntity(VoxelStore voxelStore, Mesh mesh) {
 		Entity entity = new Entity(voxelStore, mesh);

@@ -1,6 +1,5 @@
 package me.alexng.volumetricVoxels.render;
 
-import me.alexng.volumetricVoxels.exceptions.TextureException;
 import me.alexng.volumetricVoxels.render.shader.ShaderProgram;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -37,29 +36,17 @@ public class Mesh implements Cleanable {
 		}
 	}
 
-	public void draw(ShaderProgram shaderProgram) throws TextureException {
+	public void draw(ShaderProgram shaderProgram) {
 		shaderProgram.use();
-		int d = 1, s = 1;
-		for (int i = 0; i < textures.length; i++) {
-			Texture texture = textures[i];
-			String uniformName;
-			switch (texture.getType()) {
-				case DIFFUSE:
-					uniformName = "material.texture_diffuse" + d++;
-					break;
-				case SPECULAR:
-					uniformName = "material.texture_specular" + s++;
-					break;
-				default:
-					throw new TextureException("Invalid texture type: " + texture.getType());
-			}
-			texture.bind(i);
-			shaderProgram.setInt(uniformName, i);
-		}
-
 		vao.bind();
 		glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
 		VertexArrayObject.unbind();
+	}
+
+	public void drawOutline(ShaderProgram shaderProgram) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		draw(shaderProgram);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	@Override

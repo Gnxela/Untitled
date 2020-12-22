@@ -47,8 +47,10 @@ public class Main {
 		System.out.println("Vertex data length: " + mesh.getVertexDataLength());
 
 		Entity entity = vv.addEntity(octreeArrayGrid, mesh);
+		//entity.setDebugMeshWireframe(true);
+		entity.setDebugVoxelStore(true);
 		while (!vv.getWindow().shouldClose()) {
-			vv.update();
+			vv.render();
 		}
 	}
 }
